@@ -1331,7 +1331,7 @@ left: -0.2rem;
     padding-right: 0px;
     
     ">
-        <h1>
+        <h1 style="margin: 1px;">
           <span><b>Menu</b></span>
         </h1>
         <div class="row gutters-40">
@@ -1340,14 +1340,7 @@ left: -0.2rem;
         flex: 0 0 50.0%;
         max-width: 100.0%;">
             <div class="product-box-layout4 momos">
-              <div class="item-figure">
-                <img
-                  src="./images/momos.webp"
-                  alt="Category"
-                  width="95%"
-                  height="100%"
-                />
-              </div>
+              <div class="item-figure"></div>
               <div class="item-content">
                 <h2 class="card-title">Momos</h2>
               </div>
@@ -1361,7 +1354,12 @@ left: -0.2rem;
         flex: 0 0 50.0%;
         max-width: 100.0%;">
             <div class="product-box-layout4 beverages">
-              <div class="item-figure"></div>
+              <div class="item-figure"><img
+                  src="./images/momos.webp"
+                  alt="Category"
+                  width="95%"
+                  height="100%"
+                /></div>
               <div class="item-content">
                 <h2 class="card-title">Beverages</h2>
               </div>
@@ -1400,31 +1398,31 @@ left: -0.2rem;
                         <span class="checkIcon"
                           ><i class="fas fa-check-circle"></i
                         ></span>
-                        Select Menu
+                        Seleccion Menu
                       </div>
                       <div class="col paymentInfo">
                         <span class="checkIcon"
                           ><i class="fa-brands fa-whatsapp"></i
                         ></span>
-                        Place order via Whatsapp
+                        enviar Orden porr via Whatsapp
                       </div>
                       <div class="col paymentInfo">
                         <span class="checkIcon"
                           ><i class="fa-brands fa-google-pay"></i>
                         </span>
-                        Pay using Google Pay.
+                        Pagar con trasferencia.
                       </div>
                     </div>
 
                     <hr class="cartHr" />
 
                     <div class="cartContentDiv">
-                      <h1>Your Cart is Empty</h1>
+                      <h1>Tu Carrito esta Vacio</h1>
                     </div>
 
                     <div class="userInfoDiv">
                       <div class="mb-3 px-2">
-                        <label for="address">Address *</label> <br />
+                        <label for="address">Domicilio para entregas *</label> <br />
                         <textarea
                           type="text"
                           class="form-control"
@@ -1432,7 +1430,7 @@ left: -0.2rem;
                         ></textarea>
                       </div>
                       <div class="mb-3 px-2">
-                        <label for="note">Note (optional)</label> <br />
+                        <label for="note">Nota (descripcion del domicio o persona que recibe)</label> <br />
                         <textarea
                           type="text"
                           class="form-control"
@@ -1449,10 +1447,10 @@ left: -0.2rem;
                     class="btn btn-secondary"
                     onclick="location.reload()"
                   >
-                    Clear Cart
+                    Vaciar carrito
                   </button>
                   <a class="btn btn-primary" onclick="openWhatsapp()">
-                    Order Now
+                    Ordenar Ya
                   </a>
                 </div>
               </div>
@@ -2294,7 +2292,7 @@ left: -0.2rem;
                 data-toggle="modal"
                 data-target="#exampleModal"
               >
-                <i class="fas fa-shopping-cart"></i> Go to Cart
+                <i class="fas fa-shopping-cart"></i> Ver el carrito
               </button>
             </div>
           </div>
