@@ -1213,6 +1213,12 @@ left: -0.2rem;
 #cart{
  position:  relative !important;
 }
+
+#exampleModal
+{
+  padding-right:0.5 px;
+  display=:block;
+}
      </style>
 
 
@@ -1379,8 +1385,9 @@ left: -0.2rem;
             role="dialog"
             aria-labelledby="exampleModalLabel"
             aria-hidden="true"
+            
           >
-            <div class="modal-dialog" role="document">
+            <div class="modal-dialog" role="document" style="position: inherit;">
               <div class="modal-content">
                 <div class="modal-header">
                   <h5 class="modal-title" id="exampleModalLabel">Carrito</h5>
@@ -2527,9 +2534,9 @@ $(document).ready(function () {
           food[i][0] +
           '</p> <p class="text-muted-small">' +
           food[i][3] +
-          '<p></div><i class="fa-regular fa-dollar-sign"> ' +
+          '<p></div><i class="fa fa-dollar"> ' +
           food[i][2] +
-          '</i></p>  </div>  <div class="col-2"> <p class="text-muted-small" > <i class="fa-regular fa-dollar-sign"></i> ' +
+          '</i></p>  </div>  <div class="col-2"> <p class="text-muted-small" > <i class="fa fa-dollar"></i> ' +
           food[i][1] * food[i][2] +
           '</p>  <span class="cartQuantity"> ' +
           " <span> Cant : </span>" +
@@ -2555,7 +2562,7 @@ $(document).ready(function () {
     $(".totalAmountDiv").empty();
     $(".totalAmountDiv").append(
       '<span class="totalAmountText">TOTAL PAGAR : </span><br/>' +
-        '<i class="fa-regular fa-dollar-sign"></i> ' +
+        '<i class="fa fa-dollar"></i> ' +
         totalAmount
     );
   }
