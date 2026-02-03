@@ -3,7 +3,42 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <head>
-  
+    <style>
+     
+
+        .image-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            border: 1px solid #ccc;
+            padding: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            z-index: 9999;
+            max-width: 80%;
+            max-height: 80%;
+            overflow: auto;
+        }
+
+        /* Styling for the close button */
+        .close-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        /* Styling for the image */
+        .image-container img {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
    <style>
 /* ***********************************General Styles ********************************************/
 
@@ -1225,7 +1260,7 @@ left: -0.2rem;
 
 
 
-    <title>MOMOMIA</title>
+    <title>DeMasita</title>
     <link
       rel="shortcut icon"
       href="images/momo-icon.webp"
@@ -1273,7 +1308,7 @@ left: -0.2rem;
       <img
         id="loading-image"
         src="https://user-images.githubusercontent.com/62802231/194802891-66d7c782-9765-419d-964b-b6bf6323b95a.gif"
-        alt="Cargando..."
+        alt="Cargando..." style="border-radius: 5px;"
       />
     </div>
 
@@ -1353,7 +1388,7 @@ left: -0.2rem;
         flex: 0 0 50.0%;
         max-width: 100.0%;">
             <div class="product-box-layout4 beverages">
-              <div class="item-figure"><img src="https://www.cocinadelirante.com/sites/default/files/images/2023/08/antojitos-mexicanos-15-septiembre.jpg" alt="Category" width="95%" height="100%"></div>
+              <div class="item-figure"><img src="https://www.cocinadelirante.com/sites/default/files/images/2023/08/antojitos-mexicanos-15-septiembre.jpg" alt="Category" width="100%" height="100%" style="border-radius: 5px;"></div>
               <div class="item-content">
                 <h2 class="card-title">Antojitos</h2>
               </div>
@@ -1474,13 +1509,11 @@ padding: 0rem;">
               <div class="col-sm-6 col-12" style="flex: 0 0 100%;max-width: 100%;padding-right: 0px;">
                 <div class="card" style="
     align-items: normal;">
-                  <h2 class="card-title">Steamed Momos</h2>
+                  <h2 class="card-title">&nbsp;</h2>
                   <div class="card-body" style="padding-right: 0px;padding-left: 5px;">
                     <div class="row foodItem">
                       <div class="col-9 foodItemName">
-                        <p>
-                          Veggie Momo
-                          <span>
+                        <p>Emapanadas de Queso<span onclick="showImage()">
                             <img
                               class="vegIcon"
                               src="https://i.ibb.co/JRkdw345/veg.webp"
@@ -1488,8 +1521,13 @@ padding: 0rem;">
                             />
                           </span>
                         </p>
+                      
+    <p class="m-0">
+
+    </p>
+
                         <p class="text-muted-small">
-                          <b>$</b> 80
+                          <b>$</b> 15
                         </p>
                       </div>
 
@@ -1508,7 +1546,7 @@ padding: 0rem;">
                     <div class="row foodItem">
                       <div class="col-9 foodItemName">
                         <p>
-                          Paneer Momo
+                          Empanadas de Carne
                           <span>
                             <img
                               class="vegIcon"
@@ -1518,7 +1556,59 @@ padding: 0rem;">
                           </span>
                         </p>
                         <p class="text-muted-small">
-                          <b>$</b> 90
+                          <b>$</b> 15
+                        </p>
+                      </div>
+                      <div class="col-3 addCol">
+                        <span class="menuBtn minus"
+                          ><i class="fas fa-minus"></i
+                        ></span>
+                        <span class="quantity">0</span>
+                        <span class="menuBtn plus"
+                          ><i class="fas fa-plus"></i
+                        ></span>
+                      </div>
+                    </div>
+                    <hr class="foodItemHr" />
+
+                    <div class="row foodItem">
+                      <div class="col-9 foodItemName">
+                        <p>Gorditas de Huevo Salsa Verde<span>
+                            <img
+                              class="vegIcon"
+                              src="https://i.ibb.co/JRkdw345/veg.webp"
+                              alt="veg-icon"
+                            />
+                          </span>
+                        </p>
+                        <p class="text-muted-small">
+                          <b>$</b> 20
+                        </p>
+                      </div>
+                      <div class="col-3 addCol">
+                        <span class="menuBtn minus"
+                          ><i class="fas fa-minus"></i
+                        ></span>
+                        <span class="quantity">0</span>
+                        <span class="menuBtn plus"
+                          ><i class="fas fa-plus"></i
+                        ></span>
+                      </div>
+                    </div>
+                    <hr class="foodItemHr" />
+
+                    <div class="row foodItem">
+                      <div class="col-9 foodItemName">
+                        <p>Gorditas de Huevo Salsa Roja<span>
+                            <img
+                              class="vegIcon"
+                              src="https://i.ibb.co/JRkdw345/veg.webp"
+                              alt="veg-icon"
+                            />
+                          </span>
+                        </p>
+                        <p class="text-muted-small">
+                          <b>$</b> 20
                         </p>
                       </div>
                       <div class="col-3 addCol">
@@ -1536,63 +1626,7 @@ padding: 0rem;">
                     <div class="row foodItem">
                       <div class="col-9 foodItemName">
                         <p>
-                          Mushroom Momo
-                          <span>
-                            <img
-                              class="vegIcon"
-                              src="https://i.ibb.co/JRkdw345/veg.webp"
-                              alt="veg-icon"
-                            />
-                          </span>
-                        </p>
-                        <p class="text-muted-small">
-                          <b>$</b> 115
-                        </p>
-                      </div>
-                      <div class="col-3 addCol">
-                        <span class="menuBtn minus"
-                          ><i class="fas fa-minus"></i
-                        ></span>
-                        <span class="quantity">0</span>
-                        <span class="menuBtn plus"
-                          ><i class="fas fa-plus"></i
-                        ></span>
-                      </div>
-                    </div>
-                    <hr class="foodItemHr" />
-
-                    <div class="row foodItem">
-                      <div class="col-9 foodItemName">
-                        <p>
-                          Corn and Cheese Momo
-                          <span>
-                            <img
-                              class="vegIcon"
-                              src="https://i.ibb.co/JRkdw345/veg.webp"
-                              alt="veg-icon"
-                            />
-                          </span>
-                        </p>
-                        <p class="text-muted-small">
-                          <b>$</b> 130
-                        </p>
-                      </div>
-                      <div class="col-3 addCol">
-                        <span class="menuBtn minus"
-                          ><i class="fas fa-minus"></i
-                        ></span>
-                        <span class="quantity">0</span>
-                        <span class="menuBtn plus"
-                          ><i class="fas fa-plus"></i
-                        ></span>
-                      </div>
-                    </div>
-                    <hr class="foodItemHr" />
-
-                    <div class="row foodItem">
-                      <div class="col-9 foodItemName">
-                        <p>
-                          Chicken Momo
+                          Salbute
                           <span>
                             <img
                               class="nonVegIcon"
@@ -1602,7 +1636,7 @@ padding: 0rem;">
                           </span>
                         </p>
                         <p class="text-muted-small">
-                          <b>$</b> 90
+                          <b>$</b> 20
                         </p>
                       </div>
                       <div class="col-3 addCol">
@@ -1620,7 +1654,7 @@ padding: 0rem;">
                     <div class="row foodItem">
                       <div class="col-9 foodItemName">
                         <p>
-                          Chicken Schezwan Momo
+                          Enfrijoladas de Jamon
                           <span>
                             <img
                               class="nonVegIcon"
@@ -1630,7 +1664,7 @@ padding: 0rem;">
                           </span>
                         </p>
                         <p class="text-muted-small">
-                          <b>$</b> 130
+                          <b>$</b> 50
                         </p>
                       </div>
                       <div class="col-3 addCol">
@@ -1648,7 +1682,7 @@ padding: 0rem;">
 <div class="row foodItem">
                       <div class="col-9 foodItemName">
                         <p>
-                          Chicken toma Momo
+                          Enfrijoladas de Jamon con huevo
                           <span>
                             <img
                               class="nonVegIcon"
@@ -1676,7 +1710,7 @@ padding: 0rem;">
                     <div class="row foodItem">
                       <div class="col-9 foodItemName">
                         <p>
-                          Fish Momo
+                          Enchiladas veracruzana
                           <span>
                             <img
                               class="nonVegIcon"
@@ -2581,7 +2615,7 @@ function openWhatsapp() {
     let total = 0;
     let address = $("#address")[0].value;
     let note = $("#note")[0].value;
-    let wTxt = "*name*               *quantity* \n";
+    let wTxt = "*A nombre de*               *Cantidad:* \n";
 
     for (var i = 0; i < food.length; i++) {
       let name = food[i][0];
@@ -2592,16 +2626,16 @@ function openWhatsapp() {
 
     if ($("#note")[0].value === "") {
       wTxt =
-        wTxt + "\n *Total Bill: " + total + "*" + "\n\n Address: " + address;
+        wTxt + "\n *Total a pagar: " + total + "*" + "\n\n Direccion: " + address;
     } else {
       wTxt =
         wTxt +
-        "\n *Total Bill: " +
+        "\n *Total a Pagar: $" +
         total +
         "*" +
-        "\n\n Address: " +
+        "\n\n Direccion: " +
         address +
-        "\n Note: " +
+        "\n Nota: " +
         note;
     }
 
@@ -2611,4 +2645,39 @@ function openWhatsapp() {
 }
 
 </script>
+<script>
+        function showImage() {
+            let imageContainer =
+                document.createElement("div");
+            imageContainer.className =
+                "image-container";
+
+            let image =
+                document.createElement("img");
+            image.src =
+"https://www.shutterstock.com/image-photo/chebureks-meat-fried-cheburek-delicious-600w-2533435355.jpg";
+            let closeButton =
+                document.createElement(
+                    "button"
+                );
+            closeButton.textContent = "Close";
+            closeButton.className =
+                "close-btn";
+            closeButton.onclick =
+                function () {
+                    document.body.removeChild(
+                        imageContainer
+                    );
+                };
+
+            imageContainer.appendChild(
+                closeButton
+            );
+            imageContainer.appendChild(image);
+
+            document.body.appendChild(
+                imageContainer
+            );
+        }
+    </script>
 </html>
