@@ -147,6 +147,7 @@ body {
 	font-family: "Ubuntu", sans-serif;
 	/* sets font family for entire page */
 	background-color: #FFFFFF;
+	
 }
 
 @font-face /*  Specifies Custom Font to display the text */ {
@@ -1265,7 +1266,7 @@ left: -0.2rem;
   </head>
 
  
-  <body>
+  <body onmousedown="event.preventDefault ? event.preventDefault() : event.returnValue = false">
 <!--     This is the Loader -->
     <div id="loading">
       <img
@@ -1468,7 +1469,7 @@ padding: 0rem;">
 
           <div id="momos">
             
-            <div class="row" style="width: fit-content;">
+            <div class="row" style="width: auto;">
               <div class="col-sm-6 col-12" style="flex: 0 0 100%;max-width: 100%;padding-right: 0px;">
                 <div class="card" style="
     align-items: normal;">
@@ -1949,7 +1950,7 @@ padding: 0rem;">
 
           <div id="beverages">
             
-            <div class="row" style="width: fit-content;">
+            <div class="row" style="width: auto;">
               <div class="col-sm-6 col-12" style="flex: 0 0 100%;max-width: 100%;padding-right: 0px;">
                 <div class="card" style="
     align-items: normal;">
