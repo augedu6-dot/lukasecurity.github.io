@@ -175,6 +175,7 @@ li {
 
 
 body {
+	
 	font-family: "Ubuntu", sans-serif;
 	/* sets font family for entire page */
 	background-color: #FFFFFF;
@@ -1298,7 +1299,8 @@ left: -0.2rem;
   </head>
 
  
-  <body  style="position: fixed;">
+  <body  style="position: relative;
+    overflow: auto;">
 <!--     This is the Loader -->
     <div id="loading">
       <img
@@ -1309,9 +1311,10 @@ left: -0.2rem;
     </div>
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top" style="
-    position: relative;
+       position: relative;
     padding-left: 0px;
     padding-right: 0px;
+    overflow: auto;
     ">
       <div class="container">
         <!-- CODE FOR NAVIGATION BAR -->
@@ -1359,7 +1362,9 @@ left: -0.2rem;
     </nav>
 
     <a id="scrollToTop" class="btn"><i class="fas fa-caret-up"></i></a>
-<div id="main">
+<div id="main" style=" min-height: 100%; 
+
+  overflow: auto; ">
  
 
 <!-- Category section starts here -->
@@ -3092,5 +3097,14 @@ const rutafinal=rutita[pasado];
                 imageContainer
             );
         }
+		
+		// Source - https://stackoverflow.com/a/12958987
+// Posted by Vimalkumar Kalimuthu
+// Retrieved 2026-02-04, License - CC BY-SA 3.0
+
+$(window).scroll(function(){
+  $('.body').css('left',-$(window).scrollLeft());
+});
+
     </script>
 </html>
