@@ -1298,7 +1298,7 @@ left: -0.2rem;
   </head>
 
  
-  <body  style="position: static;">
+  <body  style="position: fixed;">
 <!--     This is the Loader -->
     <div id="loading">
       <img
@@ -1309,8 +1309,9 @@ left: -0.2rem;
     </div>
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top" style="
-    position: fixed;
-
+    position: relative;
+    padding-left: 0px;
+    padding-right: 0px;
     ">
       <div class="container">
         <!-- CODE FOR NAVIGATION BAR -->
@@ -1358,7 +1359,7 @@ left: -0.2rem;
     </nav>
 
     <a id="scrollToTop" class="btn"><i class="fas fa-caret-up"></i></a>
-<div id="main" style="position: fixed;">
+<div id="main">
  
 
 <!-- Category section starts here -->
@@ -1377,7 +1378,36 @@ left: -0.2rem;
         <h1 style="margin: 0px;"  type=button>
           <button id="buttonm1">Menu</button>
         </h1>
-        
+        <div class="row gutters-40" id="menus" style="margin: auto;">
+        <div class="col-lg-4 col-sm-4 col-4" style="CONTAIN-INTRINSIC-BLOCK-SIZE: AUTO 100PX;
+        -ms-flex: 0 0 50.0%;
+        flex: 0 0 50.0%;
+        max-width: 100.0%;">
+            <div class="product-box-layout4 beverages">
+              <div class="item-figure"><img src="https://www.cocinadelirante.com/sites/default/files/images/2023/08/antojitos-mexicanos-15-septiembre.jpg" alt="Category" width="96%" height="100%" style="border-radius: 5px;"></div>
+              <div class="item-content">
+                <h2 class="card-title">Antojitos</h2>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-sm-4 col-4" style="CONTAIN-INTRINSIC-BLOCK-SIZE: AUTO 100PX;
+        -ms-flex: 0 0 50.0%;
+        flex: 0 0 50.0%;
+        max-width: 100.0%;">
+            <div class="product-box-layout4 momos">
+              <div class="item-figure"><img
+                  src="https://i0.wp.com/tradicionescultura.com.mx/wp-content/uploads/2025/09/1000054056.jpg"
+                  alt="Category"
+                  width="96%"
+                  height="100%"
+                /></div>
+              <div class="item-content">
+                <h2 class="card-title">Comidas</h2>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <!-- MENU STARTS <div class="menuDiv">
           <!-- MODAL -->
