@@ -1436,7 +1436,7 @@ max-width: 50%;">
                     </div>
                   </div>
                 </div>
-                <div class="modal-footer" >
+                <div class="modal-footer" style="display: contents;" >
                   <div class="totalAmountDiv"></div>
                   
                   <a class="btn btn-primary" onClick="openWhatsapp()">Confirmar Pedido                 </a>
@@ -2453,7 +2453,7 @@ $(document).ready(function () {
     }
     $(".totalAmountDiv").empty();
     $(".totalAmountDiv").append(
-      '<span class="totalAmountText">TOTAL PAGAR : </span><br/>' +
+      '<span class="totalAmountText">TOTAL PAGAR : </span>' +
         '<i">$</i> ' +
         totalAmount
     );
