@@ -1,8 +1,6 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr"  >
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<html lang="es" dir="ltr"><head><meta name="viewport" content="width=device-width, initial-scale=1">
 
-<head>
+
     <style>
      
 
@@ -169,7 +167,7 @@ li {
 
 @media screen and (max-width: 1000px){
   .navbar-expand-lg {
-    height: auto;
+    
   }
 }
 
@@ -180,7 +178,6 @@ body {
 	/* sets font family for entire page */
 	background-color: #FFFFFF;
 
-	
 }
 
 @font-face /*  Specifies Custom Font to display the text */ {
@@ -215,7 +212,8 @@ a:hover {
 }
 
 .container {
-  padding: 0;
+
+
 }
 
 .row {
@@ -247,13 +245,13 @@ a:hover {
 
 .fixed-top {
   z-index: 11;
-      position: relative;
+      position: fixed;
+	
 }
 
 /* HOME SECTION */
 .home-container {
-  height: 100vh;
-  width: 132vw;
+ 
   display: flex;
   justify-content: center;
 }
@@ -391,14 +389,12 @@ a:hover {
 /* CATEGORY SECTION */
 
 #categorySection {
-	padding-top: 1%;
-	background-color: #FFFFFF;
-	padding-bottom: 6%;
+	
 }
 
 #categorySection .container h1 {
   text-align: center;
-  margin: 50px auto;
+  margin: 5px auto;
 }
 
 #categorySection .container h1 span {
@@ -1103,7 +1099,7 @@ footer a {
   }
 
   #categorySection {
-    padding: 1% 10px 5%;
+
   }
 
   .product-box-layout4 .item-figure {
@@ -1181,7 +1177,16 @@ footer a {
   .copyright {
     font-size: 0.9rem;
   }
-  
+  .navbar {
+background-color:#990000;
+position:absolute;
+z-index: 100;
+width:100%;
+height:60px;
+text-align:center;
+vertical-align:middle;
+line-height:30px;
+
 }
 
 @media screen and (max-width: 1000px) {
@@ -1258,87 +1263,47 @@ left: -0.2rem;
 
 
   <title>DeMasita</title>
-    <link
-      rel="shortcut icon"
-      href="images/momo-icon.webp"
-      type="image/x-icon"
-    />
+    <link rel="shortcut icon" href="images/momo-icon.webp" type="image/x-icon">
     
     <!-- META -->
    
     
 
     <!-- GOOGLE FONTS -->
-    <link
-      href="https://fonts.googleapis.com/css2?family=Marck+Script&family=Ubuntu:wght@400;500;700&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Marck+Script&amp;family=Ubuntu:wght@400;500;700&amp;display=swap" rel="stylesheet">
 
     <!-- CDN FONTS  -->
-    <link href="https://fonts.cdnfonts.com/css/elinga" rel="stylesheet" />
+    <link href="https://fonts.cdnfonts.com/css/elinga" rel="stylesheet">
 
     <!-- FONTAWESOME -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css"
-      integrity="sha256-h20CPZ0QyXlBuAw7A+KluUYx/3pK+c7lYEpqLTlxjYQ="
-      crossorigin="anonymous"
-    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" integrity="sha256-h20CPZ0QyXlBuAw7A+KluUYx/3pK+c7lYEpqLTlxjYQ=" crossorigin="anonymous">
 
     <!-- BOOTSTRAP -->
-    <link
-      rel="stylesheet"
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
-      crossorigin="anonymous"
-    />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
     <!-- CSS -->
-    <link href="https://copyfonts.com/fonts/attari-salees.html" />
+
 
   </head>
 
  
-  <body  style="position: relative;
-    overflow: auto;">
+  <body  >
 <!--     This is the Loader -->
-    <div id="loading">
-      <img
-        id="loading-image"
-        src="https://user-images.githubusercontent.com/62802231/194802891-66d7c782-9765-419d-964b-b6bf6323b95a.gif"
-        alt="Cargando..." style="border-radius: 5px;"
-      />
+    <div id="loading" style="display: none;">
+      <img id="loading-image" src="https://user-images.githubusercontent.com/62802231/194802891-66d7c782-9765-419d-964b-b6bf6323b95a.gif" alt="Cargando..." style="border-radius: 5px;">
     </div>
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top" style="
-       position: relative;
-    padding-left: 0px;
-    padding-right: 0px;
-    overflow: auto;
-    ">
-      <div class="container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top" style="display: contents;z-index: 200; " >
+      <div class="container" >
         <!-- CODE FOR NAVIGATION BAR -->
         
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-toggle="collapse"
-          data-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
 <ul class="px-0 mx-0">
-          <img
-            src="https://i.ibb.co/7tYj0G78/navbar-logo.gif"
-            height="50"
-            width="50"
-            alt="navbar-logo"
-          />
+          
         </ul> 
-        
+        <img src="https://i.ibb.co/7tYj0G78/navbar-logo.gif" height="50" width="50" alt="navbar-logo">
         <a class="navbar-brand" href="https://augedu6-dot.github.io/lukasecurity.github.io/">DeMasita</a>
         <div id="shoppingclass" data-toggle="modal" data-target="#exampleModal">
           <i class="fas fa-shopping-cart" id="cart"></i>
@@ -1346,67 +1311,43 @@ left: -0.2rem;
         </div>
       </div>
      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav ml-auto">
+          <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-              <a class="nav-link px-3" href="#"
-                >Inicio <span class="sr-only">(current)</span></a>
+              <a class="nav-link px-3" href="#">Inicio <span class="sr-only">(current)</span></a>
             </li></ul>
         </div> 
         
-      
-      
-      
-      
-      
-      
     </nav>
 
     <a id="scrollToTop" class="btn"><i class="fas fa-caret-up"></i></a>
-<div id="main" style=" min-height: 100%;overflow: auto;padding-left: 5%;padding-right: 5%;; 
-
-  overflow: auto; ">
+<div id="main">
  
 
 <!-- Category section starts here -->
-    <section id="categorySection" style="
-    padding-left: 0px;
-    padding-right: 0px;position: relative;"  >
-      <div class="container" style="
-    
-    margin-left: 0px;
-    margin-right: 0px;
-    max-width: 100%;
-    padding-left: 0px;
-    padding-right: 0px;
-    
-    ">
-        <h1 style="margin: 0px;"  type=button>
+    <section id="categorySection">
+      <div class="container" style="margin-right: auto;
+ padding-left: 0px;
+margin-left: auto; 
+padding-right: 0px;">
+        <h1>
           <button id="buttonm1">Menu</button>
         </h1>
-        <div class="row gutters-40" id="menus" style="margin: auto;">
-        <div class="col-lg-4 col-sm-4 col-4" style="CONTAIN-INTRINSIC-BLOCK-SIZE: AUTO 100PX;
-        -ms-flex: 0 0 50.0%;
-        flex: 0 0 50.0%;
-        max-width: 100.0%;">
+        <div class="row gutters-40" id="menus" style="margin-right: 0px;
+margin-left: 0px;">
+        <div class="col-lg-4 col-sm-4 col-4"style="flex: 0 0 50%;
+max-width: 50%;">
             <div class="product-box-layout4 beverages">
-              <div class="item-figure"><img src="https://www.cocinadelirante.com/sites/default/files/images/2023/08/antojitos-mexicanos-15-septiembre.jpg" alt="Category" width="96%" height="100%" style="border-radius: 5px;"></div>
+              <div class="item-figure"><img src="" alt="Category"></div>
               <div class="item-content">
                 <h2 class="card-title">Antojitos</h2>
               </div>
             </div>
           </div>
 
-          <div class="col-lg-4 col-sm-4 col-4" style="CONTAIN-INTRINSIC-BLOCK-SIZE: AUTO 100PX;
-        -ms-flex: 0 0 50.0%;
-        flex: 0 0 50.0%;
-        max-width: 100.0%;">
+          <div class="col-lg-4 col-sm-4 col-4" style="flex: 0 0 50%;
+max-width: 50%;">
             <div class="product-box-layout4 momos">
-              <div class="item-figure"><img
-                  src="https://i0.wp.com/tradicionescultura.com.mx/wp-content/uploads/2025/09/1000054056.jpg"
-                  alt="Category"
-                  width="96%"
-                  height="100%"
-                /></div>
+ <div class="item-figure"><img src="" alt="Category"></div>
               <div class="item-content">
                 <h2 class="card-title">Comidas</h2>
               </div>
@@ -1416,53 +1357,35 @@ left: -0.2rem;
 
         <!-- MENU STARTS <div class="menuDiv">
           <!-- MODAL -->
-          <div
-            class="modal fade"
-            id="exampleModal"
-            tabindex="-1"
-            role="dialog"
-            aria-labelledby="exampleModalLabel"
-            aria-hidden="true"
-            
-          >
-            <div class="modal-dialog" role="document" style="position: absolute; left: 9px;">
+          <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header">
                   <h5 class="modal-title" id="exampleModalLabel">Carrito</h5>
-                  <button
-                    type="button"
-                    class="close"
-                    data-dismiss="modal"
-                    aria-label="Close"
-                  >
-                    <span aria-hidden="true">&times;</span>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
                   </button>
                 </div>
-                <div class="modal-body" style="
-padding: 0rem;">
+                <div class="modal-body">
                   <div class="container-fluid">
                     <div class="row paymentInfoRow">
                       <div class="col paymentInfo">
-                        <span class="checkIcon"
-                          ><i class="fas fa-check-circle"></i
-                        ></span>
+                        <span class="checkIcon"><i class="fas fa-check-circle"></i></span>
                         Seleccion Menu
                       </div>
                       <div class="col paymentInfo">
-                        <span class="checkIcon"
-                          ><i class="fab fa-whatsapp" aria-hidden="true"></i>
+                        <span class="checkIcon"><i class="fab fa-whatsapp" aria-hidden="true"></i>
 </span>
                         Enviar Orden por via Whatsapp
                       </div>
                       <div class="col paymentInfo">
-                        <span class="checkIcon"
-                          ><i class="fa-brands fa-google-pay"></i>
+                        <span class="checkIcon"><i class="fa-brands fa-google-pay"></i>
                         </span>
                         Pagar con trasferencia.
                       </div>
                     </div>
 
-                    <hr class="cartHr" />
+                    <hr class="cartHr">
 
                     <div class="cartContentDiv">
                       <h1>Tu Carrito esta Vacio</h1>
@@ -1470,33 +1393,21 @@ padding: 0rem;">
 
                     <div class="userInfoDiv">
                       <div class="mb-3 px-2">
-                        <label for="address">Domicilio para entregar : </label> <br />
-                        <textarea
-                          type="text"
-                          class="form-control"
-                          id="address"
-                        ></textarea>
+                        <label for="address">Domicilio para entregar : </label> <br>
+                        <textarea type="text" class="form-control" id="address"></textarea>
                       </div>
-                      <div class="mb-3 px-2">
-                        <label for="note">Nota (descripcion del domicio o persona que recibe)</label> <br />
-                        <textarea
-                          type="text"
-                          class="form-control"
-                          id="note"
-                        ></textarea>
+                     <div class="mb-3 px-2">
+                        <label for="note">Nota (descripcion del domicio o persona que recibe)</label> <br>
+                        <textarea type="text" class="form-control" id="note"></textarea>
                       </div>
                     </div>
                   </div>
                 </div>
                 <div class="modal-footer">
-                  <div class="totalAmountDiv" style="display: contents;"></div></br>
+                  <div class="totalAmountDiv"></div>
                   
-                  <a class="btn btn-primary" onclick="openWhatsapp()">Ordenar Ya                 </a>
-                  <button
-                    type="button"
-                    class="btn btn-secondary"
-                    onclick="location.reload()"
-                  >
+                  <a class="btn btn-primary" onClick="openWhatsapp()">Ordenar Ya                 </a>
+                  <button type="button" class="btn btn-secondary" onClick="location.reload()">
                     Vaciar carrito
                   </button>
                 </div>
@@ -1506,20 +1417,17 @@ padding: 0rem;">
 
           <div id="momos">
             
-            <div class="row" style="width: auto;">
-              <div class="col-sm-6 col-12" style="flex: 0 0 100%;max-width: 100%;padding-right: 0px;">
-                <div class="card" style="
-    align-items: normal;">
+            <div class="row" style="margin-right: 0px;
+margin-left: 0px;">
+              <div class="col-sm-6 col-12" style="padding-right: 0px;
+    padding-left: 0px;">
+                <div class="card">
                   <h2 class="card-title">Antojitos</h2>
-                  <div class="card-body" style="padding-right: 0px;padding-left: 5px;">
+                  <div class="card-body" style="padding-left: 8px;padding-right: unset;">
                     <div class="row foodItem">
                       <div class="col-9 foodItemName">
-                        <p>Empanada de Queso<span onclick="showImage()">
-                            <img
-                              class="vegIcon"
-                              src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png"
-                              alt="veg-icon"
-                            />
+                        <p>Empanada de Queso<span onClick="showImage()">
+                            <img class="vegIcon" src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png" alt="veg-icon">
                           </span>
                         </p>
                       
@@ -1533,26 +1441,18 @@ padding: 0rem;">
                       </div>
 
                       <div class="col-3 addCol">
-                        <span class="menuBtn minus"
-                          ><i class="fas fa-minus"></i
-                        ></span>
+                        <span class="menuBtn minus"><i class="fas fa-minus"></i></span>
                         <span class="quantity">0</span>
-                        <span class="menuBtn plus"
-                          ><i class="fas fa-plus"></i
-                        ></span>
+                        <span class="menuBtn plus"><i class="fas fa-plus"></i></span>
                       </div>
                     </div>
-                    <hr class="foodItemHr" />
+                    <hr class="foodItemHr">
 
                     <div class="row foodItem">
                       <div class="col-9 foodItemName">
                         <p>
-                          Empanada de Carne<span onclick="showImage()">
-                            <img
-                              class="vegIcon"
-                              src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png"
-                              alt="veg-icon"
-                            />
+                          Empanada de Carne<span onClick="showImage()">
+                            <img class="vegIcon" src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png" alt="veg-icon">
                           </span>
                         </p>
                         <p class="text-muted-small">
@@ -1560,25 +1460,17 @@ padding: 0rem;">
                         </p>
                       </div>
                       <div class="col-3 addCol">
-                        <span class="menuBtn minus"
-                          ><i class="fas fa-minus"></i
-                        ></span>
+                        <span class="menuBtn minus"><i class="fas fa-minus"></i></span>
                         <span class="quantity">0</span>
-                        <span class="menuBtn plus"
-                          ><i class="fas fa-plus"></i
-                        ></span>
+                        <span class="menuBtn plus"><i class="fas fa-plus"></i></span>
                       </div>
                     </div>
-                    <hr class="foodItemHr" />
+                    <hr class="foodItemHr">
 
                     <div class="row foodItem">
                       <div class="col-9 foodItemName">
-                        <p>Gorditas de Huevo en Salsa Verde<span onclick="showImage()">
-                            <img
-                              class="vegIcon"
-                              src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png"
-                              alt="veg-icon"
-                            />
+                        <p>Gorditas de Huevo en Salsa Verde<span onClick="showImage()">
+                            <img class="vegIcon" src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png" alt="veg-icon">
                           </span>
                         </p>
                         <p class="text-muted-small">
@@ -1586,25 +1478,17 @@ padding: 0rem;">
                         </p>
                       </div>
                       <div class="col-3 addCol">
-                        <span class="menuBtn minus"
-                          ><i class="fas fa-minus"></i
-                        ></span>
+                        <span class="menuBtn minus"><i class="fas fa-minus"></i></span>
                         <span class="quantity">0</span>
-                        <span class="menuBtn plus"
-                          ><i class="fas fa-plus"></i
-                        ></span>
+                        <span class="menuBtn plus"><i class="fas fa-plus"></i></span>
                       </div>
                     </div>
-                    <hr class="foodItemHr" />
+                    <hr class="foodItemHr">
 
                     <div class="row foodItem">
                       <div class="col-9 foodItemName">
-                        <p>Gorditas de Huevo en Salsa Roja<span onclick="showImage()">
-                            <img
-                              class="vegIcon"
-                              src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png"
-                              alt="veg-icon"
-                            />
+                        <p>Gorditas de Huevo en Salsa Roja<span onClick="showImage()">
+                            <img class="vegIcon" src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png" alt="veg-icon">
                           </span>
                         </p>
                         <p class="text-muted-small">
@@ -1612,27 +1496,19 @@ padding: 0rem;">
                         </p>
                       </div>
                       <div class="col-3 addCol">
-                        <span class="menuBtn minus"
-                          ><i class="fas fa-minus"></i
-                        ></span>
+                        <span class="menuBtn minus"><i class="fas fa-minus"></i></span>
                         <span class="quantity">0</span>
-                        <span class="menuBtn plus"
-                          ><i class="fas fa-plus"></i
-                        ></span>
+                        <span class="menuBtn plus"><i class="fas fa-plus"></i></span>
                       </div>
                     </div>
-                    <hr class="foodItemHr" />
+                    <hr class="foodItemHr">
 
                     <div class="row foodItem">
                       <div class="col-9 foodItemName">
                         <p>
                           Salbute
-                          <span onclick="showImage()">
-                            <img
-                              class="vegIcon"
-                              src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png"
-                              alt="veg-icon"
-                            />
+                          <span onClick="showImage()">
+                            <img class="vegIcon" src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png" alt="veg-icon">
                           </span>
                         </p>
                         <p class="text-muted-small">
@@ -1640,53 +1516,37 @@ padding: 0rem;">
                         </p>
                       </div>
                       <div class="col-3 addCol">
-                        <span class="menuBtn minus"
-                          ><i class="fas fa-minus"></i
-                        ></span>
+                        <span class="menuBtn minus"><i class="fas fa-minus"></i></span>
                         <span class="quantity">0</span>
-                        <span class="menuBtn plus"
-                          ><i class="fas fa-plus"></i
-                        ></span>
+                        <span class="menuBtn plus"><i class="fas fa-plus"></i></span>
                       </div>
                     </div>
-                    <hr class="foodItemHr" />
+                    <hr class="foodItemHr">
 
                     <div class="row foodItem">
                       <div class="col-9 foodItemName">
                         <p>
-                        Enfrijoladas de Jamon<span onclick="showImage()">
-                            <img
-                              class="vegIcon"
-                              src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png"
-                              alt="veg-icon"
-                            />
+                        Enfrijoladas de Jamon<span onClick="showImage()">
+                            <img class="vegIcon" src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png" alt="veg-icon">
                         </span></p>
                         <p class="text-muted-small">
                           <b>$</b> 50
                         </p>
                       </div>
                       <div class="col-3 addCol">
-                        <span class="menuBtn minus"
-                          ><i class="fas fa-minus"></i
-                        ></span>
+                        <span class="menuBtn minus"><i class="fas fa-minus"></i></span>
                         <span class="quantity">0</span>
-                        <span class="menuBtn plus"
-                          ><i class="fas fa-plus"></i
-                        ></span>
+                        <span class="menuBtn plus"><i class="fas fa-plus"></i></span>
                       </div>
                     </div>
-                    <hr class="foodItemHr" />
+                    <hr class="foodItemHr">
 
 <div class="row foodItem">
                       <div class="col-9 foodItemName">
                         <p>
                           Enfrijoladas de Jamon con huevo
-                          <span onclick="showImage()">
-                            <img
-                              class="vegIcon"
-                              src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png"
-                              alt="veg-icon"
-                            />
+                          <span onClick="showImage()">
+                            <img class="vegIcon" src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png" alt="veg-icon">
                           </span>
                         </p>
                         <p class="text-muted-small">
@@ -1694,27 +1554,19 @@ padding: 0rem;">
                         </p>
                       </div>
                       <div class="col-3 addCol">
-                        <span class="menuBtn minus"
-                          ><i class="fas fa-minus"></i
-                        ></span>
+                        <span class="menuBtn minus"><i class="fas fa-minus"></i></span>
                         <span class="quantity">0</span>
-                        <span class="menuBtn plus"
-                          ><i class="fas fa-plus"></i
-                        ></span>
+                        <span class="menuBtn plus"><i class="fas fa-plus"></i></span>
                       </div>
                     </div>
-                    <hr class="foodItemHr" />
+                    <hr class="foodItemHr">
 
                     <div class="row foodItem">
                       <div class="col-9 foodItemName">
                         <p>
                           Enchiladas veracruzana
-                          <span onclick="showImage()">
-                            <img
-                              class="vegIcon"
-                              src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png"
-                              alt="veg-icon"
-                            />
+                          <span onClick="showImage()">
+                            <img class="vegIcon" src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png" alt="veg-icon">
                           </span>
                         </p>
                         <p class="text-muted-small">
@@ -1722,45 +1574,26 @@ padding: 0rem;">
                         </p>
                       </div>
                       <div class="col-3 addCol">
-                        <span class="menuBtn minus"
-                          ><i class="fas fa-minus"></i
-
-                        ></span>
+                        <span class="menuBtn minus"><i class="fas fa-minus"></i></span>
                         <span class="quantity">0</span>
-                        <span class="menuBtn plus"
-                          ><i class="fas fa-plus"></i
-                        ></span>
+                        <span class="menuBtn plus"><i class="fas fa-plus"></i></span>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
               
-  <div class="row checkOutRow">
-              <button
-                type="button"
-                class="btn knowMoreBtn"
-                data-toggle="modal"
-                data-target="#exampleModal"
-              >
-                <i class="fas fa-shopping-cart"></i> Abrir Carrito
-              </button>
-            </div>
-          </div>
-              <div class="col-sm-6 col-12" style="flex: 0 0 100%;max-width: 100%;padding-right: 0px;">
-                <div class="card" style="
-    align-items: normal;">
+ 
+          <div class="col-sm-6 col-12" style="padding-right: 0px;
+    padding-left: 0px;">
+                <div class="card">
                   <h2 class="card-title">Quesadillas (harina)</h2>
-                  <div class="card-body" style="padding-right: 0px; padding-left: 5px;">
+                  <div class="card-body" style="padding-left: 8px;padding-right: unset;">
                     <div class="row foodItem">
                       <div class="col-9 foodItemName">
                         <p>
-                          Quesadilla huevo rojo<span onclick="showImage(37)">
-                            <img
-                              class="vegIcon"
-                              src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png"
-                              alt="veg-icon"
-                            />
+                          Quesadilla huevo rojo<span onClick="showImage(37)">
+                            <img class="vegIcon" src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png" alt="veg-icon">
                           </span>
                         </p>
                         <p class="text-muted-small">
@@ -1768,50 +1601,34 @@ padding: 0rem;">
                         </p>
                       </div>
                       <div class="col-3 addCol">
-                        <span class="menuBtn minus"
-                          ><i class="fas fa-minus"></i
-                        ></span>
+                        <span class="menuBtn minus"><i class="fas fa-minus"></i></span>
                         <span class="quantity">0</span>
-                        <span class="menuBtn plus"
-                          ><i class="fas fa-plus"></i
-                        ></span>
+                        <span class="menuBtn plus"><i class="fas fa-plus"></i></span>
                       </div>
                     </div>
-                    <hr class="foodItemHr" />
+                    <hr class="foodItemHr">
 
                     <div class="row foodItem">
                       <div class="col-9 foodItemName">
                         <p>
-                        Quesadilla huevo verde<span onclick="showImage(3)">
-                            <img
-                              class="vegIcon"
-                              src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png"
-                              alt="veg-icon"
-                            />
+                        Quesadilla huevo verde<span onClick="showImage(3)">
+                            <img class="vegIcon" src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png" alt="veg-icon">
                           </span>
                         </p>
                       </div>
                       <div class="col-3 addCol">
-                        <span class="menuBtn minus"
-                          ><i class="fas fa-minus"></i
-                        ></span>
+                        <span class="menuBtn minus"><i class="fas fa-minus"></i></span>
                         <span class="quantity">0</span>
-                        <span class="menuBtn plus"
-                          ><i class="fas fa-plus"></i
-                        ></span>
+                        <span class="menuBtn plus"><i class="fas fa-plus"></i></span>
                       </div>
                     </div>
-                    <hr class="foodItemHr" />
+                    <hr class="foodItemHr">
 
                     <div class="row foodItem">
                       <div class="col-9 foodItemName">
                         <p>
-                          Quesadilla chicharron<span onclick="showImage(1)">
-                            <img
-                              class="vegIcon"
-                              src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png"
-                              alt="veg-icon"
-                            />
+                          Quesadilla chicharron<span onClick="showImage(1)">
+                            <img class="vegIcon" src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png" alt="veg-icon">
                           </span>
                         </p>
                         <p class="text-muted-small">
@@ -1819,26 +1636,18 @@ padding: 0rem;">
                         </p>
                       </div>
                       <div class="col-3 addCol">
-                        <span class="menuBtn minus"
-                          ><i class="fas fa-minus"></i
-                        ></span>
+                        <span class="menuBtn minus"><i class="fas fa-minus"></i></span>
                         <span class="quantity">0</span>
-                        <span class="menuBtn plus"
-                          ><i class="fas fa-plus"></i
-                        ></span>
+                        <span class="menuBtn plus"><i class="fas fa-plus"></i></span>
                       </div>
                     </div>
-                    <hr class="foodItemHr" />
+                    <hr class="foodItemHr">
 
                     <div class="row foodItem">
                       <div class="col-9 foodItemName">
                         <p>
-                          Quesadilla frijol con queso<span onclick="showImage(23)">
-                            <img
-                              class="vegIcon"
-                              src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png"
-                              alt="veg-icon"
-                            />
+                          Quesadilla frijol con queso<span onClick="showImage(23)">
+                            <img class="vegIcon" src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png" alt="veg-icon">
                           </span>
                         </p>
                         <p class="text-muted-small">
@@ -1846,27 +1655,19 @@ padding: 0rem;">
                         </p>
                       </div>
                       <div class="col-3 addCol">
-                        <span class="menuBtn minus"
-                          ><i class="fas fa-minus"></i
-                        ></span>
+                        <span class="menuBtn minus"><i class="fas fa-minus"></i></span>
                         <span class="quantity">0</span>
-                        <span class="menuBtn plus"
-                          ><i class="fas fa-plus"></i
-                        ></span>
+                        <span class="menuBtn plus"><i class="fas fa-plus"></i></span>
                       </div>
                     </div>
-                    <hr class="foodItemHr" />
+                    <hr class="foodItemHr">
 
                     <div class="row foodItem">
                       <div class="col-9 foodItemName">
                         <p>
                           Quesadilla queso
-                          <span onclick="showImage(24)">
-                            <img
-                              class="vegIcon"
-                              src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png"
-                              alt="veg-icon"
-                            />
+                          <span onClick="showImage(24)">
+                            <img class="vegIcon" src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png" alt="veg-icon">
                           </span>
                         </p>
                         <p class="text-muted-small">
@@ -1874,27 +1675,19 @@ padding: 0rem;">
                         </p>
                       </div>
                       <div class="col-3 addCol">
-                        <span class="menuBtn minus"
-                          ><i class="fas fa-minus"></i
-                        ></span>
+                        <span class="menuBtn minus"><i class="fas fa-minus"></i></span>
                         <span class="quantity">0</span>
-                        <span class="menuBtn plus"
-                          ><i class="fas fa-plus"></i
-                        ></span>
+                        <span class="menuBtn plus"><i class="fas fa-plus"></i></span>
                       </div>
                     </div>
-                    <hr class="foodItemHr" />
+                    <hr class="foodItemHr">
 
                     <div class="row foodItem">
                       <div class="col-9 foodItemName">
                         <p>
                           Quesadilla de papa con huevo
-                          <span onclick="showImage(38)">
-                            <img
-                              class="vegIcon"
-                              src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png"
-                              alt="veg-icon"
-                            />
+                          <span onClick="showImage(38)">
+                            <img class="vegIcon" src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png" alt="veg-icon">
                           </span>
                         </p>
                         <p class="text-muted-small">
@@ -1902,27 +1695,19 @@ padding: 0rem;">
                         </p>
                       </div>
                       <div class="col-3 addCol">
-                        <span class="menuBtn minus"
-                          ><i class="fas fa-minus"></i
-                        ></span>
+                        <span class="menuBtn minus"><i class="fas fa-minus"></i></span>
                         <span class="quantity">0</span>
-                        <span class="menuBtn plus"
-                          ><i class="fas fa-plus"></i
-                        ></span>
+                        <span class="menuBtn plus"><i class="fas fa-plus"></i></span>
                       </div>
                     </div>
-                    <hr class="foodItemHr" />
+                    <hr class="foodItemHr">
 
                     <div class="row foodItem">
                       <div class="col-9 foodItemName">
                         <p>
                           Quesadilla nopales
-                          <span onclick="showImage(48)">
-                            <img
-                              class="vegIcon"
-                              src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png"
-                              alt="veg-icon"
-                            />
+                          <span onClick="showImage(48)">
+                            <img class="vegIcon" src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png" alt="veg-icon">
                           </span>
                         </p>
                         <p class="text-muted-small">
@@ -1930,27 +1715,19 @@ padding: 0rem;">
                         </p>
                       </div>
                       <div class="col-3 addCol">
-                        <span class="menuBtn minus"
-                          ><i class="fas fa-minus"></i
-                        ></span>
+                        <span class="menuBtn minus"><i class="fas fa-minus"></i></span>
                         <span class="quantity">0</span>
-                        <span class="menuBtn plus"
-                          ><i class="fas fa-plus"></i
-                        ></span>
+                        <span class="menuBtn plus"><i class="fas fa-plus"></i></span>
                       </div>
                     </div>
-                    <hr class="foodItemHr" />
+                    <hr class="foodItemHr">
 
                     <div class="row foodItem">
                       <div class="col-9 foodItemName">
                         <p>
                           Quesadilla picadillo
-                          <span onclick="showImage(44)">
-                            <img
-                              class="vegIcon"
-                              src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png"
-                              alt="veg-icon"
-                            />
+                          <span onClick="showImage(44)">
+                            <img class="vegIcon" src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png" alt="veg-icon">
                           </span>
                         </p>
                         <p class="text-muted-small">
@@ -1958,50 +1735,31 @@ padding: 0rem;">
                         </p>
                       </div>
                       <div class="col-3 addCol">
-                        <span class="menuBtn minus"
-                          ><i class="fas fa-minus"></i
-                        ></span>
+                        <span class="menuBtn minus"><i class="fas fa-minus"></i></span>
                         <span class="quantity">0</span>
-                        <span class="menuBtn plus"
-                          ><i class="fas fa-plus"></i
-                        ></span>
+                        <span class="menuBtn plus"><i class="fas fa-plus"></i></span>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              </div></div>
+              
             </div>
 
-            <div class="row checkOutRow">
-              <button
-                type="button"
-                class="btn knowMoreBtn"
-                data-toggle="modal"
-                data-target="#exampleModal"
-              >
-                <i class="fas fa-shopping-cart"></i> Abrir Carrito
-              </button>
-            </div>
-          </div>
-
-
-          <div id="beverages">
             
-            <div class="row" style="width: auto;">
-              <div class="col-sm-6 col-12" style="flex: 0 0 100%;max-width: 100%;padding-right: 0px;">
-                <div class="card" style="
-    align-items: normal;">
+          <div id="beverages">            
+            <div class="row" style="margin-right: 0px;
+margin-left: 0px;">
+              <div class="col-sm-6 col-12" style="padding-right: 0px;
+    padding-left: 0px;">
+                <div class="card">
                   <h2 class="card-title">Gorditas</h2>
-                  <div class="card-body" style="padding-right: 0px;padding-left: 5px;">
+                  <div class="card-body" style="padding-left: 8px;padding-right: unset;">
                     <div class="row foodItem">
                       <div class="col-9 foodItemName">
                         <p>
-                          Gordita de nopales<span onclick="showImage(2)">
-                            <img
-                              class="vegIcon"
-                              src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png"
-                              alt="veg-icon"
-                            />
+                          Gordita de nopales<span onClick="showImage(2)">
+                            <img class="vegIcon" src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png" alt="veg-icon">
                           </span>
                         </p>
                         <p class="text-muted-small">
@@ -2009,26 +1767,18 @@ padding: 0rem;">
                         </p>
                       </div>
                       <div class="col-3 addCol">
-                        <span class="menuBtn minus"
-                          ><i class="fas fa-minus"></i
-                        ></span>
+                        <span class="menuBtn minus"><i class="fas fa-minus"></i></span>
                         <span class="quantity">0</span>
-                        <span class="menuBtn plus"
-                          ><i class="fas fa-plus"></i
-                        ></span>
+                        <span class="menuBtn plus"><i class="fas fa-plus"></i></span>
                       </div>
                     </div>
-                    <hr class="foodItemHr" />
+                    <hr class="foodItemHr">
 
                     <div class="row foodItem">
                       <div class="col-9 foodItemName">
                         <p>
-                          Gordita de huevo rojo<span onclick="showImage(14)">
-                            <img
-                              class="vegIcon"
-                              src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png"
-                              alt="veg-icon"
-                            />
+                          Gordita de huevo rojo<span onClick="showImage(14)">
+                            <img class="vegIcon" src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png" alt="veg-icon">
                           </span>
                         </p>
                         <p class="text-muted-small">
@@ -2036,27 +1786,18 @@ padding: 0rem;">
                         </p>
                       </div>
                       <div class="col-3 addCol">
-                        <span class="menuBtn minus"
-                          ><i class="fas fa-minus"></i
-                        ></span>
+                        <span class="menuBtn minus"><i class="fas fa-minus"></i></span>
                         <span class="quantity">0</span>
-                        <span class="menuBtn plus"
-                          ><i class="fas fa-plus"></i
-                        ></span>
+                        <span class="menuBtn plus"><i class="fas fa-plus"></i></span>
                       </div>
                     </div>
-                    <hr class="foodItemHr" />
+                    <hr class="foodItemHr">
 
                     <div class="row foodItem">
                       <div class="col-9 foodItemName">
                         <p>
-                          Gordita de frijol<span onclick="showImage(17)">
-                            <img
-                              class="vegIcon"
-
-                              src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png"
-                              alt="veg-icon"
-                            />
+                          Gordita de frijol<span onClick="showImage(17)">
+                            <img class="vegIcon" src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png" alt="veg-icon">
                           </span>
                         </p>
                         <p class="text-muted-small">
@@ -2064,27 +1805,19 @@ padding: 0rem;">
                         </p>
                       </div>
                       <div class="col-3 addCol">
-                        <span class="menuBtn minus"
-                          ><i class="fas fa-minus"></i
-                        ></span>
+                        <span class="menuBtn minus"><i class="fas fa-minus"></i></span>
                         <span class="quantity">0</span>
-                        <span class="menuBtn plus"
-                          ><i class="fas fa-plus"></i
-                        ></span>
+                        <span class="menuBtn plus"><i class="fas fa-plus"></i></span>
                       </div>
                     </div>
-                    <hr class="foodItemHr" />
+                    <hr class="foodItemHr">
 
                     <div class="row foodItem">
                       <div class="col-9 foodItemName">
                         <p>
                           Gordita de queso
-                          <span onclick="showImage(19)">
-                            <img
-                              class="vegIcon"
-                              src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png"
-                              alt="veg-icon"
-                            />
+                          <span onClick="showImage(19)">
+                            <img class="vegIcon" src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png" alt="veg-icon">
                           </span>
                         </p>
                         <p class="text-muted-small">
@@ -2092,26 +1825,18 @@ padding: 0rem;">
                         </p>
                       </div>
                       <div class="col-3 addCol">
-                        <span class="menuBtn minus"
-                          ><i class="fas fa-minus"></i
-                        ></span>
+                        <span class="menuBtn minus"><i class="fas fa-minus"></i></span>
                         <span class="quantity">0</span>
-                        <span class="menuBtn plus"
-                          ><i class="fas fa-plus"></i
-                        ></span>
+                        <span class="menuBtn plus"><i class="fas fa-plus"></i></span>
                       </div>
                     </div>
-                    <hr class="foodItemHr" />
+                    <hr class="foodItemHr">
 
                     <div class="row foodItem">
                       <div class="col-9 foodItemName">
                         <p>
-                          Gordita chorizo<span onclick="showImage(36)">
-                            <img
-                              class="vegIcon"
-                              src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png"
-                              alt="veg-icon"
-                            />
+                          Gordita chorizo<span onClick="showImage(36)">
+                            <img class="vegIcon" src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png" alt="veg-icon">
                           </span>
                         </p>
                         <p class="text-muted-small">
@@ -2119,25 +1844,17 @@ padding: 0rem;">
                         </p>
                       </div>
                       <div class="col-3 addCol">
-                        <span class="menuBtn minus"
-                          ><i class="fas fa-minus"></i
-                        ></span>
+                        <span class="menuBtn minus"><i class="fas fa-minus"></i></span>
                         <span class="quantity">0</span>
-                        <span class="menuBtn plus"
-                          ><i class="fas fa-plus"></i
-                        ></span>
+                        <span class="menuBtn plus"><i class="fas fa-plus"></i></span>
                       </div>
                     </div>
-                    <hr class="foodItemHr" />
+                    <hr class="foodItemHr">
  <div class="row foodItem">
                       <div class="col-9 foodItemName">
                         <p>
-                          Gordita huevo verde<span onclick="showImage(57)">
-                            <img
-                              class="vegIcon"
-                              src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png"
-                              alt="veg-icon"
-                            />
+                          Gordita huevo verde<span onClick="showImage(57)">
+                            <img class="vegIcon" src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png" alt="veg-icon">
                           </span>
                         </p>
                         <p class="text-muted-small">
@@ -2145,25 +1862,17 @@ padding: 0rem;">
                         </p>
                       </div>
                       <div class="col-3 addCol">
-                        <span class="menuBtn minus"
-                          ><i class="fas fa-minus"></i
-                        ></span>
+                        <span class="menuBtn minus"><i class="fas fa-minus"></i></span>
                         <span class="quantity">0</span>
-                        <span class="menuBtn plus"
-                          ><i class="fas fa-plus"></i
-                        ></span>
+                        <span class="menuBtn plus"><i class="fas fa-plus"></i></span>
                       </div>
                     </div>
-                    <hr class="foodItemHr" />
+                    <hr class="foodItemHr">
                      <div class="row foodItem">
                       <div class="col-9 foodItemName">
                         <p>
-                          Gordita frijo con queso<span onclick="showImage(69)">
-                            <img
-                              class="vegIcon"
-                              src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png"
-                              alt="veg-icon"
-                            />
+                          Gordita frijo con queso<span onClick="showImage(69)">
+                            <img class="vegIcon" src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png" alt="veg-icon">
                           </span>
                         </p>
                         <p class="text-muted-small">
@@ -2171,26 +1880,18 @@ padding: 0rem;">
                         </p>
                       </div>
                       <div class="col-3 addCol">
-                        <span class="menuBtn minus"
-                          ><i class="fas fa-minus"></i
-                        ></span>
+                        <span class="menuBtn minus"><i class="fas fa-minus"></i></span>
                         <span class="quantity">0</span>
-                        <span class="menuBtn plus"
-                          ><i class="fas fa-plus"></i
-                        ></span>
+                        <span class="menuBtn plus"><i class="fas fa-plus"></i></span>
                       </div>
                     </div>
-                    <hr class="foodItemHr" />
+                    <hr class="foodItemHr">
                     <div class="row foodItem">
                       <div class="col-9 foodItemName">
                         <p>
                           Gordita de chicarron
-                          <span onclick="showImage(81)">
-                            <img
-                              class="vegIcon"
-                              src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png"
-                              alt="veg-icon"
-                            />
+                          <span onClick="showImage(81)">
+                            <img class="vegIcon" src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png" alt="veg-icon">
                           </span>
                         </p>
                         <p class="text-muted-small">
@@ -2198,32 +1899,24 @@ padding: 0rem;">
                         </p>
                       </div>
                       <div class="col-3 addCol">
-                        <span class="menuBtn minus"
-                          ><i class="fas fa-minus"></i
-                        ></span>
+                        <span class="menuBtn minus"><i class="fas fa-minus"></i></span>
                         <span class="quantity">0</span>
-                        <span class="menuBtn plus"
-                          ><i class="fas fa-plus"></i
-                        ></span>
+                        <span class="menuBtn plus"><i class="fas fa-plus"></i></span>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-<div class="col-sm-6 col-12" style="flex: 0 0 100%;max-width: 100%;padding-right: 0px;">
-                <div class="card" style="
-    align-items: normal;">
+<div class="col-sm-6 col-12" style="padding-right: 0px;
+    padding-left: 0px;">
+                <div class="card">
                   <h2 class="card-title">Tacos (Maiz)</h2>
-                  <div class="card-body" style="padding-right: 0px;padding-left: 5px;">
+                  <div class="card-body" style="padding-left: 8px;padding-right: unset;">
                     <div class="row foodItem">
                       <div class="col-9 foodItemName">
                         <p>
-                          Taco huevo verde<span onclick="showImage(11)">
-                            <img
-                              class="vegIcon"
-                              src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png"
-                              alt="veg-icon"
-                            />
+                          Taco huevo verde<span onClick="showImage(11)">
+                            <img class="vegIcon" src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png" alt="veg-icon">
                           </span>
                         </p>
                         <p class="text-muted-small">
@@ -2231,26 +1924,18 @@ padding: 0rem;">
                         </p>
                       </div>
                       <div class="col-3 addCol">
-                        <span class="menuBtn minus"
-                          ><i class="fas fa-minus"></i
-                        ></span>
+                        <span class="menuBtn minus"><i class="fas fa-minus"></i></span>
                         <span class="quantity">0</span>
-                        <span class="menuBtn plus"
-                          ><i class="fas fa-plus"></i
-                        ></span>
+                        <span class="menuBtn plus"><i class="fas fa-plus"></i></span>
                       </div>
                     </div>
-                    <hr class="foodItemHr" />
+                    <hr class="foodItemHr">
 
                     <div class="row foodItem">
                       <div class="col-9 foodItemName">
                         <p>
-                          Taco picadillo<span onclick="showImage(27)">
-                            <img
-                              class="vegIcon"
-                              src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png"
-                              alt="veg-icon"
-                            />
+                          Taco picadillo<span onClick="showImage(27)">
+                            <img class="vegIcon" src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png" alt="veg-icon">
                           </span>
                         </p>
                         <p class="text-muted-small">
@@ -2258,26 +1943,18 @@ padding: 0rem;">
                         </p>
                       </div>
                       <div class="col-3 addCol">
-                        <span class="menuBtn minus"
-                          ><i class="fas fa-minus"></i
-                        ></span>
+                        <span class="menuBtn minus"><i class="fas fa-minus"></i></span>
                         <span class="quantity">0</span>
-                        <span class="menuBtn plus"
-                          ><i class="fas fa-plus"></i
-                        ></span>
+                        <span class="menuBtn plus"><i class="fas fa-plus"></i></span>
                       </div>
                     </div>
-                    <hr class="foodItemHr" />
+                    <hr class="foodItemHr">
 
                     <div class="row foodItem">
                       <div class="col-9 foodItemName">
                         <p>
-                          Taco de chorizo<span onclick="showImage(34)">
-                            <img
-                              class="vegIcon"
-                              src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png"
-                              alt="veg-icon"
-                            />
+                          Taco de chorizo<span onClick="showImage(34)">
+                            <img class="vegIcon" src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png" alt="veg-icon">
                           </span>
                         </p>
                         <p class="text-muted-small">
@@ -2285,27 +1962,19 @@ padding: 0rem;">
                         </p>
                       </div>
                       <div class="col-3 addCol">
-                        <span class="menuBtn minus"
-                          ><i class="fas fa-minus"></i
-                        ></span>
+                        <span class="menuBtn minus"><i class="fas fa-minus"></i></span>
                         <span class="quantity">0</span>
-                        <span class="menuBtn plus"
-                          ><i class="fas fa-plus"></i
-                        ></span>
+                        <span class="menuBtn plus"><i class="fas fa-plus"></i></span>
                       </div>
                     </div>
-                    <hr class="foodItemHr" />
+                    <hr class="foodItemHr">
 
                     <div class="row foodItem">
                       <div class="col-9 foodItemName">
                         <p>
                           Taco de chicharron
-                          <span onclick="showImage(35)">
-                            <img
-                              class="vegIcon"
-                              src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png"
-                              alt="veg-icon"
-                            />
+                          <span onClick="showImage(35)">
+                            <img class="vegIcon" src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png" alt="veg-icon">
                           </span>
                         </p>
                         <p class="text-muted-small">
@@ -2313,26 +1982,18 @@ padding: 0rem;">
                         </p>
                       </div>
                       <div class="col-3 addCol">
-                        <span class="menuBtn minus"
-                          ><i class="fas fa-minus"></i
-                        ></span>
+                        <span class="menuBtn minus"><i class="fas fa-minus"></i></span>
                         <span class="quantity">0</span>
-                        <span class="menuBtn plus"
-                          ><i class="fas fa-plus"></i
-                        ></span>
+                        <span class="menuBtn plus"><i class="fas fa-plus"></i></span>
                       </div>
                     </div>
-                    <hr class="foodItemHr" />
+                    <hr class="foodItemHr">
 
                     <div class="row foodItem">
                       <div class="col-9 foodItemName">
                         <p>
-                          Taco de papa con huevo<span onclick="showImage(33)">
-                            <img
-                              class="vegIcon"
-                              src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png"
-                              alt="veg-icon"
-                            />
+                          Taco de papa con huevo<span onClick="showImage(33)">
+                            <img class="vegIcon" src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png" alt="veg-icon">
                           </span>
                         </p>
                         <p class="text-muted-small">
@@ -2340,25 +2001,17 @@ padding: 0rem;">
                         </p>
                       </div>
                       <div class="col-3 addCol">
-                        <span class="menuBtn minus"
-                          ><i class="fas fa-minus"></i
-                        ></span>
+                        <span class="menuBtn minus"><i class="fas fa-minus"></i></span>
                         <span class="quantity">0</span>
-                        <span class="menuBtn plus"
-                          ><i class="fas fa-plus"></i
-                        ></span>
+                        <span class="menuBtn plus"><i class="fas fa-plus"></i></span>
                       </div>
                     </div>
-                    <hr class="foodItemHr" />
+                    <hr class="foodItemHr">
  <div class="row foodItem">
                       <div class="col-9 foodItemName">
                         <p>
-                          Taco nopales<span onclick="showImage(40)">
-                            <img
-                              class="vegIcon"
-                              src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png"
-                              alt="veg-icon"
-                            />
+                          Taco nopales<span onClick="showImage(40)">
+                            <img class="vegIcon" src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png" alt="veg-icon">
                           </span>
                         </p>
                         <p class="text-muted-small">
@@ -2366,25 +2019,17 @@ padding: 0rem;">
                         </p>
                       </div>
                       <div class="col-3 addCol">
-                        <span class="menuBtn minus"
-                          ><i class="fas fa-minus"></i
-                        ></span>
+                        <span class="menuBtn minus"><i class="fas fa-minus"></i></span>
                         <span class="quantity">0</span>
-                        <span class="menuBtn plus"
-                          ><i class="fas fa-plus"></i
-                        ></span>
+                        <span class="menuBtn plus"><i class="fas fa-plus"></i></span>
                       </div>
                     </div>
-                    <hr class="foodItemHr" />
+                    <hr class="foodItemHr">
                      <div class="row foodItem">
                       <div class="col-9 foodItemName">
                         <p>
-                          Taco de huevo rojo<span onclick="showImage(59)">
-                            <img
-                              class="vegIcon"
-                              src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png"
-                              alt="veg-icon"
-                            />
+                          Taco de huevo rojo<span onClick="showImage(59)">
+                            <img class="vegIcon" src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png" alt="veg-icon">
                           </span>
                         </p>
                         <p class="text-muted-small">
@@ -2392,26 +2037,18 @@ padding: 0rem;">
                         </p>
                       </div>
                       <div class="col-3 addCol">
-                        <span class="menuBtn minus"
-                          ><i class="fas fa-minus"></i
-                        ></span>
+                        <span class="menuBtn minus"><i class="fas fa-minus"></i></span>
                         <span class="quantity">0</span>
-                        <span class="menuBtn plus"
-                          ><i class="fas fa-plus"></i
-                        ></span>
+                        <span class="menuBtn plus"><i class="fas fa-plus"></i></span>
                       </div>
                     </div>
-                    <hr class="foodItemHr" />
+                    <hr class="foodItemHr">
                     <div class="row foodItem">
                       <div class="col-9 foodItemName">
                         <p>
                           Taco de queso
-                          <span onclick="showImage(68)">
-                            <img
-                              class="vegIcon"
-                              src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png"
-                              alt="veg-icon"
-                            />
+                          <span onClick="showImage(68)">
+                            <img class="vegIcon" src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png" alt="veg-icon">
                           </span>
                         </p>
                         <p class="text-muted-small">
@@ -2419,270 +2056,180 @@ padding: 0rem;">
                         </p>
                       </div>
                       <div class="col-3 addCol">
-                        <span class="menuBtn minus"
-                          ><i class="fas fa-minus"></i
-                        ></span>
+                        <span class="menuBtn minus"><i class="fas fa-minus"></i></span>
                         <span class="quantity">0</span>
-                        <span class="menuBtn plus"
-                          ><i class="fas fa-plus"></i
-                        ></span>
+                        <span class="menuBtn plus"><i class="fas fa-plus"></i></span>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-                <div class="row checkOutRow">
-              <button
-                type="button"
-                class="btn knowMoreBtn"
-                data-toggle="modal"
-                data-target="#exampleModal"
-              >
-                <i class="fas fa-shopping-cart"></i> Abrir Carrito
-              </button>
-            </div>
-          </div>
-              <div class="col-sm-6 col-12" style="flex: 0 0 100%;max-width: 100%;padding-right: 0px;">
-                <div class="card" style="
-    align-items: normal;">
+               
+          <div class="col-sm-6 col-12" style="padding-right: 0px;
+    padding-left: 0px;">
+                <div class="card">
                   <h2 class="card-title">Burritos</h2>
-                  <div class="card-body" style="padding-right: 0px;padding-left: 5px;">
+                  <div class="card-body" style="padding-left: 8px;padding-right: unset;">
                     <div class="row foodItem">
                       <div class="col-9 foodItemName">
-                        <p>Burrito nopales <span onclick="showImage(16)">
-                            <img
-                              class="vegIcon"
-                              src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png"
-                              alt="veg-icon"
-                            />
+                        <p>Burrito nopales <span onClick="showImage(16)">
+                            <img class="vegIcon" src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png" alt="veg-icon">
                           </span></p>
                         <p class="text-muted-small">
                           <b>$</b> 120
                         </p>
                       </div>
                       <div class="col-3 addCol">
-                        <span class="menuBtn minus"
-                          ><i class="fas fa-minus"></i
-                        ></span>
+                        <span class="menuBtn minus"><i class="fas fa-minus"></i></span>
                         <span class="quantity">0</span>
-                        <span class="menuBtn plus"
-                          ><i class="fas fa-plus"></i
-                        ></span>
+                        <span class="menuBtn plus"><i class="fas fa-plus"></i></span>
                       </div>
                     </div>
-                    <hr class="foodItemHr" />
+                    <hr class="foodItemHr">
 
                     <div class="row foodItem">
                       <div class="col-9 foodItemName">
-                        <p>Burrito chicharron <span onclick="showImage(25)">
-                            <img
-                              class="vegIcon"
-                              src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png"
-                              alt="veg-icon"
-                            />
+                        <p>Burrito chicharron <span onClick="showImage(25)">
+                            <img class="vegIcon" src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png" alt="veg-icon">
                           </span></p>
                         <p class="text-muted-small">
                           <b>$</b> 150
                         </p>
                       </div>
                       <div class="col-3 addCol">
-                        <span class="menuBtn minus"
-                          ><i class="fas fa-minus"></i
-                        ></span>
+                        <span class="menuBtn minus"><i class="fas fa-minus"></i></span>
                         <span class="quantity">0</span>
-                        <span class="menuBtn plus"
-                          ><i class="fas fa-plus"></i
-                        ></span>
+                        <span class="menuBtn plus"><i class="fas fa-plus"></i></span>
                       </div>
                     </div>
-                    <hr class="foodItemHr" />
+                    <hr class="foodItemHr">
 
                     <div class="row foodItem">
                       <div class="col-9 foodItemName">
-                        <p>Burrito frijo <span onclick="showImage(39)">
-                            <img
-                              class="vegIcon"
-                              src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png"
-                              alt="veg-icon"
-                            />
+                        <p>Burrito frijo <span onClick="showImage(39)">
+                            <img class="vegIcon" src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png" alt="veg-icon">
                           </span></p>
                         <p class="text-muted-small">
                           <b>$</b> 140
                         </p>
                       </div>
                       <div class="col-3 addCol">
-                        <span class="menuBtn minus"
-                          ><i class="fas fa-minus"></i
-                        ></span>
+                        <span class="menuBtn minus"><i class="fas fa-minus"></i></span>
                         <span class="quantity">0</span>
-                        <span class="menuBtn plus"
-                          ><i class="fas fa-plus"></i
-                        ></span>
+                        <span class="menuBtn plus"><i class="fas fa-plus"></i></span>
                       </div>
                     </div>
-                    <hr class="foodItemHr" />
+                    <hr class="foodItemHr">
 
                     <div class="row foodItem">
                       <div class="col-9 foodItemName">
-                        <p>Burrito huevo verde <span onclick="showImage(47)">
-                            <img
-                              class="vegIcon"
-                              src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png"
-                              alt="veg-icon"
-                            />
+                        <p>Burrito huevo verde <span onClick="showImage(47)">
+                            <img class="vegIcon" src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png" alt="veg-icon">
                           </span></p>
                         <p class="text-muted-small">
                           <b>$</b> 140
                         </p>
                       </div>
                       <div class="col-3 addCol">
-                        <span class="menuBtn minus"
-                          ><i class="fas fa-minus"></i
-                        ></span>
+                        <span class="menuBtn minus"><i class="fas fa-minus"></i></span>
                         <span class="quantity">0</span>
-                        <span class="menuBtn plus"
-                          ><i class="fas fa-plus"></i
-                        ></span>
+                        <span class="menuBtn plus"><i class="fas fa-plus"></i></span>
                       </div>
                     </div>
-                    <hr class="foodItemHr" />
+                    <hr class="foodItemHr">
 
                     <div class="row foodItem">
                       <div class="col-9 foodItemName">
-                        <p>Burrito papa con huevo <span onclick="showImage(61)">
-                            <img
-                              class="vegIcon"
-                              src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png"
-                              alt="veg-icon"
-                            />
+                        <p>Burrito papa con huevo <span onClick="showImage(61)">
+                            <img class="vegIcon" src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png" alt="veg-icon">
                           </span></p>
                         <p class="text-muted-small">
                           <b>$</b> 150
                         </p>
                       </div>
                       <div class="col-3 addCol">
-                        <span class="menuBtn minus"
-                          ><i class="fas fa-minus"></i
-                        ></span>
+                        <span class="menuBtn minus"><i class="fas fa-minus"></i></span>
                         <span class="quantity">0</span>
-                        <span class="menuBtn plus"
-                          ><i class="fas fa-plus"></i
-                        ></span>
+                        <span class="menuBtn plus"><i class="fas fa-plus"></i></span>
                       </div>
                     </div>
-                    <hr class="foodItemHr" />
+                    <hr class="foodItemHr">
                     <div class="row foodItem">
                       <div class="col-9 foodItemName">
-                        <p>Burrito de chorizo <span onclick="showImage(70)">
-                            <img
-                              class="vegIcon"
-                              src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png"
-                              alt="veg-icon"
-                            />
+                        <p>Burrito de chorizo <span onClick="showImage(70)">
+                            <img class="vegIcon" src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png" alt="veg-icon">
                           </span></p>
                         <p class="text-muted-small">
                           <b>$</b> 150
                         </p>
                       </div>
                       <div class="col-3 addCol">
-                        <span class="menuBtn minus"
-                          ><i class="fas fa-minus"></i
-                        ></span>
+                        <span class="menuBtn minus"><i class="fas fa-minus"></i></span>
                         <span class="quantity">0</span>
-                        <span class="menuBtn plus"
-                          ><i class="fas fa-plus"></i
-                        ></span>
+                        <span class="menuBtn plus"><i class="fas fa-plus"></i></span>
                       </div>
                     </div>
-                    <hr class="foodItemHr" />
+                    <hr class="foodItemHr">
                     <div class="row foodItem">
                       <div class="col-9 foodItemName">
-                        <p>Burrito huevo rojo <span onclick="showImage(85)">
-                            <img
-                              class="vegIcon"
-                              src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png"
-                              alt="veg-icon"
-                            />
+                        <p>Burrito huevo rojo <span onClick="showImage(85)">
+                            <img class="vegIcon" src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png" alt="veg-icon">
                           </span></p>
                         <p class="text-muted-small">
                           <b>$</b> 150
                         </p>
                       </div>
                       <div class="col-3 addCol">
-                        <span class="menuBtn minus"
-                          ><i class="fas fa-minus"></i
-                        ></span>
+                        <span class="menuBtn minus"><i class="fas fa-minus"></i></span>
                         <span class="quantity">0</span>
-                        <span class="menuBtn plus"
-                          ><i class="fas fa-plus"></i
-                        ></span>
+                        <span class="menuBtn plus"><i class="fas fa-plus"></i></span>
                       </div>
                     </div>
-                    <hr class="foodItemHr" />
+                    <hr class="foodItemHr">
                     
                    
                     <div class="row foodItem">
                       <div class="col-9 foodItemName">
-                        <p>Burrito de picadillo<span onclick="showImage(67)">
-                            <img
-                              class="vegIcon"
-                              src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png"
-                              alt="veg-icon"
-                            />
+                        <p>Burrito de picadillo<span onClick="showImage(67)">
+                            <img class="vegIcon" src="https://i.ibb.co/KczGm4Yj/icons8-panel-de-vista-previa-80.png" alt="veg-icon">
                           </span></p>
                         <p class="text-muted-small">
                           <b>$</b> 230
                         </p>
                       </div>
                       <div class="col-3 addCol">
-                        <span class="menuBtn minus"
-                          ><i class="fas fa-minus"></i
-                        ></span>
+                        <span class="menuBtn minus"><i class="fas fa-minus"></i></span>
                         <span class="quantity">0</span>
-                        <span class="menuBtn plus"
-                          ><i class="fas fa-plus"></i
-                        ></span>
+                        <span class="menuBtn plus"><i class="fas fa-plus"></i></span>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
+              </div></div>
+              
+            </div></div>
+
+
+          
 
             <div class="row checkOutRow">
-              <button
-                type="button"
-                class="btn knowMoreBtn"
-                data-toggle="modal"
-                data-target="#exampleModal"
-              >
+              <button type="button" class="btn knowMoreBtn" data-toggle="modal" data-target="#exampleModal">
                 <i class="fas fa-shopping-cart"></i> Ver el carrito
               </button>
             </div>
-          </div>
-        </div>HERE -->
+          </section></div>
+        HERE 
         
-      </div>
-</div>
-   
-  </body>
+      
+      
 
-  <!-- BOOTSTRAP JS -->
-  <script
-    src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-    integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
-    crossorigin="anonymous"
-  ></script>
-  <script
-    src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-    integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-    crossorigin="anonymous"
-  ></script>
-  <script
-    src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
-    integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
-    crossorigin="anonymous"
-  ></script>
+   
+  
+
+  
+  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 
   <!-- JQUERY CDN -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -2788,16 +2335,6 @@ $(document).ready(function () {
       $("html, body").animate(
         {
           scrollTop: $("#momos").offset().top,
-        },
-        800,
-        function () {}
-      );
-    } else if ($(this)[0].className.search("chinese productClicked") > -1) {
-      $("#chinese").show().siblings("div").hide();
-
-      $("html, body").animate(
-        {
-          scrollTop: $("#chinese").offset().top,
         },
         800,
         function () {}
@@ -3107,4 +2644,4 @@ $(window).scroll(function(){
 });
 
     </script>
-</html>
+</body><!-- BOOTSTRAP JS --></html>
