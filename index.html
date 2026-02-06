@@ -1435,7 +1435,7 @@ max-width: 50%;">
                     </div>
                   </div>
                 </div>
-                <div class="modal-footer">
+                <div class="modal-footer" style="display: grid;">
                   <div class="totalAmountDiv"></div>
                   
                   <a class="btn btn-primary" onClick="openWhatsapp()">Ordenar Ya                 </a>
@@ -2453,7 +2453,7 @@ $(document).ready(function () {
     $(".totalAmountDiv").empty();
     $(".totalAmountDiv").append(
       '<span class="totalAmountText">TOTAL PAGAR : </span><br/>' +
-        '<i class="fa-dollar"></i> ' +
+        '<i">$</i> ' +
         totalAmount
     );
   }
@@ -2463,7 +2463,7 @@ function openWhatsapp() {
   // console.log($('#address'));
 
   if ($("#address")[0].value === "") {
-    alert("Please Enter Address");
+    alert("Introducir direccion");
     return;
   } else {
     let total = 0;
