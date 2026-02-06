@@ -569,7 +569,7 @@ a:hover {
   display: inline-block;
   width: 100%;
   padding: 2rem 1rem 5rem 1rem;
-  background-color: #ffe6cc;
+  background-color: #ffffff;
   position: relative;
   border: none;
   padding-right: 0px;
@@ -692,7 +692,7 @@ a:hover {
 }
 
 .checkOutRow .knowMoreBtn {
-  background-color: #ffe6cc;
+  background-color: #ffffff;
   font-size: 1.3rem;
 }
 
@@ -767,7 +767,7 @@ a:hover {
 }
 
 .modal-content {
-  background-color: #ffe6cc;
+  background-color: #fffff;
 }
 
 textarea#address,
@@ -1414,11 +1414,7 @@ max-width: 50%;">
 </span>
                         Enviar Orden por via Whatsapp
                       </div>
-                      <div class="col paymentInfo">
-                        <span class="checkIcon"><i class="fa-brands fa-google-pay"></i>
-                        </span>
-                        Pagar con trasferencia.
-                      </div>
+                     
                     </div>
 
                     <hr class="cartHr">
@@ -2392,9 +2388,9 @@ $(document).ready(function () {
     let foodPos;
     let node;
     if (isVeg) {
-      node = '<img class="vegIcon" src="https://i.ibb.co/JRkdw345/veg.webp" alt="" />';
+      node = '<img  src="" alt="" />';
     } else {
-      node = '<img class="nonVegIcon" src="https://i.ibb.co/gLfx2pfh/non-veg.webp" alt="" />';
+      node = '<img src="" alt="" />';
     }
     for (var i = 0; i < food.length; i++) {
       if (food[i][0] === foodNameClicked) {
@@ -2430,9 +2426,8 @@ $(document).ready(function () {
           food[i][0] +
           '</p> <p class="text-muted-small">' +
           food[i][3] +
-          '<p></div><i class="fa-dollar"> ' +
-          food[i][2] +
-          '</i></p>  </div>  <div class="col-2" style="padding-right: 0px;"> <p class="text-muted-small" > <i class="fa-dollar"></i> ' +
+          '<p></div><i> ' +
+          '</i></p>  </div>  <div class="col-2" style="padding-right: 0px;"> <p class="text-muted-small" > <i>$</i> ' +
           food[i][1] * food[i][2] +
           '</p>  <span class="cartQuantity"> ' +
           " <span> Cant : </span>" +
@@ -2445,7 +2440,7 @@ $(document).ready(function () {
 
       $(".cartContentDiv").empty();
       $(".cartContentDiv").append(
-        '<h1 class="text-muted">Your Cart is Empty</h1>'
+        '<h1 class="text-muted">Carrito vacio</h1>'
       );
     }
 
