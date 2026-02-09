@@ -2642,7 +2642,19 @@ const rutafinal=rutita[pasado];
 $(window).scroll(function(){
   $('.body').css('left',-$(window).scrollLeft());
 });
-
-
     </script>
-</body><!-- BOOTSTRAP JS --></html>
+
+<input type="button" value="Send data to Android" onClick="sendData()" />
+
+<script type="text/javascript">
+    function sendData() {
+        var dataToSend = "Hello from JavaScript!";
+        // Call the Android method using the 'Android' interface name
+        if (typeof Android !== 'undefined' && Android !== null) {
+            Android.sendDataToAndroid(dataToSend);
+        } else {
+            alert("Android interface not found");
+        }
+    }
+</script>
+</body></html>
