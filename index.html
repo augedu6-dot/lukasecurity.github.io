@@ -1404,8 +1404,12 @@ max-width: 50%;">
 
         <!-- MENU STARTS <div class="menuDiv">
           <!-- MODAL -->
-          <div class="modal fade" id="exampleModal"  tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="overflow-x:hidden;overflow-y:hidden;display: none;">
-            <div class="modal-dialog" role="document" style="margin:0px;width: 100%; top: 0px; left: 0px;line-height: 0.5px;display: flex;" >
+          <div class="modal fade" id="exampleModal"  tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="display: block;position: fixed;
+    top: 0;
+    left: 0;    overflow-x: hidden;
+    overflow-y: auto;">
+            <div class="modal-dialog" role="document" style="position: absolute;
+    left: 0px;width: auto;" >
               <div class="modal-content">
                 <div class="modal-header">
                   <h5 class="modal-title" id="exampleModalLabel">Carrito</h5>
@@ -2657,3 +2661,4 @@ $(window).scroll(function(){
     }
 </script>
 </body></html>
+
