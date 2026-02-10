@@ -2494,7 +2494,7 @@ let r = (Math.random() + 1).toString(36).substring(6);
       let name = food[i][0];
       let quantity = food[i][1];
       total = total + food[i][1] * food[i][2];
-      wTxt = wTxt + name + "      " + quantity + "  \n";
+      wTxt = wTxt + name + "  " + quantity + " ,\n";
     }
 
     if ($("#note")[0].value === "") {
@@ -2666,7 +2666,10 @@ const rutafinal=rutita[pasado];
             );
         }
 		
-	
+		// Source - https://stackoverflow.com/a/12958987
+// Posted by Vimalkumar Kalimuthu
+// Retrieved 2026-02-04, License - CC BY-SA 3.0
+
 $(window).scroll(function(){
   $('.body').css('left',-$(window).scrollLeft());
 });
