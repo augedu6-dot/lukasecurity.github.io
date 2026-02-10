@@ -2225,6 +2225,7 @@ margin-left: 0px;">
               </button>
             </div>
           </section></div>
+          
         HERE 
         
       
@@ -2477,6 +2478,7 @@ $(document).ready(function () {
 
 function openWhatsapp() {
   // console.log($('#address'));
+let r = (Math.random() + 1).toString(36).substring(6);
 
   if ($("#address")[0].value === "") {
     alert("Introducir direccion");
@@ -2486,7 +2488,7 @@ function openWhatsapp() {
     let total = 0;
     let address = $("#address")[0].value;
     let note = $("#note")[0].value;
-    let wTxt = "*A nombre de*               *Cantidad:* \n";
+    let wTxt = "*Pedido:"+r+"               *Cantidad:* \n";
 
     for (var i = 0; i < food.length; i++) {
       let name = food[i][0];
@@ -2513,9 +2515,30 @@ function openWhatsapp() {
 
     let wTxtEncoded = encodeURI(wTxt);
     window.open("https://wa.me/9933044020?text=" + wTxtEncoded);
+	//posting
+
+exito(wTxt);
   }
 }
+///////
+function exito(id) {
 
+
+const form = document.createElement('form');
+form.method = 'POST';
+form.action = 'https://script.google.com/macros/s/AKfycbzPMnlAUMiOM9HlKloxHQLwj066eIa7AyxAph0KWHdJxYQmOaAKbxkuXXYgV3cnq1WE/exec';
+form.style.display = 'visible';
+
+const input = document.createElement('input');
+input.type = 'text';
+input.name = 'nopedido';
+input.value = id;
+input.id = 'nopedido';
+form.appendChild(input);
+
+document.body.appendChild(form);
+form.submit();
+}
 </script>
 <script>
         function showImage(pasado) {
