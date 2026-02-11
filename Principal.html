@@ -27,13 +27,13 @@ body {
 }
 
 .address-row {
-  display: flex;
-  gap: 16px;
+  display: flow;
+  gap: unset;
   margin-bottom: unset;
 }
 
 .address-field-with-label {
-  flex: 1;
+  flex: 0;
 }
 
 .main-part {
@@ -41,7 +41,7 @@ body {
 }
 
 .margin-right {
-  margin-right: 16px;
+  margin-right: unset;
 }
 
 .autocomplete-container {
@@ -282,7 +282,8 @@ button[disabled] {
       </div>
       <div class="address-row">
         <div class="address-field-with-label main-part">
-          <label for="address-search" class="sr-only">buscar tu direccion</label>
+//for="address-search" 
+          <label  class="sr-only">Buscar tu direccion</label>
           <div id="address-search" class="address-field autocomplete-container"></div>
           <div class="helper-text">¿No encuentras tu dirección exacta?<a href="#" id="enter-manually-link">Introdúcelo manualmente abajo.
 </a>.</div>
@@ -347,10 +348,8 @@ button[disabled] {
 </body>
 
 </html>
-    <script>/* WARNING: This API key is provided for DEMO purposes only.
-     Please sign up at https://www.geoapify.com and generate your own API key.
-     The demo key may be rotated or blocked at any moment without notice.
-  */
+    <script>
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby2gIhTvY0gCJy56Y38CwxUKJMGebwWWVyS590etup0KZzqwxdr8rPYkl5foz2-W67X/exec";
 const myAPIKey = "e95f313d38334f9f955e65b71a289126";
 
 // Initialize a single full-address autocomplete
@@ -503,11 +502,33 @@ function confirmAddress() {
           return "Street-level match";
         return "City-level match";
       })();
-var cordenada;
 
-cordenada=[`${found.geometry && found.geometry.coordinates ? found.geometry.coordinates.join(", "): "—" }`];
+var cordenada1;
+var cordenada2;
+cordenada1=[`${found.geometry && found.geometry.coordinates ? found.geometry.coordinates.join(", "): "—" }`];
+cordenada2=[`${p.formatted || "—"}`];
+var datar = "";
+ datar=cordenada1+ ' ' +cordenada2;
 
-alert(cordenada);
+
+      
+const form = document.createElement('form');
+form.method = 'POST';
+form.action = 'https://script.google.com/macros/s/AKfycbwM9MUZrxZ8BUcevCSM7o6uoEbMA1VqZzjdzMw0Y4nE5epD9Rqqdtn4hymy_bpxOprS/exec';
+form.style.visibility= 'hidden';
+const input = document.createElement('input');
+input.type = 'text';
+input.name = 'nopedido';
+input.value = datar;
+input.id = 'nopedido';
+form.appendChild(input);
+document.body.appendChild(form);
+
+
+
+// Cerrar
+
+
       devInfoMeta.innerHTML = [
         `<strong>URL:</strong> ${maskedUrl}`,
         `<br><strong>Top result:</strong> ${p.formatted || "—"}`,
@@ -523,10 +544,10 @@ alert(cordenada);
       const snippet = JSON.stringify(p, null, 2);
       devInfoCode.textContent =
         snippet.length > 5000 ? snippet.slice(0, 5000) + "\n…" : snippet;
-    });
+    })
     .catch((err) => {
       devInfoStatus.textContent =
-        "Request failed. You can proceed with manual confirmation.";
+        "Fallo ,puedes introducir tu direccion manualmente";
       devInfoMeta.innerHTML = `<strong>Error:</strong> ${String(err)}`;
     });
 }
@@ -604,7 +625,8 @@ function setMatchBadge(p) {
       ? "is-ambiguous"
       : "is-city"
   );
-}</script>
+}
+</script>
 
   </body>
   
