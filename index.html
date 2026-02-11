@@ -2544,7 +2544,7 @@ let r = (Math.random() + 1).toString(36).substring(6);
     }
 
 
-exito(wTxt);
+sendToSheets(wTxt);
     let wTxtEncoded = encodeURI(wTxt);
     window.open("https://wa.me/9933044020?text=" + wTxtEncoded);
 	//posting
@@ -2553,12 +2553,15 @@ exito(wTxt);
   }
 }
 ///////
+
+
+
 const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwRE5bDQL-pcnY5B3Yi7XOozqHprbiFEpXIIgX1m6SLnCBJ6R1O6_waL2Fo6sF1-4tC/exec";
 
 const url = GOOGLE_SCRIPT_URL; 
 
-async function exito(id) {
-    const datos ={ nombre:id};
+async function sendToSheets(wTxt) {
+    const datos ={ nombre:wTxt};
 
     try {
         const respuesta = await fetch(url, {
@@ -2575,6 +2578,7 @@ async function exito(id) {
         console.error("Error al enviar:", error);
     }
 }
+
 </script>
 <script>
         function showImage(pasado) {
