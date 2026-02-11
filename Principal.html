@@ -255,6 +255,7 @@ button[disabled] {
 
  </style>
 
+
   </head>
     
   <body>
@@ -263,7 +264,6 @@ button[disabled] {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Busca direccion ,verifica y confirma</title>
-
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@geoapify/geocoder-autocomplete@3.0.1/dist/index.min.js"></script>
   <link id="geocoder-theme" rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@geoapify/geocoder-autocomplete@3.0.1/styles/minimal.css">
 </head>
@@ -283,7 +283,7 @@ button[disabled] {
       <div class="address-row">
         <div class="address-field-with-label main-part">
 //for="address-search" 
-          <label  class="sr-only">Buscar tu direccion</label>
+          <label  for="address-search" class="sr-only">Buscar tu direccion</label>
           <div id="address-search" class="address-field autocomplete-container"></div>
           <div class="helper-text">¿No encuentras tu dirección exacta?<a href="#" id="enter-manually-link">Introdúcelo manualmente abajo.
 </a>.</div>
@@ -349,7 +349,7 @@ button[disabled] {
 
 </html>
     <script>
-const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwM9MUZrxZ8BUcevCSM7o6uoEbMA1VqZzjdzMw0Y4nE5epD9Rqqdtn4hymy_bpxOprS/exec";
+
 const myAPIKey = "e95f313d38334f9f955e65b71a289126";
 
 // Initialize a single full-address autocomplete
@@ -613,17 +613,30 @@ function setMatchBadge(p) {
 }
 
 
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwRE5bDQL-pcnY5B3Yi7XOozqHprbiFEpXIIgX1m6SLnCBJ6R1O6_waL2Fo6sF1-4tC/exec";
 
-function sendToSheets(datar) {
-  const data = new URLSearchParams();
-  data.append("nopedido", datar);
+const url = GOOGLE_SCRIPT_URL; 
 
+async function sendToSheets(datar) {
+    const datos ={ nombre:datar};
 
-  fetch(GOOGLE_SCRIPT_URL, {
-    method: "POST",
-    body: data
-  });
+    try {
+        const respuesta = await fetch(url, {
+            method: 'POST', 
+            mode: 'no-cors', // Evita el bloqueo de CORS en el envío
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(datos)
+        });
+
+        console.log("Datos enviados correctamente");
+    } catch (error) {
+        console.error("Error al enviar:", error);
+    }
 }
+
+
 </script>
 
   </body>
