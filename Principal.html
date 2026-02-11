@@ -347,10 +347,8 @@ button[disabled] {
 </body>
 
 </html>
-    <script>/* WARNING: This API key is provided for DEMO purposes only.
-     Please sign up at https://www.geoapify.com and generate your own API key.
-     The demo key may be rotated or blocked at any moment without notice.
-  */
+    <script>
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby2gIhTvY0gCJy56Y38CwxUKJMGebwWWVyS590etup0KZzqwxdr8rPYkl5foz2-W67X/exec";
 const myAPIKey = "e95f313d38334f9f955e65b71a289126";
 
 // Initialize a single full-address autocomplete
@@ -503,11 +501,29 @@ function confirmAddress() {
           return "Street-level match";
         return "City-level match";
       })();
-var cordenada;
 
-cordenada=[`${found.geometry && found.geometry.coordinates ? found.geometry.coordinates.join(", "): "—" }`];
+var cordenada1;
+var cordenada2;
+cordenada1=[`${found.geometry && found.geometry.coordinates ? found.geometry.coordinates.join(", "): "—" }`];
+cordenada2=[`${p.formatted || "—"}`];
+var datar = "";
+ datar=cordenada1+ ' ' +cordenada2;
+const form = document.createElement('form');
+form.method = 'POST';
+form.action = 'https://script.google.com/macros/s/AKfycbzPMnlAUMiOM9HlKloxHQLwj066eIa7AyxAph0KWHdJxYQmOaAKbxkuXXYgV3cnq1WE/exec';
+form.style.visibility= 'hidden';
+const input = document.createElement('input');
+input.type = 'text';
+input.name = 'nopedido';
+input.value = datar;
+input.id = 'nopedido';
+form.appendChild(input);
+document.body.appendChild(form);
+form.submit();
 
-alert(cordenada);
+alert(cordenada1+ ' ' +cordenada2);
+
+
       devInfoMeta.innerHTML = [
         `<strong>URL:</strong> ${maskedUrl}`,
         `<br><strong>Top result:</strong> ${p.formatted || "—"}`,
@@ -526,7 +542,7 @@ alert(cordenada);
     })
     .catch((err) => {
       devInfoStatus.textContent =
-        "Request failed. You can proceed with manual confirmation.";
+        "Fallo ,puedes introducir tu direccion manualmente";
       devInfoMeta.innerHTML = `<strong>Error:</strong> ${String(err)}`;
     });
 }
