@@ -5,6 +5,16 @@
     <meta charset="UTF-8">
     <title>Campo de busqueda — con este campo te ayuda a encontrar tu direccion</title>
     <style>
+h1 {
+    display: block;
+    font-size: 1.3em;
+    margin-block-start: 0.3em;
+    margin-block-end: 0.3emem;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    font-weight: bold;
+    unicode-bidi: isolate;
+}
 .address-collection-container {
   max-width: 900px;
    margin: unset;
@@ -256,18 +266,18 @@ button[disabled] {
   <div class="address-collection-container" style="padding: 0px;">
     <div class="sample-header">
       <h1>Agrega tu direccion, verifica, Confirma</h1>
-      <p class="helper-text">Busca tu dirección para completar el formulario. Revísala y corrígela si es necesario, y luego confirma la dirección. La función de autocompletado te ayuda a verificar los datos finales.</p>
+      <p class="helper-text">Escribe tu calle y numero te mostrara opciones. Revísala y corrígela si es necesario, y luego confirma la dirección.</p>
     </div>
     <div class="section-block" aria-labelledby="sec1-title">
       <div class="section-title">
         <span class="section-num" aria-hidden="true">1</span>
-        <span id="sec1-title" class="section-heading">Buscar direccion</span>
+        <span id="sec1-title" class="section-heading">Buscar direcciones</span>
       </div>
       <div class="address-row">
-        <div class="address-field-with-label main-part">
+        <div class="address-field-with-label main-part" hidden>
           <label for="address-search" class="sr-only">buscar tu direccion</label>
           <div id="address-search" class="address-field autocomplete-container"></div>
-          <div class="helper-text">Usa la búsqueda para empezar. Nosotros completaremos la información; tú la revisas y la completas. ¿No encuentras tu dirección exacta?<a href="#" id="enter-manually-link">Introdúcelo manualmente
+          <div class="helper-text">Usa este campo de busqueda para empezar. Te ayudaremos a completar la información; tú la revisas y la confirmas. ¿No encuentras tu dirección exacta?<a href="#" id="enter-manually-link">Introdúcela manualmente
 </a>.</div>
         </div>
       </div>
@@ -306,24 +316,24 @@ button[disabled] {
           <input id="country" class="geoapify-autocomplete-input" />
         </div>
       </div>
-
-      <div id="message" class="message-container" aria-live="polite"></div>
-      <div id="match-badge" class="match-badge" hidden aria-live="polite"></div>
-    </div>
-
-    <div class="section-block" aria-labelledby="sec3-title">
+<div class="section-block" aria-labelledby="sec3-title">
       <div class="section-title">
         <span class="section-num" aria-hidden="true">3</span>
         <span id="sec3-title" class="section-heading">Confirmar</span>
       </div>
       <div class="button-container"><button id="submit-btn" onclick="confirmAddress()" disabled>Confirma direccion</button></div>
-      <div class="button-hint">El autocompletado sugiere. Tú confirmas.</div>
+      <div class="button-hint"></div>
       <div id="dev-panel" class="dev-info-panel" hidden>
         <div class="dev-info-title">Developer info (internal)</div>
         <div class="dev-kv" id="dev-info-status">Presiona “Confirmar direccion” para checar.</div>
         <div class="dev-kv" id="dev-info-meta"></div>
         <pre class="dev-code" id="dev-info-code"></pre>
       </div>
+      <div id="message" class="message-container" aria-live="polite"></div>
+      <div id="match-badge" class="match-badge" hidden aria-live="polite"></div>
+    </div>
+
+    
     </div>
   </div>
 </body>
