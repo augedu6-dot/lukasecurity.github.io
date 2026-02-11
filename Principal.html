@@ -544,7 +544,7 @@ document.body.appendChild(form);
       const snippet = JSON.stringify(p, null, 2);
       devInfoCode.textContent =
         snippet.length > 5000 ? snippet.slice(0, 5000) + "\n…" : snippet;
-    })
+    });
     .catch((err) => {
       devInfoStatus.textContent =
         "Fallo ,puedes introducir tu direccion manualmente";
