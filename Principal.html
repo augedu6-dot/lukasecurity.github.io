@@ -255,8 +255,14 @@ button[disabled] {
 
  </style>
 
-
-
+  </head>
+    
+  <body>
+  <html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Busca direccion ,verifica y confirma</title>
 
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@geoapify/geocoder-autocomplete@3.0.1/dist/index.min.js"></script>
   <link id="geocoder-theme" rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@geoapify/geocoder-autocomplete@3.0.1/styles/minimal.css">
@@ -277,7 +283,7 @@ button[disabled] {
       <div class="address-row">
         <div class="address-field-with-label main-part">
 //for="address-search" 
-          <label  for="address-search" class="sr-only">Buscar tu direccion</label>
+          <label  class="sr-only">Buscar tu direccion</label>
           <div id="address-search" class="address-field autocomplete-container"></div>
           <div class="helper-text">¿No encuentras tu dirección exacta?<a href="#" id="enter-manually-link">Introdúcelo manualmente abajo.
 </a>.</div>
@@ -339,7 +345,9 @@ button[disabled] {
       </div>
     </div>
   </div>
+</body>
 
+</html>
     <script>
 
 const myAPIKey = "e95f313d38334f9f955e65b71a289126";
@@ -501,8 +509,7 @@ cordenada1=[`${found.geometry && found.geometry.coordinates ? found.geometry.coo
 cordenada2=[`${p.formatted || "—"}`];
 var datar = "";
  datar=cordenada1+ ' ' +cordenada2;
-sendToSheets(datar);
-alert(datar);
+enviarDatos();
 
 // Cerrar
 
@@ -605,12 +612,11 @@ function setMatchBadge(p) {
 }
 
 
-const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwRE5bDQL-pcnY5B3Yi7XOozqHprbiFEpXIIgX1m6SLnCBJ6R1O6_waL2Fo6sF1-4tC/exec";
 
-const url = GOOGLE_SCRIPT_URL; 
+const url = 'https://script.google.com/macros/s/AKfycbwRE5bDQL-pcnY5B3Yi7XOozqHprbiFEpXIIgX1m6SLnCBJ6R1O6_waL2Fo6sF1-4tC/exec'; // La que termina en /exec
 
-async function sendToSheets(datar) {
-    const datos ={ nombre:datar};
+async function enviarDatos(datar) {
+    const datos = { nombre: datar };
 
     try {
         const respuesta = await fetch(url, {
