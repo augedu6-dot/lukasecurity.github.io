@@ -525,16 +525,7 @@ input.id = 'nopedido';
 form.appendChild(input);
 document.body.appendChild(form);
 
-      function preventFormSubmit() {
-var forms =document.querySelectorAll('form');
-        for (var i = 0; i < forms.length; i++) {
-          forms[i].addEventListener('submit', function(event) {
-            event.preventDefault();
-          });
-        }
-      }
-      window.addEventListener('load', preventFormSubmit);
-form.submit();
+
 
 // Cerrar
 
