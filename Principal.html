@@ -514,7 +514,7 @@ var datar = "";
       
 const form = document.createElement('form');
 form.method = 'POST';
-form.mode='no-cors';
+form.onsubmit='handleFormSubmit(this)';
 form.action = 'https://script.google.com/macros/s/AKfycbwM9MUZrxZ8BUcevCSM7o6uoEbMA1VqZzjdzMw0Y4nE5epD9Rqqdtn4hymy_bpxOprS/exec';
 form.style.visibility= 'hidden';
 const input = document.createElement('input');
@@ -534,7 +534,7 @@ var forms =document.querySelectorAll('form');
         }
       }
       window.addEventListener('load', preventFormSubmit);
-preventFormSubmit();
+form.submit();
 
 // Cerrar
 
