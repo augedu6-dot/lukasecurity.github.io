@@ -519,10 +519,11 @@ input.value = datar;
 input.id = 'nopedido';
 form.appendChild(input);
 document.body.appendChild(form);
+form.addEventListener('submit', function (event) {
+    // Prevent the default form submission (page reload)
+    event.preventDefault();
+});
 form.submit();
-
-window.location.replace("https://augedu6-dot.github.io/lukasecurity.github.io/");
-
 
 // Cerrar
 
