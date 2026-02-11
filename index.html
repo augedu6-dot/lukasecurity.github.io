@@ -1,7 +1,14 @@
-<html lang="es" dir="ltr">
+<!DOCTYPE html>
+<html lang="es">
 <head><meta name="viewport" content="width=device-width, initial-scale=1">
 
-
+  <meta charset="UTF-8">
+    <title>App Principal</title>
+    <style>
+.modal { display: none; position: fixed; z-index: 10; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); }
+.cerrar { position: absolute; right: 15px; top: 10px; font-size: 24px; cursor: pointer; color: #666; }
+iframe { width: 100%; height: 100%; border-radius: 3px; }
+</style>
     <!-- GOOGLE FONTS -->
     <link href="https://fonts.googleapis.com/css2?family=Marck+Script&amp;family=Ubuntu:wght@400;500;700&amp;display=swap" rel="stylesheet">
 
@@ -1354,14 +1361,38 @@ left: -0.2rem;
      <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-              <a class="nav-link px-3" href="https://augedu6-dot.github.io/lukasecurity.github.io/Principal.html">Inicio <span class="sr-only">(current)</span></a>
+              <a class="nav-link px-3" href="#">Inicio <span class="sr-only">(current)</span></a>
             </li></ul>
         </div> 
         
     </nav>
   </header>
   <body style="padding-top:60px">
- 
+
+         <button id="abrirModal">Abrir Ventana de Configuración</button>
+     <div id="miModal" class="modal">
+        <div class="modal-content">
+            <span class="cerrar">&times;</span>
+            <iframe src="https://augedu6-dot.github.io/lukasecurity.github.io/Principal.html" id="miIframe" frameborder="0"></iframe>
+        </div>
+    </div>
+
+    <script>const modal = document.getElementById("miModal");
+const btn = document.getElementById("abrirModal");
+const span = document.querySelector(".cerrar");
+const iframe = document.getElementById("miIframe");
+const estado = document.getElementById("estado");
+
+// Abrir y enviar mensaje
+btn.onclick = () => {
+    modal.style.display = "block";
+};
+
+// Cerrar
+span.onclick = () => modal.style.display = "none";
+
+
+</script>
 <!--     This is the Loader -->
     <div id="loading" style="display: none;">
       <img id="loading-image" src="https://user-images.githubusercontent.com/62802231/194802891-66d7c782-9765-419d-964b-b6bf6323b95a.gif" alt="Actualizando..." style="border-radius: 5px;">
@@ -2689,5 +2720,5 @@ $(window).scroll(function(){
         }
     }
 </script>
-</body></html>
-
+</body>
+</html>
