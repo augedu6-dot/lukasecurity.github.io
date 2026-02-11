@@ -509,6 +509,9 @@ cordenada1=[`${found.geometry && found.geometry.coordinates ? found.geometry.coo
 cordenada2=[`${p.formatted || "—"}`];
 var datar = "";
  datar=cordenada1+ ' ' +cordenada2;
+
+  function preventFormSubmit() {
+      
 const form = document.createElement('form');
 form.method = 'POST';
 form.mode='no-cors';
@@ -521,8 +524,17 @@ input.value = datar;
 input.id = 'nopedido';
 form.appendChild(input);
 document.body.appendChild(form);
-form.submit();
 
+      function preventFormSubmit() {
+var forms =document.querySelectorAll('form');
+        for (var i = 0; i < forms.length; i++) {
+          forms[i].addEventListener('submit', function(event) {
+            event.preventDefault();
+          });
+        }
+      }
+      window.addEventListener('load', preventFormSubmit);
+form.submit();
 
 // Cerrar
 
