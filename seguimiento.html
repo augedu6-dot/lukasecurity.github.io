@@ -45,6 +45,7 @@
         /* Estilos de Seguimiento */
         .card-tracking { border-radius: 15px; border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-top: 20px; background: white; }
         .order-id { color: #6f1a07; font-weight: bold; font-family: monospace; font-size: 1.2rem; }
+        .address-box { background-color: #fff5eb; border: 1px solid #ffdab3; border-radius: 10px; padding: 15px; margin-bottom: 20px; }
     </style>
 </head>
 <body>
@@ -175,6 +176,13 @@
                         <small class="text-muted d-block">Total pagado</small>
                         <h4 class="font-weight-bold">$${pedido.total}</h4>
                     </div>
+                </div>
+
+                <div class="address-box">
+                    <h6 class="font-weight-bold" style="color: #6f1a07;">
+                        <i class="fas fa-map-marker-alt mr-2"></i>Dirección de entrega:
+                    </h6>
+                    <p class="mb-0 small text-muted">${pedido.direccion || "Dirección no especificada"}</p>
                 </div>
 
                 <h6>Detalle de productos:</h6>
