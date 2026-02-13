@@ -148,7 +148,7 @@
 
 <script>
     let carrito = JSON.parse(localStorage.getItem("carrito_obj")) || {};
-    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxitLq0Q0KkyK4iPB6a7Ctzj86fY2xCIi2zgmTQ9LHjKn5zM_wHkVI3Jq3Lnqjphgc0/exec";
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxeE8NaqRpHD1eztqcSCWT7aCKzrhZSjBoGyZbdrhif3uAMRt1mfJ9E9stKIv7Bfl2p/exec";
 
     function cargarDireccion() {
         const d = JSON.parse(localStorage.getItem('domicilio'));
@@ -220,12 +220,12 @@
 
         // Enviar a Google Sheets (idéntico a direccion.html)
         try {
-const datosx = { nombre:infoCompleta,pedido:idPedido};
+const datosx = { nombre: infoCompleta, pedido: idPedido };
             await fetch(GOOGLE_SCRIPT_URL, {
                 method: 'POST',
                 mode: 'no-cors',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ datosx})
+              body: JSON.stringify(datosx)
             });
         } catch (e) { console.error("Error envío:", e); }
 
@@ -261,6 +261,7 @@ const datosx = { nombre:infoCompleta,pedido:idPedido};
 </script>
 </body>
 </html>
+
 
 
 
