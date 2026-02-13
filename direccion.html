@@ -193,8 +193,8 @@
 
     const direccionEjemplo = {
         calle: " ",
-        numero: "0",
-        cp: "86090",
+        numero: "",
+        cp: "86000",
         ciudad: "Centro",
         pais: "México"
     };
@@ -245,10 +245,11 @@
         localStorage.setItem('domicilio', JSON.stringify(nuevaDireccion));
         
         // Preparar cadena de texto con Email + Dirección para enviar a Sheets
-        const emailUsuario = localStorage.getItem('usuario') || "Sin Email";
+        const emailUsuario = localStorage.getItem('usuarioLogueado') || "Sin Email";
         const infoCompleta = `Usuario: ${emailUsuario} | Dirección: ${nuevaDireccion.calle} ${nuevaDireccion.numero}, ${nuevaDireccion.ciudad}, CP: ${nuevaDireccion.cp}`;
-        
-        // Enviar a Google Sheets
+        const emailUsuario = localStorage.getItem('usuarioLogueado') || "Sin Email";
+
+ // Enviar a Google Sheets
         sendToSheets(infoCompleta);
         
         // Mostrar mensaje de éxito
