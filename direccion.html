@@ -245,7 +245,7 @@
         localStorage.setItem('domicilio', JSON.stringify(nuevaDireccion));
         
         // Preparar cadena de texto con Email + Dirección para enviar a Sheets
-        const emailUsuario = localStorage.getItem(usuario) || "Sin Email";
+        const emailUsuario = localStorage.getItem('usuario') || "Sin Email";
         const infoCompleta = `Usuario: ${emailUsuario} | Dirección: ${nuevaDireccion.calle} ${nuevaDireccion.numero}, ${nuevaDireccion.ciudad}, CP: ${nuevaDireccion.cp}`;
         
         // Enviar a Google Sheets
