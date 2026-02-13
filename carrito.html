@@ -148,7 +148,7 @@
 
 <script>
     let carrito = JSON.parse(localStorage.getItem("carrito_obj")) || {};
-    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzgN4KiuPOg7ZgHknq8KCl9Wvl4vwvay1vunbXShuWXNcnZ8KpQ1DDMtvsZu4GlZEOM/exec";
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwo-wSafZbFF1aBaokN6scJgtBPhtTT-XHOuT62IkVLKi2ZFrU7NnY4R6R6E2ys4HDb/exec";
 
     function cargarDireccion() {
         const d = JSON.parse(localStorage.getItem('domicilio'));
@@ -217,7 +217,7 @@
 
         // VARIABLE SOLICITADA: Junta toda la información del pedido
         const infoCompleta = `Pedido: #${idPedido} | Usuario: ${usuarioEmail} | Entrega: ${direccion} |Productos: [${productosTexto}] |  Total: $${totalPagar}`;
-const=infoPedido= `Pedido: #${idPedido} `;
+const infoPedido = `#${idPedido}`;
         // Enviar a Google Sheets (idéntico a direccion.html)
         try {
             await fetch(GOOGLE_SCRIPT_URL, {
@@ -260,4 +260,3 @@ const=infoPedido= `Pedido: #${idPedido} `;
 </script>
 </body>
 </html>
-
