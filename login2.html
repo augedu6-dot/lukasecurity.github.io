@@ -7,10 +7,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Marck+Script&family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet">
     
     <style>
-        /* --- ESTILO VISUAL SOLICITADO --- */
         body { 
             font-family: "Ubuntu", sans-serif; 
-            background-color: #f3e6d8; /* Color Crema/Arena */
+            background-color: #f3e6d8; 
             display: flex; 
             align-items: center; 
             justify-content: center; 
@@ -21,82 +20,83 @@
         .login-card { 
             background: white; 
             padding: 40px 30px; 
-            border-radius: 15px; 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
-            width: 95%; 
+            border-radius: 20px; 
+            box-shadow: 0 10px 25px rgba(111, 26, 7, 0.1); 
+            width: 90%; 
             max-width: 400px; 
             text-align: center; 
         }
 
         .login-card h2 { 
             font-family: 'Marck Script', cursive; 
-            color: #6f1a07; /* Color Marrón Rojizo */
-            margin-bottom: 25px; 
-            font-size: 3.5rem; 
-        }
-
-        .form-control { 
-            width: 100%;
-            border-radius: 20px; 
-            margin-bottom: 15px; 
-            border: 1px solid #ddd;
-            padding: 15px 15px; /* Ajustado para balance visual */
-            height: auto;
-            box-sizing: border-box;
-            outline: none;
-            transition: all 0.2s;
-        }
-
-        .form-control:focus {
-            border-color: #f44336; /* Rojo DeMasita */
-            box-shadow: 0 0 0 0.2rem rgba(244, 67, 54, 0.25);
-        }
-
-        .btn-entrar { 
-            background-color: #f44336; /* Rojo Principal */
-            color: white; 
-            border-radius: 20px; 
-            width: 100%; 
-            border: none; 
-            padding: 12px; 
-            font-weight: bold; 
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: 0.3s ease;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-
-        .btn-entrar:hover { 
-            background-color: #d32f2f; 
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            color: white;
-        }
-
-        .toggle-link { 
             color: #6f1a07; 
-            cursor: pointer; 
-            text-decoration: underline; 
-            font-size: 0.9rem;
-            display: block;
-            margin-top: 20px;
-            background: none;
-            border: none;
-            width: 100%;
+            font-size: 2.5rem; 
+            margin-bottom: 25px; 
         }
 
-        /* Mensajes de feedback */
+        .input-group { margin-bottom: 20px; text-align: left; }
+        
+        label { 
+            display: block; 
+            margin-bottom: 8px; 
+            font-weight: 500; 
+            color: #555; 
+            font-size: 0.9rem;
+        }
+
+        input { 
+            width: 100%; 
+            padding: 12px 15px; 
+            border: 2px solid #eee; 
+            border-radius: 10px; 
+            font-size: 1rem; 
+            transition: all 0.3s;
+            box-sizing: border-box;
+        }
+
+        input:focus { 
+            border-color: #d35400; 
+            outline: none; 
+            box-shadow: 0 0 8px rgba(211, 84, 0, 0.1);
+        }
+
+        .btn-accion { 
+            width: 100%; 
+            padding: 14px; 
+            background-color: #6f1a07; 
+            color: white; 
+            border: none; 
+            border-radius: 10px; 
+            font-weight: 700; 
+            font-size: 1rem; 
+            cursor: pointer; 
+            transition: background 0.3s;
+        }
+
+        .btn-accion:hover { background-color: #d35400; }
+
+        .btn-toggle { 
+            background: none; 
+            border: none; 
+            color: #d35400; 
+            font-weight: 700; 
+            cursor: pointer; 
+            text-decoration: underline;
+            padding: 0;
+        }
+
         #mensaje {
-            margin-top: 15px;
-            padding: 10px;
-            border-radius: 10px;
+            margin-top: 20px;
+            padding: 12px;
+            border-radius: 8px;
             display: none;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             font-weight: 500;
         }
+
         .success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
         .error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
-        .loading { background-color: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; }
+        .loading { background-color: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
     </style>
 </head>
 <body>
@@ -105,24 +105,27 @@
     <h2 id="titulo">Iniciar Sesión</h2>
     
     <div class="input-group">
-        <input type="email" id="email" class="form-control" placeholder="Correo electrónico">
+        <label>Correo Electrónico</label>
+        <input type="email" id="email" placeholder="ejemplo@correo.com">
     </div>
 
     <div class="input-group">
-        <input type="password" id="password" class="form-control" placeholder="Contraseña">
+        <label>Contraseña</label>
+        <input type="password" id="password" placeholder="••••••••">
     </div>
 
-    <button class="btn-entrar" id="btnAccion" onclick="enviarDatos()">Ingresar</button>
+    <button class="btn-accion" id="btnAccion" onclick="enviarDatos()">Ingresar</button>
     
-    <button class="toggle-link" onclick="toggleModo()" id="btnModo">
-        <span id="txtToggle">¿No tienes cuenta?</span> Regístrate aquí
-    </button>
+    <p style="margin-top: 25px; font-size: 0.85rem; color: #666;">
+        <span id="txtToggle">¿No tienes cuenta?</span> 
+        <button class="btn-toggle" onclick="toggleModo()" id="btnModo">Regístrate aquí</button>
+    </p>
 
     <div id="mensaje"></div>
 </div>
 
 <script>
-    // --- CONFIGURACIÓN ---
+    // URL de tu Google Apps Script (Verifica que sea la versión más reciente publicada)
     const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxSU_GZQvd8zYwBr-gurnn-cfMustpVnsZB0QQvdMEbvSiOkrt0MXr0KIoqSwidBQgFgQ/exec";
     
     let modoActual = "login"; 
@@ -131,20 +134,21 @@
         const titulo = document.getElementById('titulo');
         const btnAccion = document.getElementById('btnAccion');
         const btnModo = document.getElementById('btnModo');
-        const divMensaje = document.getElementById('mensaje');
-
-        divMensaje.style.display = "none";
+        const txtToggle = document.getElementById('txtToggle');
+        document.getElementById('mensaje').style.display = "none";
 
         if (modoActual === "login") {
             modoActual = "registro";
             titulo.innerText = "Crear Cuenta";
             btnAccion.innerText = "Registrarse";
-            btnModo.innerHTML = "¿Ya tienes cuenta? Inicia sesión";
+            btnModo.innerText = "Inicia sesión";
+            txtToggle.innerText = "¿Ya tienes cuenta?";
         } else {
             modoActual = "login";
             titulo.innerText = "Iniciar Sesión";
             btnAccion.innerText = "Ingresar";
-            btnModo.innerHTML = "¿No tienes cuenta? Regístrate aquí";
+            btnModo.innerText = "Regístrate aquí";
+            txtToggle.innerText = "¿No tienes cuenta?";
         }
     }
 
@@ -153,44 +157,55 @@
         const password = document.getElementById('password').value.trim();
 
         if (!email || !password) {
-            mostrarMensaje("Por favor rellena todos los campos", "error");
+            mostrarMensaje("Completa todos los campos", "error");
             return;
         }
 
-        mostrarMensaje("Comunicando con el servidor...", "loading");
+        mostrarMensaje("Procesando...", "loading");
 
         try {
-            const urlCompleta = `${WEB_APP_URL}?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}&accion=${modoActual}`;
-            const respuesta = await fetch(urlCompleta);
+            // Construimos la URL con parámetros para el GET del Apps Script
+            const urlFinal = `${WEB_APP_URL}?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}&accion=${modoActual}`;
+
+            const respuesta = await fetch(urlFinal);
             const resultado = await respuesta.text();
-            procesarResultado(resultado, email);
+
+            procesarResultado(resultado.trim(), email);
         } catch (error) {
-            mostrarMensaje("Error al conectar con el servidor.", "error");
-            console.error(error);
+            mostrarMensaje("Error de conexión. Verifica tu internet.", "error");
+            console.error("Fetch error:", error);
         }
     }
 
     function procesarResultado(res, email) {
-        switch(res.trim()) {
-            case "exito":
-                mostrarMensaje("¡Acceso correcto! Redirigiendo...", "success");
-                localStorage.setItem("usuarioLogueado", email);
+        // Normalizamos la respuesta del servidor para evitar errores por espacios o mayúsculas
+        const r = res.toLowerCase().trim();
+
+        if (r === "exito") {
+            mostrarMensaje("¡Acceso correcto! Redirigiendo...", "success");
+            
+            // Intentamos guardar en LocalStorage (importante para WebViews)
+            try {
+                localStorage.setItem("usuarioLogueado", email.toLowerCase());
                 setTimeout(() => {
                     window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/menu.html";
-                }, 1200);
-                break;
-            case "registro_exitoso":
-                mostrarMensaje("¡Cuenta creada! Ya puedes iniciar sesión.", "success");
-                setTimeout(() => toggleModo(), 1500);
-                break;
-            case "error_existe":
-                mostrarMensaje("Este correo ya está registrado.", "error");
-                break;
-            case "error_credenciales":
-                mostrarMensaje("Correo o contraseña incorrectos.", "error");
-                break;
-            default:
-                mostrarMensaje("Error: " + res, "error");
+                }, 1000);
+            } catch (e) {
+                mostrarMensaje("Error: Tu navegador bloquea LocalStorage.", "error");
+            }
+
+        } else if (r === "registro_exitoso") {
+            mostrarMensaje("¡Cuenta creada! Ya puedes entrar.", "success");
+            setTimeout(() => toggleModo(), 1500);
+
+        } else if (r === "error_existe") {
+            mostrarMensaje("Este correo ya está registrado.", "error");
+
+        } else if (r === "error_credenciales") {
+            mostrarMensaje("Correo o contraseña incorrectos.", "error");
+
+        } else {
+            mostrarMensaje("Respuesta del servidor: " + res, "error");
         }
     }
 
