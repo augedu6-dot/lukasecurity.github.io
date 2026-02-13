@@ -1,3 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dirección - DeMasita</title>
+    <link href="https://fonts.googleapis.com/css2?family=Marck+Script&family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+    <style>
+        body { font-family: "Ubuntu", sans-serif; background-color: #fefcf5; }
+     /* Estilos Globales del Navbar */
+.navbar { background-color: white; border-bottom: 2px solid #ffdab3; position: sticky; top: 0; z-index: 1000; }
+.navbar-brand { font-family: 'Marck Script', cursive; font-size: 2rem; color: #6f1a07 !important; }
+
+.nav-user-link {
+    color: #d35400 !important;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex; align-items: center;
+    padding: 5px 12px;
+    background: #fff5eb;
+    border-radius: 20px;
+    text-decoration: none !important;
+}
+
+.cart-icon { font-size: 1.5rem; color: #6f1a07; position: relative; cursor: pointer; }
+.cart-count { 
+    background: #f44336; color: white; border-radius: 50%; 
+    padding: 2px 6px; font-size: 0.7rem; 
+    position: absolute; top: -10px; right: -10px; 
+}
+
+/* Estilos del Modal */
+.modal-content { border-radius: 20px; border: none; }
+.modal-header { background: #6f1a07; color: white; border-radius: 20px 20px 0 0; }
+.user-avatar {
+    width: 70px; height: 70px; background: #ffdab3; color: #6f1a07;
+    border-radius: 50%; display: flex; align-items: center;
+    justify-content: center; font-size: 2rem; margin: 0 auto 15px;
+}
+        
+        .container-main { max-width: 500px; margin-top: 30px; padding: 20px; }
+        
+        /* Alerta de éxito */
+        #successAlert { display: none; border-radius: 15px; background-color: #d4edda; color: #155724; border: none; }
+
+        /* Tarjeta de Dirección */
+        .address-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            border: 2px solid #ffdab3;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .address-card i { color: #f44336; font-size: 1.5rem; margin-right: 15px; }
+        .address-title { font-weight: bold; color: #6f1a07; font-size: 1.1rem; margin-bottom: 5px; }
+        .address-text { color: #555; line-height: 1.4; margin-bottom: 0; }
+
+        /* Formulario */
+        .form-container { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #eee; }
+        .form-group label { font-weight: 500; color: #6f1a07; margin-bottom: 5px; }
+        .form-control { border-radius: 10px; border: 1px solid #ddd; padding: 12px; height: auto; }
+        
+        .btn-main { background: #f44336; color: white; border: none; border-radius: 25px; padding: 12px; width: 100%; font-weight: bold; transition: 0.3s; }
+        .btn-main:hover { background: #d32f2f; transform: translateY(-2px); }
+        
+        .btn-outline-custom { color: #f44336; border: 1px solid #f44336; background: none; border-radius: 20px; padding: 5px 20px; font-size: 0.9rem; margin-top: 15px; }
+        
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container">
+        <a class="navbar-brand" href="menu.html">DeMasita</a>
+        
+        <div class="d-flex align-items-center ml-auto">
+            <div class="cart-icon mr-3" onclick="window.location.href='carrito.html'">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-count" id="cartCount">0</span>
+            </div>
+
+            <div class="nav-user-link" data-toggle="modal" data-target="#userModal">
+                <i class="fas fa-user-circle mr-1"></i>
+                <span id="navUser">Cuenta</span>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title">Mi Perfil</h5>
+                <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body text-center p-4">
+                <div class="user-avatar"><i class="fas fa-user"></i></div>
+                <h3 class="h5 font-weight-bold">¡Hola!</h3>
+                <p class="text-muted small">Sesión iniciada como:</p>
+                <p class="user-email font-weight-bold mb-4" id="displayEmail"></p>
+                
+                <div class="list-group mb-4">
+                    <a href="menu.html" class="list-group-item list-group-item-action border-0 text-left">
+                        <i class="fas fa-utensils mr-2"></i> Ver Menú
+                    </a>
+                    <a href="direccion.html" class="list-group-item list-group-item-action border-0 text-left">
+                        <i class="fas fa-map-marker-alt mr-2"></i> Mis Direcciones
+                    </a>
+                </div>
+
+                <button class="btn btn-danger btn-block rounded-pill py-2" onclick="cerrarSesion()">
+                    <i class="fas fa-sign-out-alt mr-2"></i>Cerrar Sesión
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container container-main">
+    
+    <div id="successAlert" class="alert alert-success text-center mb-4" role="alert">
+        <i class="fas fa-check-circle"></i> ¡Dirección guardada con éxito!
+    </div>
+
+    <div id="sectionSavedAddress">
+        <h5 class="mb-3" style="color: #6f1a07; font-weight: bold;">Entregar en:</h5>
+        <div class="address-card d-flex align-items-start">
+            <i class="fas fa-map-marker-alt mt-1"></i>
+            <div class="address-details w-100">
+                <p class="address-title">Mi Domicilio</p>
+                <p id="displayFullAddress" class="address-text"></p>
+                <button class="btn-outline-custom" onclick="abrirFormulario()">
+                    <i class="fas fa-plus mr-1"></i> Agregar o Cambiar
+                </button>
+            </div>
+        </div>
+        <button class="btn-main mt-3" onclick="confirmarPedido()">
+            Confirmar y Continuar <i class="fas fa-arrow-right ml-2"></i>
+        </button>
+    </div>
+
+    <div id="sectionFormAddress" class="form-container hidden">
+        <h5 class="mb-4" style="color: #6f1a07; font-weight: bold;">Nueva Dirección</h5>
+        <form id="addressForm">
+            <div class="form-group">
+                <label>Calle</label>
+                <input type="text" id="calle" class="form-control" placeholder="Nombre de la calle" required>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <div class="form-group">
+                        <label>Número</label>
+                        <input type="text" id="numero" class="form-control" placeholder="123" required>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label>Cód. Postal</label>
+                        <input type="text" id="cp" class="form-control" placeholder="CP" required>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Ciudad</label>
+                <input type="text" id="ciudad" class="form-control" placeholder="Ciudad" required>
+            </div>
+            <div class="form-group">
+                <label>País</label>
+                <input type="text" id="pais" class="form-control" value="México" required>
+            </div>
+            
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn-main mr-2">
+                    <i class="fas fa-save mr-1"></i> Guardar Dirección
+                </button>
+                <button type="button" class="btn btn-light" style="border-radius: 25px;" onclick="cancelarRegistro()">Cancelar</button>
+            </div>
+        </form>
+    </div>
+
+</div>
 <script>
     const sectionForm = document.getElementById('sectionFormAddress');
     const sectionSaved = document.getElementById('sectionSavedAddress');
@@ -112,3 +298,5 @@
         window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/login2.html"; // O la página de inicio
     }
 </script>
+</body>
+</html>
