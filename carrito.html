@@ -9,8 +9,30 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
     <style>
         body { font-family: "Ubuntu", sans-serif; background-color: #fefcf5; padding-bottom: 120px; }
-        .navbar { background-color: white; border-bottom: 2px solid #ffdab3; position: sticky; top: 0; z-index: 1000; }
-        .navbar-brand { font-family: 'Marck Script', cursive; font-size: 2rem; color: #6f1a07 !important; text-decoration: none; }
+        
+        /* NAVBAR CORREGIDO: Todo en una sola línea para móvil */
+        .navbar { 
+            background-color: white; 
+            border-bottom: 2px solid #ffdab3; 
+            position: sticky; 
+            top: 0; 
+            z-index: 1050; 
+            padding: 0.5rem 0.8rem;
+        }
+        .navbar .container {
+            display: flex;
+            flex-wrap: nowrap; 
+            align-items: center;
+            justify-content: space-between;
+        }
+        .navbar-brand { 
+            font-family: 'Marck Script', cursive; 
+            font-size: 1.4rem; 
+            color: #6f1a07 !important; 
+            text-decoration: none;
+            margin-right: 5px;
+            white-space: nowrap;
+        }
         
         .nav-user-link {
             color: #d35400 !important;
@@ -18,61 +40,88 @@
             cursor: pointer;
             display: flex;
             align-items: center;
-            padding: 5px 12px;
+            padding: 5px 10px;
             background: #fff5eb;
             border-radius: 20px;
             text-decoration: none !important;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
+            white-space: nowrap;
         }
 
-        .modal-content { border-radius: 20px; border: none; }
-        .modal-header { background: #6f1a07; color: white; border-radius: 20px 20px 0 0; }
-        .user-avatar { width: 70px; height: 70px; background: #ffdab3; color: #6f1a07; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 15px; }
-
-        .cart-icon { font-size: 1.5rem; color: #6f1a07; position: relative; cursor: pointer; }
-        .cart-count { background: #f44336; color: white; border-radius: 50%; padding: 2px 6px; font-size: 0.7rem; position: absolute; top: -10px; right: -10px; }
+        .cart-icon { font-size: 1.3rem; color: #6f1a07; position: relative; cursor: pointer; }
+        .cart-count { background: #f44336; color: white; border-radius: 50%; padding: 2px 6px; font-size: 0.65rem; position: absolute; top: -8px; right: -8px; }
         
-        .menu-container { padding: 20px; }
-        .category-title { color: #6f1a07; font-weight: bold; margin-top: 20px; font-size: 1.2rem; border-left: 4px solid #f44336; padding-left: 10px; }
-        
+        /* Estilos de los elementos del carrito */
+        .menu-container { padding: 15px; }
+        .category-title { color: #6f1a07; font-weight: bold; margin-top: 10px; font-size: 1.2rem; border-left: 4px solid #f44336; padding-left: 10px; }
         .food-item { background: white; padding: 15px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
         
         .quantity-controls { display: flex; align-items: center; background: #f8f9fa; border-radius: 25px; padding: 2px; border: 1px solid #ddd; }
-        .btn-qty { width: 32px; height: 32px; border-radius: 50%; border: none; background: white; color: #6f1a07; font-weight: bold; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .qty-number { margin: 0 12px; font-weight: bold; }
+        .btn-qty { width: 30px; height: 30px; border-radius: 50%; border: none; background: white; color: #6f1a07; font-weight: bold; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .qty-number { margin: 0 10px; font-weight: bold; }
 
-        .delivery-selection { background: #fff3e0; margin: 20px; padding: 15px; border-radius: 15px; border: 1px dashed #6f1a07; }
-        .delivery-info { font-size: 0.9rem; color: #6f1a07; margin-bottom: 0; }
-        .btn-change-addr { font-size: 0.8rem; color: #f44336; text-decoration: underline; cursor: pointer; border: none; background: none; padding: 0; }
+        .delivery-selection { background: #fff3e0; margin: 15px; padding: 15px; border-radius: 15px; border: 1px dashed #6f1a07; }
+        .delivery-info { font-size: 0.85rem; color: #6f1a07; margin-bottom: 0; }
+        .btn-change-addr { font-size: 0.75rem; color: #f44336; text-decoration: underline; cursor: pointer; border: none; background: none; padding: 0; }
+
+        /* TABLA MODAL CORREGIDA: No se sale de la ventana */
+        #resumenCuerpo table { font-size: 0.85rem; width: 100%; table-layout: fixed; }
+        #resumenCuerpo th, #resumenCuerpo td { 
+            padding: 8px 2px; 
+            word-wrap: break-word; 
+            vertical-align: middle;
+        }
+        .col-prod { width: 50%; }
+        .col-cant { width: 20%; text-align: center; }
+        .col-sub { width: 30%; text-align: right; }
 
         .floating-cart { 
             position: fixed; bottom: 0; left: 0; width: 100%; 
-            background: #6f1a07; color: white; padding: 20px; 
+            background: #6f1a07; color: white; padding: 15px; 
             border-radius: 20px 20px 0 0; cursor: pointer; 
             box-shadow: 0 -4px 15px rgba(0,0,0,0.2); z-index: 1001;
         }
+
+        /* Ajustes Dropdown */
+        .dropdown-menu { border-radius: 15px; background: #fff5eb; border: none; margin-top: 10px; }
+        .dropdown-item { color: #6f1a07; font-weight: 500; font-size: 0.9rem; }
+        .dropdown-item:active { background-color: #ffdab3; }
     </style>
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-light">
+<nav class="navbar navbar-light">
     <div class="container">
         <a class="navbar-brand" href="menu.html">DeMasita</a>
         
-        <div class="d-flex align-items-center ml-auto">
+        <div class="d-flex align-items-center">
             <div class="nav-user-link mr-2" onclick="window.location.href='https://augedu6-dot.github.io/lukasecurity.github.io/seguimiento.html'" style="background: #e8f5e9; color: #2e7d32 !important;">
                 <i class="fas fa-truck mr-1"></i>
-                <span>Seguir Pedido</span>
+                <span>Seguir</span>
             </div>
 
-            <div class="cart-icon mr-3" onclick="window.location.href='https://augedu6-dot.github.io/lukasecurity.github.io/carrito.html'">
+            <div class="cart-icon mr-3" onclick="window.location.href='carrito.html'">
                 <i class="fas fa-shopping-cart"></i>
                 <span class="cart-count" id="cartCount">0</span>
             </div>
 
-            <div class="nav-user-link" data-toggle="modal" data-target="#userModal">
-                <i class="fas fa-user-circle mr-1"></i>
-                <span id="navUser">Cuenta</span>
+            <div class="dropdown">
+                <div class="nav-user-link dropdown-toggle" id="userMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-user-circle mr-1"></i>
+                    <span id="navUser">Cuenta</span>
+                </div>
+                <div class="dropdown-menu dropdown-menu-right shadow border-0" aria-labelledby="userMenu">
+                    <a class="dropdown-item py-2" href="https://augedu6-dot.github.io/lukasecurity.github.io/menu.html">
+                        <i class="fas fa-utensils mr-2"></i> Ver Menú
+                    </a>
+                    <a class="dropdown-item py-2" href="direccion.html">
+                        <i class="fas fa-map-marker-alt mr-2"></i> Mis Direcciones
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item py-2" href="#" data-toggle="modal" data-target="#userModal">
+                        <i class="fas fa-user mr-2"></i> Mi Perfil
+                    </a>
+                </div>
             </div>
         </div>
     </div>
@@ -81,9 +130,9 @@
 <div class="delivery-selection" id="deliverySection">
     <div class="d-flex align-items-center">
         <i class="fas fa-map-marker-alt mr-3" style="font-size: 1.2rem; color: #f44336;"></i>
-        <div>
+        <div style="flex: 1; overflow: hidden;">
             <p class="delivery-info"><strong>Entregar en:</strong></p>
-            <p id="currentAddress" class="delivery-info">Cargando dirección...</p>
+            <p id="currentAddress" class="delivery-info text-truncate">Cargando dirección...</p>
             <button class="btn-change-addr" onclick="window.location.href='https://augedu6-dot.github.io/lukasecurity.github.io/direccion.html'">Cambiar o agregar domicilio</button>
         </div>
     </div>
@@ -102,8 +151,8 @@
                 <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body text-center p-4">
-                <div class="user-avatar"><i class="fas fa-user"></i></div>
-                <h3 class="h5 font-weight-bold">¡Bienvenido!</h3>
+                <div class="user-avatar"><i class="fas fa-user" style="font-size: 2rem; color: #6f1a07;"></i></div>
+                <h3 class="h5 font-weight-bold">¡Hola!</h3>
                 <p class="user-email font-weight-bold mb-4" id="displayEmail"></p>
                 <button class="btn btn-danger btn-block rounded-pill py-2" onclick="cerrarSesion()">Cerrar Sesión</button>
             </div>
@@ -121,8 +170,8 @@
             <div class="modal-body" id="resumenCuerpo">
                 </div>
             <div class="modal-footer border-0">
-                <button type="button" class="btn btn-secondary rounded-pill" data-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-success rounded-pill px-4" onclick="confirmarPedidoFinal()">Confirmar y Pagar</button>
+                <button type="button" class="btn btn-secondary btn-sm rounded-pill" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success btn-sm rounded-pill px-4" onclick="confirmarPedidoFinal()">Confirmar y Pagar</button>
             </div>
         </div>
     </div>
@@ -139,6 +188,7 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 
 <script>
@@ -174,7 +224,7 @@
 
             lista.innerHTML += `
                 <div class="food-item">
-                    <div><p class="mb-0 font-weight-bold">${nombre}</p><small class="text-muted">$${item.precio} c/u</small></div>
+                    <div style="flex:1"><p class="mb-0 font-weight-bold" style="font-size:0.9rem">${nombre}</p><small class="text-muted">$${item.precio} c/u</small></div>
                     <div class="quantity-controls">
                         <button class="btn-qty" onclick="cambiarCantidad('${nombre}', ${item.precio}, -1)">-</button>
                         <span class="qty-number">${item.cantidad}</span>
@@ -200,36 +250,38 @@
         const d = JSON.parse(localStorage.getItem('domicilio'));
         if (!d) {
             alert("Por favor, registra una dirección de entrega primero.");
-            window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/direccion.html";
+            window.location.href = "direccion.html";
             return;
         }
 
-        // Crear tabla de resumen para el Modal
-        let tabla = `<table class="table table-borderless sm-table">
-            <thead><tr class="border-bottom"><th>Producto</th><th>Cant.</th><th>Subtotal</th></tr></thead>
+        let tabla = `<table class="table table-sm table-borderless">
+            <thead>
+                <tr class="border-bottom">
+                    <th class="col-prod">Producto</th>
+                    <th class="col-cant">Cant.</th>
+                    <th class="col-sub">Subtotal</th>
+                </tr>
+            </thead>
             <tbody>`;
         let total = 0;
         for (const [nombre, item] of Object.entries(carrito)) {
             let sub = item.cantidad * item.precio;
             total += sub;
-            tabla += `<tr><td>${nombre}</td><td>${item.cantidad}</td><td>$${sub}</td></tr>`;
+            tabla += `<tr><td>${nombre}</td><td class="text-center">${item.cantidad}</td><td class="text-right">$${sub}</td></tr>`;
         }
         tabla += `</tbody></table>
         <div class="bg-light p-3 rounded">
             <p class="mb-1 small"><strong>Entregar en:</strong></p>
             <p class="mb-0 small">${d.calle} #${d.numero}, ${d.ciudad}</p>
         </div>
-        <h4 class="text-right mt-3">Total: $${total}</h4>`;
+        <h5 class="text-right mt-3">Total: $${total}</h5>`;
 
         document.getElementById('resumenCuerpo').innerHTML = tabla;
         $('#resumenModal').modal('show');
     }
 
     function confirmarPedidoFinal() {
-        // Generar ID Hexadecimal de 6 dígitos aleatorios
         const idPedido = Math.floor(Math.random() * 0xFFFFFF).toString(16).toUpperCase().padStart(6, '0');
-        
-        // Calcular hora de entrega (+45 minutos)
         const ahora = new Date();
         ahora.setMinutes(ahora.getMinutes() + 45);
         const horaEntrega = ahora.getHours() + ":" + (ahora.getMinutes() < 10 ? '0' : '') + ahora.getMinutes();
@@ -243,7 +295,6 @@
             fecha: new Date().toLocaleDateString()
         };
 
-        // Guardar pedido y limpiar carrito
         localStorage.setItem("ultimoPedido", JSON.stringify(dataPedido));
         localStorage.removeItem("carrito_obj");
         
