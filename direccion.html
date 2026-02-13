@@ -9,39 +9,113 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
     <style>
         body { font-family: "Ubuntu", sans-serif; background-color: #fefcf5; }
-        .navbar { background-color: white; border-bottom: 2px solid #ffdab3; position: sticky; top: 0; z-index: 1000; }
-        .navbar-brand { font-family: 'Marck Script', cursive; font-size: 2rem; color: #6f1a07 !important; }
-        .nav-user-link { color: #d35400 !important; font-weight: 700; cursor: pointer; display: flex; align-items: center; padding: 5px 12px; background: #fff5eb; border-radius: 20px; text-decoration: none !important; }
-        .cart-icon { font-size: 1.5rem; color: #6f1a07; position: relative; cursor: pointer; }
-        .cart-count { background: #f44336; color: white; border-radius: 50%; padding: 2px 6px; font-size: 0.7rem; position: absolute; top: -10px; right: -10px; }
-        .modal-content { border-radius: 20px; border: none; }
-        .modal-header { background: #6f1a07; color: white; border-radius: 20px 20px 0 0; }
-        .user-avatar { width: 70px; height: 70px; background: #ffdab3; color: #6f1a07; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 15px; }
+     /* Estilos Globales del Navbar */
+/* NAVBAR RESPONSIVO EN UNA SOLA LÍNEA */
+.navbar { 
+    background-color: white; 
+    border-bottom: 2px solid #ffdab3; 
+    position: sticky; 
+    top: 0; 
+    z-index: 1050; 
+    padding: 0.5rem 0.4rem; /* Espaciado mínimo */
+}
+.navbar .container {
+    display: flex;
+    flex-wrap: nowrap !important; /* Prohíbe el salto de línea */
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 5px;
+}
+.navbar-brand { 
+    font-family: 'Marck Script', cursive; 
+    font-size: 1.2rem; /* Tamaño optimizado para móvil */
+    color: #6f1a07 !important; 
+    white-space: nowrap;
+    margin-right: 5px;
+}
+.nav-user-link {
+    color: #d35400 !important;
+    font-weight: 700;
+    padding: 4px 6px;
+    background: #fff5eb;
+    border-radius: 15px;
+    font-size: 0.7rem; /* Fuente pequeña para maximizar espacio */
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+}
+.tracking-btn { background: #e8f5e9 !important; color: #2e7d32 !important; }
+.cart-icon { font-size: 1.2rem; color: #6f1a07; position: relative; cursor: pointer; }
+.cart-count { background: #f44336; color: white; border-radius: 50%; padding: 1px 5px; font-size: 0.6rem; position: absolute; top: -8px; right: -8px; }
+.dropdown-menu { font-size: 0.85rem; border-radius: 12px; }
+/* Estilos del Modal */
+.modal-content { border-radius: 20px; border: none; }
+.modal-header { background: #6f1a07; color: white; border-radius: 20px 20px 0 0; }
+.user-avatar {
+    width: 70px; height: 70px; background: #ffdab3; color: #6f1a07;
+    border-radius: 50%; display: flex; align-items: center;
+    justify-content: center; font-size: 2rem; margin: 0 auto 15px;
+}
+        
         .container-main { max-width: 500px; margin-top: 30px; padding: 20px; }
+        
+        /* Alerta de éxito */
         #successAlert { display: none; border-radius: 15px; background-color: #d4edda; color: #155724; border: none; }
-        .address-card { background: white; border-radius: 15px; padding: 20px; border: 2px solid #ffdab3; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 20px; position: relative; }
+
+        /* Tarjeta de Dirección */
+        .address-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            border: 2px solid #ffdab3;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            position: relative;
+        }
         .address-card i { color: #f44336; font-size: 1.5rem; margin-right: 15px; }
         .address-title { font-weight: bold; color: #6f1a07; font-size: 1.1rem; margin-bottom: 5px; }
         .address-text { color: #555; line-height: 1.4; margin-bottom: 0; }
+
+        /* Formulario */
         .form-container { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #eee; }
+        .form-group label { font-weight: 500; color: #6f1a07; margin-bottom: 5px; }
+        .form-control { border-radius: 10px; border: 1px solid #ddd; padding: 12px; height: auto; }
+        
         .btn-main { background: #f44336; color: white; border: none; border-radius: 25px; padding: 12px; width: 100%; font-weight: bold; transition: 0.3s; }
+        .btn-main:hover { background: #d32f2f; transform: translateY(-2px); }
+        
         .btn-outline-custom { color: #f44336; border: 1px solid #f44336; background: none; border-radius: 20px; padding: 5px 20px; font-size: 0.9rem; margin-top: 15px; }
+        
         .hidden { display: none; }
     </style>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 </head>
 <body>
-
-<nav class="navbar navbar-expand-lg navbar-light">
+<nav class="navbar navbar-light">
     <div class="container">
         <a class="navbar-brand" href="menu.html">DeMasita</a>
-        <div class="d-flex align-items-center ml-auto">
-            <div class="cart-icon mr-3" onclick="window.location.href='carrito.html'">
+        
+        <div class="d-flex align-items-center">
+            <div class="nav-user-link tracking-btn mr-1" onclick="window.location.href='seguimiento.html'">
+                <i class="fas fa-truck mr-1"></i><span>Seguir</span>
+            </div>
+
+            <div class="cart-icon mr-2" onclick="window.location.href='carrito.html'">
                 <i class="fas fa-shopping-cart"></i>
                 <span class="cart-count" id="cartCount">0</span>
             </div>
-            <div class="nav-user-link" data-toggle="modal" data-target="#userModal">
-                <i class="fas fa-user-circle mr-1"></i>
-                <span id="navUser">Cuenta</span>
+
+            <div class="dropdown">
+                <div class="nav-user-link dropdown-toggle" id="userMenu" data-toggle="dropdown">
+                    <i class="fas fa-user-circle mr-1"></i><span id="navUser">Cuenta</span>
+                </div>
+                <div class="dropdown-menu dropdown-menu-right shadow border-0">
+                    <a class="dropdown-item py-2" href="menu.html">Ver Menú</a>
+                    <a class="dropdown-item py-2" href="direccion.html">Direcciones</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item py-2 text-danger" href="#" onclick="cerrarSesion()">Cerrar Sesión</a>
+                </div>
             </div>
         </div>
     </div>
@@ -59,11 +133,16 @@
                 <h3 class="h5 font-weight-bold">¡Hola!</h3>
                 <p class="text-muted small">Sesión iniciada como:</p>
                 <p class="user-email font-weight-bold mb-4" id="displayEmail"></p>
+                
                 <div class="list-group mb-4">
                     <a href="menu.html" class="list-group-item list-group-item-action border-0 text-left">
                         <i class="fas fa-utensils mr-2"></i> Ver Menú
                     </a>
+                    <a href="direccion.html" class="list-group-item list-group-item-action border-0 text-left">
+                        <i class="fas fa-map-marker-alt mr-2"></i> Mis Direcciones
+                    </a>
                 </div>
+
                 <button class="btn btn-danger btn-block rounded-pill py-2" onclick="cerrarSesion()">
                     <i class="fas fa-sign-out-alt mr-2"></i>Cerrar Sesión
                 </button>
@@ -73,7 +152,8 @@
 </div>
 
 <div class="container container-main">
-    <div id="successAlert" class="alert alert-success text-center mb-4">
+    
+    <div id="successAlert" class="alert alert-success text-center mb-4" role="alert">
         <i class="fas fa-check-circle"></i> ¡Dirección guardada con éxito!
     </div>
 
@@ -97,59 +177,90 @@
     <div id="sectionFormAddress" class="form-container hidden">
         <h5 class="mb-4" style="color: #6f1a07; font-weight: bold;">Nueva Dirección</h5>
         <form id="addressForm">
-            <div class="form-group"><label>Calle</label><input type="text" id="calle" class="form-control" required></div>
-            <div class="row">
-                <div class="col-6"><div class="form-group"><label>Número</label><input type="text" id="numero" class="form-control" required></div></div>
-                <div class="col-6"><div class="form-group"><label>Cód. Postal</label><input type="text" id="cp" class="form-control" required></div></div>
+            <div class="form-group">
+                <label>Calle</label>
+                <input type="text" id="calle" class="form-control" placeholder="Nombre de la calle" required>
             </div>
-            <div class="form-group"><label>Ciudad</label><input type="text" id="ciudad" class="form-control" required></div>
-            <div class="form-group"><label>País</label><input type="text" id="pais" class="form-control" value="México" required></div>
-            <div class="d-flex">
-                <button type="submit" class="btn-main mr-2">Guardar Dirección</button>
+            <div class="row">
+                <div class="col-6">
+                    <div class="form-group">
+                        <label>Número</label>
+                        <input type="text" id="numero" class="form-control" placeholder="123" required>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label>Cód. Postal</label>
+                        <input type="text" id="cp" class="form-control" placeholder="CP" required>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Ciudad</label>
+                <input type="text" id="ciudad" class="form-control" placeholder="Ciudad" required>
+            </div>
+            <div class="form-group">
+                <label>País</label>
+                <input type="text" id="pais" class="form-control" value="México" required>
+            </div>
+            
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn-main mr-2">
+                    <i class="fas fa-save mr-1"></i> Guardar Dirección
+                </button>
                 <button type="button" class="btn btn-light" style="border-radius: 25px;" onclick="cancelarRegistro()">Cancelar</button>
             </div>
         </form>
     </div>
+
 </div>
-
-<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-
 <script>
     const sectionForm = document.getElementById('sectionFormAddress');
     const sectionSaved = document.getElementById('sectionSavedAddress');
     const successAlert = document.getElementById('successAlert');
 
-    window.onload = function() {
-        const usuario = localStorage.getItem("usuarioLogueado");
-        if (!usuario) {
-            window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/login2.html";
-        } else {
-            document.getElementById("displayEmail").innerText = usuario;
-            document.getElementById("navUser").innerText = usuario.split('@')[0];
-        }
-
-        const carrito = JSON.parse(localStorage.getItem("carrito_obj")) || {};
-        let totalItems = 0;
-        Object.values(carrito).forEach(item => totalItems += item.cantidad);
-        document.getElementById("cartCount").innerText = totalItems;
-
-        cargarDatos();
+    const direccionEjemplo = {
+        calle: " ",
+        numero: "",
+        cp: "86000",
+        ciudad: "Centro",
+        pais: "México"
     };
+
+  window.onload = function() {
+    // Verificar sesión igual que en menú
+    const usuario = localStorage.getItem("usuarioLogueado");
+    if (!usuario) {
+        window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/login2.html";
+    } else {
+        document.getElementById("displayEmail").innerText = usuario;
+        // Muestra el nombre antes del @ en el navbar
+        document.getElementById("navUser").innerText = usuario.split('@')[0];
+    }
+
+    // Lógica propia de la página de dirección
+    if (!localStorage.getItem('domicilio')) {
+        localStorage.setItem('domicilio', JSON.stringify(direccionEjemplo));
+    }
+    cargarDatos();
+};
 
     function cargarDatos() {
         const d = JSON.parse(localStorage.getItem('domicilio'));
-        if (d && d.calle.trim() !== "") {
-            document.getElementById('displayFullAddress').innerHTML = `${d.calle} #${d.numero}, ${d.ciudad}<br>CP: ${d.cp}, ${d.pais}`;
+        if (d) {
+            document.getElementById('displayFullAddress').innerHTML = 
+                `${d.calle} #${d.numero}, ${d.ciudad}<br>CP: ${d.cp}, ${d.pais}`;
+            
             sectionForm.classList.add('hidden');
             sectionSaved.classList.remove('hidden');
-        } else {
-            abrirFormulario();
         }
     }
 
+
+
     document.getElementById('addressForm').addEventListener('submit', function(e) {
         e.preventDefault();
+        
         const nuevaDireccion = {
             calle: document.getElementById('calle').value,
             numero: document.getElementById('numero').value,
@@ -158,53 +269,77 @@
             pais: document.getElementById('pais').value
         };
 
+        // Guardar localmente
         localStorage.setItem('domicilio', JSON.stringify(nuevaDireccion));
         
-        // CORREGIDO: Uso de usuarioLogueado para Sheets
+        // Preparar cadena de texto con Email + Dirección para enviar a Sheets
         const emailUsuario = localStorage.getItem('usuarioLogueado') || "Sin Email";
         const infoCompleta = `Usuario: ${emailUsuario} | Dirección: ${nuevaDireccion.calle} ${nuevaDireccion.numero}, ${nuevaDireccion.ciudad}, CP: ${nuevaDireccion.cp}`;
-        
+        const emailUsuario = localStorage.getItem('usuarioLogueado') || "Sin Email";
+
+ // Enviar a Google Sheets
         sendToSheets(infoCompleta);
         
+        // Mostrar mensaje de éxito
         successAlert.style.display = 'block';
         setTimeout(() => { successAlert.style.display = 'none'; }, 3000);
+
         cargarDatos();
     });
 
     function abrirFormulario() {
         sectionSaved.classList.add('hidden');
         sectionForm.classList.remove('hidden');
+        
+        const d = JSON.parse(localStorage.getItem('domicilio'));
+        if(d) {
+            document.getElementById('calle').value = d.calle;
+            document.getElementById('numero').value = d.numero;
+            document.getElementById('cp').value = d.cp;
+            document.getElementById('ciudad').value = d.ciudad;
+            document.getElementById('pais').value = d.pais;
+        }
     }
 
     function cancelarRegistro() {
-        const d = JSON.parse(localStorage.getItem('domicilio'));
-        if(d && d.calle.trim() !== "") cargarDatos();
-        else window.location.href = "menu.html";
+        sectionForm.classList.add('hidden');
+        sectionSaved.classList.remove('hidden');
     }
 
     function confirmarPedido() {
-        alert("¡Dirección confirmada!");
-        window.location.href = "carrito.html";
+        alert("¡Pedido confirmado! Preparando tus antojitos...");
+        window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/carrito.html";
     }
 
-    function cerrarSesion() {
-        localStorage.removeItem("usuarioLogueado");
-        window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/login2.html";
-    }
+ function cerrarSesion() {
+    localStorage.removeItem("usuarioLogueado");
+    window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/login2.html";
+}
 
-    async function sendToSheets(infoCompleta) {
-        const url = "https://script.google.com/macros/s/AKfycbwo-wSafZbFF1aBaokN6scJgtBPhtTT-XHOuT62IkVLKi2ZFrU7NnY4R6R6E2ys4HDb/exec";
-        try {
-            await fetch(url, {
-                method: 'POST', 
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ nombre: infoCompleta })
-            });
-        } catch (error) {
-            console.error("Error al enviar:", error);
-        }
+
+
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwo-wSafZbFF1aBaokN6scJgtBPhtTT-XHOuT62IkVLKi2ZFrU7NnY4R6R6E2ys4HDb/exec";
+
+const url = GOOGLE_SCRIPT_URL; 
+
+async function sendToSheets(infoCompleta) {
+    const datos ={ nombre:infoCompleta};
+
+    try {
+        const respuesta = await fetch(url, {
+            method: 'POST', 
+            mode: 'no-cors', // Evita el bloqueo de CORS en el envío
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(datos)
+        });
+
+        console.log("Datos enviados correctamente");
+    } catch (error) {
+        console.error("Error al enviar:", error);
     }
+}
 </script>
 </body>
 </html>
