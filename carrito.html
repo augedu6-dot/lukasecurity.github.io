@@ -217,14 +217,14 @@
 
         // VARIABLE SOLICITADA: Junta toda la información del pedido
         const infoCompleta = `Pedido: #${idPedido} | Usuario: ${usuarioEmail} | Entrega: ${direccion} |Productos: [${productosTexto}] |  Total: $${totalPagar}`;
-
+    const infoPedido = `#${idPedido}`;
         // Enviar a Google Sheets (idéntico a direccion.html)
         try {
             await fetch(GOOGLE_SCRIPT_URL, {
                 method: 'POST',
                 mode: 'no-cors',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ nombre: infoCompleta , pedido:infoPedido})
+                body: JSON.stringify({ nombre: infoCompleta , pedido:idPedido})
             });
         } catch (e) { console.error("Error envío:", e); }
 
@@ -260,4 +260,3 @@
 </script>
 </body>
 </html>
-
