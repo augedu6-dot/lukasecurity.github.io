@@ -216,7 +216,7 @@
         productosTexto = productosTexto.slice(0, -2);
 
         // VARIABLE SOLICITADA: Junta toda la información del pedido
-        const infoCompleta = `Pedido: #${idPedido} | Usuario: ${usuarioEmail} | Productos: [${productosTexto}] | Entrega: ${direccion} | Total: $${totalPagar}`;
+        const infoCompleta = `Pedido: #${idPedido} | Usuario: ${usuarioEmail} | Entrega: ${direccion} |Productos: [${productosTexto}] |  Total: $${totalPagar}`;
 
         // Enviar a Google Sheets (idéntico a direccion.html)
         try {
