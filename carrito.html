@@ -220,11 +220,14 @@
     const infoPedido = `#${idPedido}`;
         // Enviar a Google Sheets (idéntico a direccion.html)
         try {
+const datos = {
+ nombre: infoCompleta,
+ pedido: idPedido};
             await fetch(GOOGLE_SCRIPT_URL, {
                 method: 'POST',
                 mode: 'no-cors',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ nombre: infoCompleta , pedido:idPedido})
+                body: JSON.stringify({ datos})
             });
         } catch (e) { console.error("Error envío:", e); }
 
