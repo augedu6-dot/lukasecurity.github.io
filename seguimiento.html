@@ -55,8 +55,8 @@
 
             for (let i = 0; i < filas.length; i++) {
                 const columnas = filas[i].split(",");
-                // Columna C (indice 2) es el ID de 6 dígitos
-                if (columnas[2] && columnas[2].trim() === idBuscado) {
+                // Columna C (indice 3) es el ID de 6 dígitos
+                if (columnas[3] && columnas[3].trim() === idBuscado) {
                     // Columna E (indice 4) es el Estado
                     estadoEncontrado = columnas[4] ? columnas[4].trim() : "Pendiente";
                     break;
@@ -155,3 +155,4 @@
 </script>
 </body>
 </html>
+
