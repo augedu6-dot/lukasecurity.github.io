@@ -9,36 +9,97 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
     <style>
         body { font-family: "Ubuntu", sans-serif; background-color: #fefcf5; }
-        .navbar { background-color: white; border-bottom: 2px solid #ffdab3; position: sticky; top: 0; z-index: 1000; }
-        .navbar-brand { font-family: 'Marck Script', cursive; font-size: 2rem; color: #6f1a07 !important; }
-        .nav-user-link { color: #d35400 !important; font-weight: 700; cursor: pointer; display: flex; align-items: center; padding: 5px 12px; background: #fff5eb; border-radius: 20px; text-decoration: none !important; }
-        .cart-icon { font-size: 1.5rem; color: #6f1a07; position: relative; cursor: pointer; }
-        .cart-count { background: #f44336; color: white; border-radius: 50%; padding: 2px 6px; font-size: 0.7rem; position: absolute; top: -10px; right: -10px; }
+        
+        /* FIX NAVBAR: Todo en una sola línea */
+        .navbar { 
+            background-color: white; 
+            border-bottom: 2px solid #ffdab3; 
+            position: sticky; 
+            top: 0; 
+            z-index: 1000;
+            padding: 0.5rem 1rem;
+        }
+        .navbar .container {
+            display: flex;
+            flex-wrap: nowrap; /* Evita que los elementos bajen a la siguiente línea */
+            justify-content: space-between;
+            align-items: center;
+        }
+        .navbar-brand { 
+            font-family: 'Marck Script', cursive; 
+            font-size: 1.6rem; /* Ajustado para móvil */
+            color: #6f1a07 !important; 
+            margin-right: 0;
+        }
+
+        .nav-user-link {
+            color: #d35400 !important;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex; 
+            align-items: center;
+            padding: 5px 10px;
+            background: #fff5eb;
+            border-radius: 20px;
+            text-decoration: none !important;
+            font-size: 0.85rem;
+        }
+
+        .cart-icon { font-size: 1.4rem; color: #6f1a07; position: relative; cursor: pointer; }
+        .cart-count { 
+            background: #f44336; color: white; border-radius: 50%; 
+            padding: 2px 6px; font-size: 0.7rem; 
+            position: absolute; top: -10px; right: -10px; 
+        }
+
+        /* Estilos del Modal */
         .modal-content { border-radius: 20px; border: none; }
         .modal-header { background: #6f1a07; color: white; border-radius: 20px 20px 0 0; }
-        .user-avatar { width: 70px; height: 70px; background: #ffdab3; color: #6f1a07; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 15px; }
-        .container-main { max-width: 500px; margin-top: 30px; padding: 20px; }
+        .user-avatar {
+            width: 70px; height: 70px; background: #ffdab3; color: #6f1a07;
+            border-radius: 50%; display: flex; align-items: center;
+            justify-content: center; font-size: 2rem; margin: 0 auto 15px;
+        }
+        
+        /* Ajuste de contenedor principal para móvil */
+        .container-main { max-width: 100%; margin-top: 20px; padding: 15px; }
+        
         #successAlert { display: none; border-radius: 15px; background-color: #d4edda; color: #155724; border: none; }
-        .address-card { background: white; border-radius: 15px; padding: 20px; border: 2px solid #ffdab3; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 20px; position: relative; }
-        .address-card i { color: #f44336; font-size: 1.5rem; margin-right: 15px; }
-        .address-title { font-weight: bold; color: #6f1a07; font-size: 1.1rem; margin-bottom: 5px; }
-        .address-text { color: #555; line-height: 1.4; margin-bottom: 0; }
-        .form-container { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #eee; }
-        .btn-main { background: #f44336; color: white; border: none; border-radius: 25px; padding: 12px; width: 100%; font-weight: bold; transition: 0.3s; }
-        .btn-outline-custom { color: #f44336; border: 1px solid #f44336; background: none; border-radius: 20px; padding: 5px 20px; font-size: 0.9rem; margin-top: 15px; }
+
+        .address-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            border: 2px solid #ffdab3;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+        .address-card i { color: #f44336; font-size: 1.3rem; margin-right: 12px; }
+        .address-title { font-weight: bold; color: #6f1a07; font-size: 1.1rem; }
+        .address-text { color: #555; font-size: 0.95rem; }
+
+        .form-container { background: white; padding: 20px; border-radius: 15px; border: 1px solid #eee; }
+        .form-control { border-radius: 10px; border: 1px solid #ddd; padding: 10px; height: auto; font-size: 16px; /* Evita zoom automático en iPhone */ }
+        
+        .btn-main { background: #f44336; color: white; border: none; border-radius: 25px; padding: 12px; width: 100%; font-weight: bold; }
+        .btn-outline-custom { color: #f44336; border: 1px solid #f44336; background: none; border-radius: 20px; padding: 5px 15px; font-size: 0.85rem; margin-top: 10px; }
+        
         .hidden { display: none; }
     </style>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 </head>
 <body>
-
-<nav class="navbar navbar-expand-lg navbar-light">
+<nav class="navbar navbar-light">
     <div class="container">
         <a class="navbar-brand" href="menu.html">DeMasita</a>
-        <div class="d-flex align-items-center ml-auto">
+        
+        <div class="d-flex align-items-center">
             <div class="cart-icon mr-3" onclick="window.location.href='carrito.html'">
                 <i class="fas fa-shopping-cart"></i>
                 <span class="cart-count" id="cartCount">0</span>
             </div>
+
             <div class="nav-user-link" data-toggle="modal" data-target="#userModal">
                 <i class="fas fa-user-circle mr-1"></i>
                 <span id="navUser">Cuenta</span>
@@ -59,11 +120,16 @@
                 <h3 class="h5 font-weight-bold">¡Hola!</h3>
                 <p class="text-muted small">Sesión iniciada como:</p>
                 <p class="user-email font-weight-bold mb-4" id="displayEmail"></p>
+                
                 <div class="list-group mb-4">
                     <a href="menu.html" class="list-group-item list-group-item-action border-0 text-left">
                         <i class="fas fa-utensils mr-2"></i> Ver Menú
                     </a>
+                    <a href="direccion.html" class="list-group-item list-group-item-action border-0 text-left">
+                        <i class="fas fa-map-marker-alt mr-2"></i> Mis Direcciones
+                    </a>
                 </div>
+
                 <button class="btn btn-danger btn-block rounded-pill py-2" onclick="cerrarSesion()">
                     <i class="fas fa-sign-out-alt mr-2"></i>Cerrar Sesión
                 </button>
@@ -73,8 +139,8 @@
 </div>
 
 <div class="container container-main">
-    <div id="successAlert" class="alert alert-success text-center mb-4">
-        <i class="fas fa-check-circle"></i> ¡Dirección guardada con éxito!
+    <div id="successAlert" class="alert alert-success text-center mb-4" role="alert">
+        <i class="fas fa-check-circle"></i> ¡Dirección guardada!
     </div>
 
     <div id="sectionSavedAddress">
@@ -85,40 +151,65 @@
                 <p class="address-title">Mi Domicilio</p>
                 <p id="displayFullAddress" class="address-text"></p>
                 <button class="btn-outline-custom" onclick="abrirFormulario()">
-                    <i class="fas fa-plus mr-1"></i> Agregar o Cambiar
+                    <i class="fas fa-plus mr-1"></i> Cambiar Dirección
                 </button>
             </div>
         </div>
         <button class="btn-main mt-3" onclick="confirmarPedido()">
-            Confirmar y Continuar <i class="fas fa-arrow-right ml-2"></i>
+            Continuar al Carrito <i class="fas fa-arrow-right ml-2"></i>
         </button>
     </div>
 
     <div id="sectionFormAddress" class="form-container hidden">
         <h5 class="mb-4" style="color: #6f1a07; font-weight: bold;">Nueva Dirección</h5>
         <form id="addressForm">
-            <div class="form-group"><label>Calle</label><input type="text" id="calle" class="form-control" required></div>
-            <div class="row">
-                <div class="col-6"><div class="form-group"><label>Número</label><input type="text" id="numero" class="form-control" required></div></div>
-                <div class="col-6"><div class="form-group"><label>Cód. Postal</label><input type="text" id="cp" class="form-control" required></div></div>
+            <div class="form-group">
+                <label>Calle</label>
+                <input type="text" id="calle" class="form-control" placeholder="Nombre de la calle" required>
             </div>
-            <div class="form-group"><label>Ciudad</label><input type="text" id="ciudad" class="form-control" required></div>
-            <div class="form-group"><label>País</label><input type="text" id="pais" class="form-control" value="México" required></div>
+            <div class="row">
+                <div class="col-6">
+                    <div class="form-group">
+                        <label>Número</label>
+                        <input type="text" id="numero" class="form-control" placeholder="123" required>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label>C.P.</label>
+                        <input type="text" id="cp" class="form-control" placeholder="CP" required>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Ciudad</label>
+                <input type="text" id="ciudad" class="form-control" placeholder="Ciudad" required>
+            </div>
+            <div class="form-group">
+                <label>País</label>
+                <input type="text" id="pais" class="form-control" value="México" required>
+            </div>
+            
             <div class="d-flex">
-                <button type="submit" class="btn-main mr-2">Guardar Dirección</button>
+                <button type="submit" class="btn-main mr-2">Guardar</button>
                 <button type="button" class="btn btn-light" style="border-radius: 25px;" onclick="cancelarRegistro()">Cancelar</button>
             </div>
         </form>
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-
 <script>
     const sectionForm = document.getElementById('sectionFormAddress');
     const sectionSaved = document.getElementById('sectionSavedAddress');
     const successAlert = document.getElementById('successAlert');
+
+    const direccionEjemplo = {
+        calle: "Cargando...",
+        numero: "",
+        cp: "",
+        ciudad: "",
+        pais: "México"
+    };
 
     window.onload = function() {
         const usuario = localStorage.getItem("usuarioLogueado");
@@ -129,18 +220,27 @@
             document.getElementById("navUser").innerText = usuario.split('@')[0];
         }
 
-        const carrito = JSON.parse(localStorage.getItem("carrito_obj")) || {};
-        let totalItems = 0;
-        Object.values(carrito).forEach(item => totalItems += item.cantidad);
-        document.getElementById("cartCount").innerText = totalItems;
-
+        if (!localStorage.getItem('domicilio')) {
+            localStorage.setItem('domicilio', JSON.stringify(direccionEjemplo));
+        }
         cargarDatos();
+        actualizarContadorCarrito();
     };
+
+    function actualizarContadorCarrito() {
+        const carrito = JSON.parse(localStorage.getItem("carrito_obj")) || {};
+        let total = 0;
+        for (const item in carrito) {
+            total += carrito[item].cantidad;
+        }
+        document.getElementById("cartCount").innerText = total;
+    }
 
     function cargarDatos() {
         const d = JSON.parse(localStorage.getItem('domicilio'));
-        if (d && d.calle.trim() !== "") {
-            document.getElementById('displayFullAddress').innerHTML = `${d.calle} #${d.numero}, ${d.ciudad}<br>CP: ${d.cp}, ${d.pais}`;
+        if (d && d.calle !== "Cargando...") {
+            document.getElementById('displayFullAddress').innerHTML = 
+                `${d.calle} #${d.numero}, ${d.ciudad}<br>CP: ${d.cp}, ${d.pais}`;
             sectionForm.classList.add('hidden');
             sectionSaved.classList.remove('hidden');
         } else {
@@ -150,6 +250,7 @@
 
     document.getElementById('addressForm').addEventListener('submit', function(e) {
         e.preventDefault();
+        
         const nuevaDireccion = {
             calle: document.getElementById('calle').value,
             numero: document.getElementById('numero').value,
@@ -160,31 +261,42 @@
 
         localStorage.setItem('domicilio', JSON.stringify(nuevaDireccion));
         
-        // CORREGIDO: Uso de usuarioLogueado para Sheets
         const emailUsuario = localStorage.getItem('usuarioLogueado') || "Sin Email";
         const infoCompleta = `Usuario: ${emailUsuario} | Dirección: ${nuevaDireccion.calle} ${nuevaDireccion.numero}, ${nuevaDireccion.ciudad}, CP: ${nuevaDireccion.cp}`;
-        
+
         sendToSheets(infoCompleta);
         
         successAlert.style.display = 'block';
         setTimeout(() => { successAlert.style.display = 'none'; }, 3000);
+
         cargarDatos();
     });
 
     function abrirFormulario() {
         sectionSaved.classList.add('hidden');
         sectionForm.classList.remove('hidden');
+        const d = JSON.parse(localStorage.getItem('domicilio'));
+        if(d) {
+            document.getElementById('calle').value = d.calle || "";
+            document.getElementById('numero').value = d.numero || "";
+            document.getElementById('cp').value = d.cp || "";
+            document.getElementById('ciudad').value = d.ciudad || "";
+            document.getElementById('pais').value = d.pais || "México";
+        }
     }
 
     function cancelarRegistro() {
         const d = JSON.parse(localStorage.getItem('domicilio'));
-        if(d && d.calle.trim() !== "") cargarDatos();
-        else window.location.href = "menu.html";
+        if (d && d.calle !== "Cargando...") {
+            sectionForm.classList.add('hidden');
+            sectionSaved.classList.remove('hidden');
+        } else {
+            window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/menu.html";
+        }
     }
 
     function confirmarPedido() {
-        alert("¡Dirección confirmada!");
-        window.location.href = "carrito.html";
+        window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/carrito.html";
     }
 
     function cerrarSesion() {
@@ -193,9 +305,9 @@
     }
 
     async function sendToSheets(infoCompleta) {
-        const url = "https://script.google.com/macros/s/AKfycbwo-wSafZbFF1aBaokN6scJgtBPhtTT-XHOuT62IkVLKi2ZFrU7NnY4R6R6E2ys4HDb/exec";
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwo-wSafZbFF1aBaokN6scJgtBPhtTT-XHOuT62IkVLKi2ZFrU7NnY4R6R6E2ys4HDb/exec";
         try {
-            await fetch(url, {
+            await fetch(GOOGLE_SCRIPT_URL, {
                 method: 'POST', 
                 mode: 'no-cors',
                 headers: { 'Content-Type': 'application/json' },
