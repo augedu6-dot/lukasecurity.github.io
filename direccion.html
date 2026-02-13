@@ -71,6 +71,8 @@
         
         .hidden { display: none; }
     </style>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light">
@@ -197,16 +199,23 @@
         pais: "México"
     };
 
-    window.onload = function() {
-        if (!localStorage.getItem('domicilio')) {
-            localStorage.setItem('domicilio', JSON.stringify(direccionEjemplo));
-        }
-        cargarDatos();
-        
-        // Mostrar el email del usuario en la interfaz si existe
-        const userEmail = localStorage.getItem('userEmail') || "Invitado";
-        document.getElementById('displayEmail').innerText = userEmail;
-    };
+  window.onload = function() {
+    // Verificar sesión igual que en menú
+    const usuario = localStorage.getItem("usuarioLogueado");
+    if (!usuario) {
+        window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/login2.html";
+    } else {
+        document.getElementById("displayEmail").innerText = usuario;
+        // Muestra el nombre antes del @ en el navbar
+        document.getElementById("navUser").innerText = usuario.split('@')[0];
+    }
+
+    // Lógica propia de la página de dirección
+    if (!localStorage.getItem('domicilio')) {
+        localStorage.setItem('domicilio', JSON.stringify(direccionEjemplo));
+    }
+    cargarDatos();
+};
 
     function cargarDatos() {
         const d = JSON.parse(localStorage.getItem('domicilio'));
@@ -273,10 +282,10 @@
         window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/carrito.html";
     }
 
-    function cerrarSesion() {
-        localStorage.removeItem('userEmail');
-        window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/login2.html"; // O la página de inicio
-    }
+ function cerrarSesion() {
+    localStorage.removeItem("usuarioLogueado");
+    window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/login2.html";
+}
 
 
 
