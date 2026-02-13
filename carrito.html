@@ -9,8 +9,28 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
     <style>
         body { font-family: "Ubuntu", sans-serif; background-color: #fefcf5; padding-bottom: 120px; }
-        .navbar { background-color: white; border-bottom: 2px solid #ffdab3; position: sticky; top: 0; z-index: 1000; }
-        .navbar-brand { font-family: 'Marck Script', cursive; font-size: 2rem; color: #6f1a07 !important; text-decoration: none; }
+        
+        /* FIX NAVBAR: Forzar una sola línea en móviles */
+        .navbar { 
+            background-color: white; 
+            border-bottom: 2px solid #ffdab3; 
+            position: sticky; 
+            top: 0; 
+            z-index: 1000;
+            padding: 0.5rem 1rem;
+        }
+        .navbar .container {
+            display: flex;
+            flex-wrap: nowrap; /* Evita que los elementos salten de línea */
+            justify-content: space-between;
+            align-items: center;
+        }
+        .navbar-brand { 
+            font-family: 'Marck Script', cursive; 
+            font-size: 1.5rem; /* Tamaño reducido para móviles */
+            color: #6f1a07 !important; 
+            margin-right: 0;
+        }
         
         .nav-user-link {
             color: #d35400 !important;
@@ -18,51 +38,53 @@
             cursor: pointer;
             display: flex;
             align-items: center;
-            padding: 5px 12px;
+            padding: 4px 8px; /* Menos padding */
             background: #fff5eb;
             border-radius: 20px;
             text-decoration: none !important;
-            font-size: 0.9rem;
+            font-size: 0.75rem; /* Letra más pequeña */
         }
 
+        /* FIX TABLA MODAL: Evitar desbordamiento */
+        #resumenCuerpo {
+            padding: 10px;
+            overflow-x: auto; /* Permite scroll horizontal si es necesario */
+        }
+        .table-resumen {
+            width: 100%;
+            font-size: 0.85rem; /* Texto más pequeño para que quepa todo */
+        }
+        .table-resumen th, .table-resumen td {
+            padding: 8px 4px;
+        }
+
+        /* Resto de estilos existentes */
         .modal-content { border-radius: 20px; border: none; }
         .modal-header { background: #6f1a07; color: white; border-radius: 20px 20px 0 0; }
         .user-avatar { width: 70px; height: 70px; background: #ffdab3; color: #6f1a07; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 15px; }
-
-        .cart-icon { font-size: 1.5rem; color: #6f1a07; position: relative; cursor: pointer; }
+        .cart-icon { font-size: 1.3rem; color: #6f1a07; position: relative; cursor: pointer; }
         .cart-count { background: #f44336; color: white; border-radius: 50%; padding: 2px 6px; font-size: 0.7rem; position: absolute; top: -10px; right: -10px; }
-        
         .menu-container { padding: 20px; }
         .category-title { color: #6f1a07; font-weight: bold; margin-top: 20px; font-size: 1.2rem; border-left: 4px solid #f44336; padding-left: 10px; }
-        
         .food-item { background: white; padding: 15px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
-        
         .quantity-controls { display: flex; align-items: center; background: #f8f9fa; border-radius: 25px; padding: 2px; border: 1px solid #ddd; }
         .btn-qty { width: 32px; height: 32px; border-radius: 50%; border: none; background: white; color: #6f1a07; font-weight: bold; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         .qty-number { margin: 0 12px; font-weight: bold; }
-
         .delivery-selection { background: #fff3e0; margin: 20px; padding: 15px; border-radius: 15px; border: 1px dashed #6f1a07; }
         .delivery-info { font-size: 0.9rem; color: #6f1a07; margin-bottom: 0; }
         .btn-change-addr { font-size: 0.8rem; color: #f44336; text-decoration: underline; cursor: pointer; border: none; background: none; padding: 0; }
-
-        .floating-cart { 
-            position: fixed; bottom: 0; left: 0; width: 100%; 
-            background: #6f1a07; color: white; padding: 20px; 
-            border-radius: 20px 20px 0 0; cursor: pointer; 
-            box-shadow: 0 -4px 15px rgba(0,0,0,0.2); z-index: 1001;
-        }
+        .floating-cart { position: fixed; bottom: 0; left: 0; width: 100%; background: #6f1a07; color: white; padding: 20px; border-radius: 20px 20px 0 0; cursor: pointer; box-shadow: 0 -4px 15px rgba(0,0,0,0.2); z-index: 1001; }
     </style>
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-light">
+<nav class="navbar navbar-light">
     <div class="container">
         <a class="navbar-brand" href="menu.html">DeMasita</a>
         
-        <div class="d-flex align-items-center ml-auto">
+        <div class="d-flex align-items-center">
             <div class="nav-user-link mr-2" onclick="window.location.href='https://augedu6-dot.github.io/lukasecurity.github.io/seguimiento.html'" style="background: #e8f5e9; color: #2e7d32 !important;">
-                <i class="fas fa-truck mr-1"></i>
-                <span>Seguir Pedido</span>
+                <i class="fas fa-truck"></i>
             </div>
 
             <div class="cart-icon mr-3" onclick="window.location.href='https://augedu6-dot.github.io/lukasecurity.github.io/carrito.html'">
@@ -71,8 +93,7 @@
             </div>
 
             <div class="nav-user-link" data-toggle="modal" data-target="#userModal">
-                <i class="fas fa-user-circle mr-1"></i>
-                <span id="navUser">Cuenta</span>
+                <i class="fas fa-user-circle"></i>
             </div>
         </div>
     </div>
@@ -142,6 +163,7 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 
 <script>
+    // Se mantiene la lógica de JavaScript igual, solo ajustamos la clase de la tabla en irAFinalizar()
     let carrito = JSON.parse(localStorage.getItem("carrito_obj")) || {};
 
     function cargarDireccion() {
@@ -204,8 +226,8 @@
             return;
         }
 
-        // Crear tabla de resumen para el Modal
-        let tabla = `<table class="table table-borderless sm-table">
+        // FIX: Se agregó la clase 'table-resumen' para controlar el ancho
+        let tabla = `<table class="table table-borderless table-resumen">
             <thead><tr class="border-bottom"><th>Producto</th><th>Cant.</th><th>Subtotal</th></tr></thead>
             <tbody>`;
         let total = 0;
@@ -226,10 +248,7 @@
     }
 
     function confirmarPedidoFinal() {
-        // Generar ID Hexadecimal de 6 dígitos aleatorios
         const idPedido = Math.floor(Math.random() * 0xFFFFFF).toString(16).toUpperCase().padStart(6, '0');
-        
-        // Calcular hora de entrega (+45 minutos)
         const ahora = new Date();
         ahora.setMinutes(ahora.getMinutes() + 45);
         const horaEntrega = ahora.getHours() + ":" + (ahora.getMinutes() < 10 ? '0' : '') + ahora.getMinutes();
@@ -243,7 +262,6 @@
             fecha: new Date().toLocaleDateString()
         };
 
-        // Guardar pedido y limpiar carrito
         localStorage.setItem("ultimoPedido", JSON.stringify(dataPedido));
         localStorage.removeItem("carrito_obj");
         
@@ -263,7 +281,8 @@
             window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/login2.html";
         } else {
             document.getElementById("displayEmail").innerText = usuario;
-            document.getElementById("navUser").innerText = usuario.split('@')[0];
+            // Ocultamos el nombre largo en el nav para ganar espacio en móvil
+            // document.getElementById("navUser").innerText = usuario.split('@')[0];
         }
         cargarDireccion();
         actualizarInterfaz();
