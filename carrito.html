@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menú - DeMasita</title>
+    <link href="https://fonts.googleapis.com/css2?family=Marck+Script&family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+    <style>
+        body { font-family: "Ubuntu", sans-serif; background-color: #fefcf5; padding-bottom: 120px; }
+        
+        .navbar { background-color: white; border-bottom: 2px solid #ffdab3; position: sticky; top: 0; z-index: 1000; }
+        .navbar-brand { font-family: 'Marck Script', cursive; font-size: 2rem; color: #6f1a07 !important; }
+        
+        .menu-container { padding: 20px; }
+        .category-title { color: #6f1a07; font-weight: bold; margin-top: 20px; font-size: 1.2rem; }
+        
+        .food-item { background: white; padding: 15px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+        
+        /* Controles de cantidad */
+        .quantity-controls { display: flex; align-items: center; background: #f8f9fa; border-radius: 25px; padding: 2px; border: 1px solid #ddd; }
+        .btn-qty { width: 32px; height: 32px; border-radius: 50%; border: none; background: white; color: #6f1a07; font-weight: bold; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .qty-number { margin: 0 12px; font-weight: bold; }
+        .btn-add-initial { background: #f44336; color: white; border-radius: 20px; border: none; padding: 5px 18px; }
+
+        /* SECCIÓN DE ENTREGA EN EL CARRITO */
+        .delivery-selection {
+            background: #fff3e0;
+            margin: 20px;
+            padding: 15px;
+            border-radius: 15px;
+            border: 1px dashed #6f1a07;
+        }
+        .delivery-info { font-size: 0.9rem; color: #6f1a07; margin-bottom: 0; }
+        .btn-change-addr { font-size: 0.8rem; color: #f44336; text-decoration: underline; cursor: pointer; border: none; background: none; padding: 0; }
+
+        .floating-cart { 
+            position: fixed; bottom: 0; left: 0; width: 100%; 
+            background: #6f1a07; color: white; padding: 20px; 
+            border-radius: 20px 20px 0 0; cursor: pointer; 
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.2); z-index: 1001;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-light">
+    <div class="container d-flex justify-content-between">
+        <span class="navbar-brand">DeMasita</span>
+        <div class="cart-icon" style="color: #6f1a07; font-size: 1.5rem; position: relative;">
+            <i class="fas fa-shopping-cart"></i>
+            <span id="cartCount" class="badge badge-danger" style="position: absolute; top: -10px; right: -10px; border-radius: 50%;">0</span>
+        </div>
+    </div>
+</nav>
+
+<div class="delivery-selection" id="deliverySection">
+    <div class="d-flex align-items-center">
+        <i class="fas fa-truck mr-3" style="font-size: 1.2rem; color: #f44336;"></i>
+        <div>
+            <p class="delivery-info"><strong>Entregar en:</strong></p>
+            <p id="currentAddress" class="delivery-info">Cargando dirección...</p>
+            <button class="btn-change-addr" onclick="window.location.href='direccion.html'">Cambiar o agregar domicilio</button>
+        </div>
+    </div>
+</div>
+
+<div class="container menu-container">
+    <div class="category-title">Antojitos</div>
+    <div class="food-item">
+        <div><p class="mb-0">Empanada de Queso</p><small class="text-muted">$15</small></div>
+        <div id="controls-empanada"><button class="btn-add-initial" onclick="cambiarCantidad('Empanada de Queso', 15, 1)">Añadir</button></div>
+    </div>
+
+    <div class="food-item">
+        <div><p class="mb-0">Gorditas de Huevo</p><small class="text-muted">$20</small></div>
+        <div id="controls-gorditas"><button class="btn-add-initial" onclick="cambiarCantidad('Gorditas de Huevo', 20, 1)">Añadir</button></div>
+    </div>
+</div>
+
+<div class="floating-cart" onclick="irADireccion()">
+    <div class="container d-flex justify-content-between align-items-center">
+        <div>
+            <span id="itemsTotal">0</span> productos
+        </div>
+        <div class="text-right">
+            <strong>Finalizar Pedido</strong><br>
+            <small>Total: $<span id="totalFloat">0</span></small>
+        </div>
+    </div>
+</div>
+
+<script>
+    let carrito = JSON.parse(localStorage.getItem("carrito_obj")) || {};
+
+    // Cargar la dirección guardada desde la otra página
+    function cargarDireccion() {
+        const d = JSON.parse(localStorage.getItem('domicilio'));
+        const display = document.getElementById('currentAddress');
+        
+        if (d) {
+            display.innerText = `${d.calle} #${d.numero}, ${d.ciudad}`;
+        } else {
+            display.innerHTML = `<span class="text-danger">No has registrado dirección</span>`;
+        }
+    }
+
+    function cambiarCantidad(nombre, precio, cambio) {
+        if (!carrito[nombre]) carrito[nombre] = { precio, cantidad: 0 };
+        carrito[nombre].cantidad += cambio;
+        if (carrito[nombre].cantidad <= 0) delete carrito[nombre];
+        
+        localStorage.setItem("carrito_obj", JSON.stringify(carrito));
+        actualizarInterfaz();
+    }
+
+    function actualizarInterfaz() {
+        let totalItems = 0;
+        let precioTotal = 0;
+
+        // IDs para los botones (puedes automatizar esto más adelante)
+        const mapping = {'Empanada de Queso': 'empanada', 'Gorditas de Huevo': 'gorditas'};
+
+        for (const [nombre, id] of Object.entries(mapping)) {
+            const container = document.getElementById(`controls-${id}`);
+            const item = carrito[nombre];
+
+            if (item && item.cantidad > 0) {
+                totalItems += item.cantidad;
+                precioTotal += item.cantidad * item.precio;
+                container.innerHTML = `
+                    <div class="quantity-controls">
+                        <button class="btn-qty" onclick="cambiarCantidad('${nombre}', ${item.precio}, -1)">-</button>
+                        <span class="qty-number">${item.cantidad}</span>
+                        <button class="btn-qty" onclick="cambiarCantidad('${nombre}', ${item.precio}, 1)">+</button>
+                    </div>`;
+            } else {
+                const p = nombre === 'Empanada de Queso' ? 15 : 20;
+                container.innerHTML = `<button class="btn-add-initial" onclick="cambiarCantidad('${nombre}', ${p}, 1)">Añadir</button>`;
+            }
+        }
+
+        document.getElementById("cartCount").innerText = totalItems;
+        document.getElementById("itemsTotal").innerText = totalItems;
+        document.getElementById("totalFloat").innerText = precioTotal;
+    }
+
+    function irADireccion() {
+        if (Object.keys(carrito).length === 0) {
+            alert("Tu carrito está vacío");
+            return;
+        }
+        if (!localStorage.getItem('domicilio')) {
+            alert("Por favor, registra una dirección de entrega primero.");
+            window.location.href = "direccion.html";
+            return;
+        }
+        // Si todo está bien, procedemos
+        alert("¡Pedido enviado! Gracias por tu compra.");
+    }
+
+    window.onload = function() {
+        cargarDireccion();
+        actualizarInterfaz();
+    };
+</script>
+</body>
+</html>
