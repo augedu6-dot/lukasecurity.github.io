@@ -61,8 +61,8 @@
             for (let i = 1; i < filas.length; i++) {
                 const columnas = filas[i].split(",");
                 // Columna C es índice 2, Columna E es índice 4
-                if (columnas[0] && columnas[0].trim() === idBuscado) {
-                    estadoEncontrado = columnas[1] ? columnas[1].trim() : "Pendiente";
+                if (columnas[1] && columnas[1].trim() === idBuscado) {
+                    estadoEncontrado = columnas[2] ? columnas[2].trim() : "Pendiente";
                     break;
                 }
             }
@@ -160,6 +160,7 @@
 </script>
 </body>
 </html>
+
 
 
 
