@@ -9,39 +9,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
     <style>
         body { font-family: "Ubuntu", sans-serif; background-color: #fefcf5; }
-        
-        .navbar { 
-            background-color: white; 
-            border-bottom: 2px solid #ffdab3; 
-            position: sticky; 
-            top: 0; 
-            z-index: 1050; 
-            padding: 0.5rem 0.4rem; 
-        }
-        .navbar-brand { 
-            font-family: 'Marck Script', cursive; 
-            font-size: 1.2rem; 
-            color: #6f1a07 !important; 
-        }
-        .nav-user-link {
-            color: #d35400 !important;
-            font-weight: 700;
-            padding: 4px 10px;
-            background: #fff5eb;
-            border-radius: 15px;
-            font-size: 0.8rem;
-            display: flex;
-            align-items: center;
-        }
-        .tracking-btn { background: #e8f5e9 !important; color: #2e7d32 !important; }
-        .cart-count { background: #f44336; color: white; border-radius: 50%; padding: 1px 5px; font-size: 0.6rem; position: absolute; top: -8px; right: -8px; }
-        
+        .navbar { background-color: white; border-bottom: 2px solid #ffdab3; position: sticky; top: 0; z-index: 1050; padding: 0.5rem 0.4rem; }
+        .navbar-brand { font-family: 'Marck Script', cursive; font-size: 1.2rem; color: #6f1a07 !important; }
+        .nav-user-link { color: #d35400 !important; font-weight: 700; padding: 4px 10px; background: #fff5eb; border-radius: 15px; font-size: 0.8rem; display: flex; align-items: center; }
         .card-tracking { border-radius: 15px; border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-top: 20px; background: white; }
         .order-id { color: #6f1a07; font-weight: bold; font-family: monospace; font-size: 1.2rem; }
         .address-box { background-color: #fff5eb; border: 1px solid #ffdab3; border-radius: 10px; padding: 15px; margin-bottom: 20px; }
-        
-        /* Estilo para el estado parpadeante cuando actualiza */
-        .updating { opacity: 0.5; transition: opacity 0.3s; }
+        .updating { opacity: 0.6; transition: opacity 0.3s; }
     </style>
 </head>
 <body>
@@ -49,31 +23,22 @@
 <nav class="navbar navbar-light">
     <div class="container d-flex justify-content-between align-items-center">
         <a class="navbar-brand" href="menu.html">DeMasita</a>
-        <div class="d-flex align-items-center">
-            <div class="nav-user-link tracking-btn mr-2" onclick="location.reload()">
-                <i class="fas fa-sync-alt mr-1"></i><span>Actualizar</span>
-            </div>
-            <div class="nav-user-link" id="userDisplay">
-                <i class="fas fa-user-circle mr-1"></i><span id="navUser">Cuenta</span>
-            </div>
+        <div class="nav-user-link">
+            <i class="fas fa-user-circle mr-1"></i><span id="navUser">Cuenta</span>
         </div>
     </div>
 </nav>
 
 <div class="container py-4">
-    <h2 class="text-center mb-4" style="color: #6f1a07;">Seguimiento en Vivo</h2>
-    <div id="contenido-seguimiento">
-        </div>
+    <h2 class="text-center mb-4" style="color: #6f1a07;">Estado de tu Pedido</h2>
+    <div id="contenido-seguimiento"></div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-
 <script>
-
-    // --- REEMPLAZA ESTE ENLACE CON TU CSV PUBLICADO ---
+    // --- REEMPLAZA CON TU ENLACE CSV DE GOOGLE SHEETS ---
     const URL_CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRvlRhwdMH5fof8Od9MtSjd7teTPRIh-_qsKsA_jjTVIxekrDYHrJFQAr1C--LccAbSCTm-gCNjVppn/pub?output=csv";
-    const INTERVALO = 60000; // 60 segundos
+    const INTERVALO = 60000; // 1 minuto
 
     async function actualizarEstadoDesdeSheets() {
         const pedido = JSON.parse(localStorage.getItem("ultimoPedido"));
@@ -84,88 +49,82 @@
 
         try {
             const respuesta = await fetch(URL_CSV);
-            const datosTexto = await respuesta.text();
+            const texto = await respuesta.text();
+            const filas = texto.split("\n").map(f => f.split(","));
             
-            // Convertir CSV a Array
-            const filas = datosTexto.split("\n").map(f => f.split(","));
-            
-            // Buscar ID en Columna C (índice 2) y obtener Estado en E (índice 4)
+            // Columna C (índice 2) = ID | Columna E (índice 4) = Estado
             const idBuscado = pedido.id.toString().trim();
-            const filaEncontrada = filas.find(r => r[2] && r[2].trim() === idBuscado);
+            const fila = filas.find(r => r[2] && r[2].trim() === idBuscado);
 
-            if (filaEncontrada) {
-                const nuevoEstado = filaEncontrada[4].trim();
+            if (fila) {
+                const nuevoEstado = fila[4].trim();
                 if (badge) {
                     badge.innerText = nuevoEstado;
                     badge.classList.remove("updating");
+                    
+                    // Ajuste de barra de progreso según estado
+                    const barra = document.getElementById("pBar");
+                    if (nuevoEstado.toLowerCase().includes("entregado")) barra.style.width = "100%";
+                    else if (nuevoEstado.toLowerCase().includes("camino")) barra.style.width = "75%";
                 }
             }
-        } catch (e) {
-            console.error("Error consultando la hoja:", e);
-        }
+        } catch (e) { console.error("Error al actualizar:", e); }
     }
 
     window.onload = function() {
         const usuario = localStorage.getItem("usuarioLogueado");
-        if (!usuario) {
-            window.location.href = "login2.html";
-            return;
-        }
+        if (!usuario) { window.location.href = "login2.html"; return; }
         document.getElementById("navUser").innerText = usuario.split('@')[0];
 
         const pedido = JSON.parse(localStorage.getItem("ultimoPedido"));
         const contenedor = document.getElementById("contenido-seguimiento");
 
         if (!pedido) {
-            contenedor.innerHTML = `
-                <div class="text-center mt-5">
-                    <i class="fas fa-box-open fa-4x mb-3" style="color: #ddd;"></i>
-                    <p>No tienes pedidos activos actualmente.</p>
-                    <a href="menu.html" class="btn btn-danger rounded-pill px-4">Ir al Menú</a>
-                </div>`;
+            contenedor.innerHTML = `<div class="text-center mt-5"><p>No hay pedidos activos.</p></div>`;
             return;
         }
 
         let listaProd = "";
         for (const [nombre, item] of Object.entries(pedido.productos)) {
-            listaProd += `
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    ${nombre} (x${item.cantidad})
-                    <span>$${item.precio * item.cantidad}</span>
-                </li>`;
+            listaProd += `<li class="list-group-item d-flex justify-content-between">${nombre} (x${item.cantidad}) <span>$${item.precio * item.cantidad}</span></li>`;
         }
 
         contenedor.innerHTML = `
             <div class="card card-tracking p-4">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <span>Orden: <span class="order-id">#${pedido.id}</span></span>
-                    <span class="badge badge-warning p-2" id="statusBadge">Verificando...</span>
+                    <span class="badge badge-success p-2" id="statusBadge">Verificando...</span>
                 </div>
                 
                 <div class="progress mb-4" style="height: 10px;">
-                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" style="width: 50%"></div>
+                    <div id="pBar" class="progress-bar progress-bar-striped progress-bar-animated bg-success" style="width: 40%"></div>
+                </div>
+
+                <div class="row text-center mb-4">
+                    <div class="col-6 border-right">
+                        <small class="text-muted d-block">Llegada estimada</small>
+                        <h4 class="font-weight-bold">${pedido.hora || '--:--'}</h4>
+                    </div>
+                    <div class="col-6">
+                        <small class="text-muted d-block">Total pagado</small>
+                        <h4 class="font-weight-bold">$${pedido.total}</h4>
+                    </div>
                 </div>
 
                 <div class="address-box">
-                    <h6 class="font-weight-bold" style="color: #6f1a07;">
-                        <i class="fas fa-map-marker-alt mr-2"></i>Dirección de entrega:
-                    </h6>
-                    <p class="mb-0 small text-muted">${pedido.direccion || "Dirección no especificada"}</p>
+                    <h6 class="font-weight-bold" style="color: #6f1a07;"><i class="fas fa-map-marker-alt mr-2"></i>Entrega en:</h6>
+                    <p class="mb-0 small text-muted">${pedido.direccion || "No especificada"}</p>
                 </div>
 
-                <h6>Detalle de productos:</h6>
-                <ul class="list-group list-group-flush mb-3">
-                    ${listaProd}
-                </ul>
-                <p class="text-center small text-muted"><i class="fas fa-clock mr-1"></i> Se actualiza cada minuto</p>
+                <h6>Detalle:</h6>
+                <ul class="list-group list-group-flush mb-3">${listaProd}</ul>
+                <div class="alert alert-warning small mb-0"><i class="fas fa-sync fa-spin mr-2"></i>Actualizando estado automáticamente cada minuto.</div>
             </div>
         `;
 
-        // Ejecutar búsqueda inmediata y luego cada 1 minuto
         actualizarEstadoDesdeSheets();
         setInterval(actualizarEstadoDesdeSheets, INTERVALO);
     };
 </script>
-
 </body>
 </html>
