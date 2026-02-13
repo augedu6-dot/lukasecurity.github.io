@@ -15,7 +15,6 @@
         .card-tracking { border-radius: 15px; border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-top: 20px; background: white; }
         .order-id { color: #6f1a07; font-weight: bold; font-family: monospace; font-size: 1.2rem; }
         .address-box { background-color: #fff5eb; border: 1px solid #ffdab3; border-radius: 10px; padding: 15px; margin-bottom: 20px; }
-        .updating { opacity: 0.5; transition: opacity 0.3s; }
         .progress-bar { transition: width 1s ease-in-out; }
     </style>
 </head>
@@ -31,64 +30,68 @@
 </nav>
 
 <div class="container py-4">
-    <h2 class="text-center mb-4" style="color: #6f1a07;">Estado de tu Pedido</h2>
-    <div id="contenido-seguimiento">
-        </div>
+    <h2 class="text-center mb-4" style="color: #6f1a07;">Seguimiento de Pedido</h2>
+    <div id="contenido-seguimiento"></div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-
 <script>
-    // URL CSV con los datos de tu Google Sheet
-    const URL_BASE = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRvlRhwdMH5fof8Od9MtSjd7teTPRIh-_qsKsA_jjTVIxekrDYHrJFQAr1C--LccAbSCTm-gCNjVppn/pub?gid=1744519019&single=true&output=csv";
+    // URL CSV directa
+    const URL_CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRvlRhwdMH5fof8Od9MtSjd7teTPRIh-_qsKsA_jjTVIxekrDYHrJFQAr1C--LccAbSCTm-gCNjVppn/pub?gid=0&single=true&output=csv";
 
-    async function actualizarDesdeHoja() {
-        const pedido = JSON.parse(localStorage.getItem("ultimoPedido"));
-        if (!pedido) return;
-
-        const badge = document.getElementById("statusBadge");
-        const barra = document.getElementById("pBar");
-        
-        if (badge) badge.classList.add("updating");
+    async function consultarEstado() {
+        const pedidoLocal = JSON.parse(localStorage.getItem("ultimoPedido"));
+        if (!pedidoLocal) return;
 
         try {
-            // SUGERENCIA 1: Cache Buster (evita que el navegador use datos viejos)
-            const urlConCacheBuster = `${URL_BASE}&t=${new Date().getTime()}`;
-            const respuesta = await fetch(urlConCacheBuster);
-            const csvTexto = await respuesta.text();
-
-            // SUGERENCIA 2: Split robusto (maneja diferentes tipos de saltos de línea)
-            const filas = csvTexto.split(/\r?\n/).map(fila => fila.split(","));
-
-            // SUGERENCIA 3: Búsqueda con .trim() para evitar errores por espacios invisibles
-            const idBuscado = pedido.id.toString().trim();
+            // Fetch directo sin proxy. Añadimos timestamp para evitar caché.
+            const response = await fetch(`${URL_CSV}&t=${new Date().getTime()}`);
+            const text = await response.text();
             
-            // Columna C = índice 2 | Columna D = índice 3
-            const filaEncontrada = filas.find(r => r[2] && r[2].trim() === idBuscado);
+            // Procesar CSV manualmente
+            const filas = text.split("\n");
+            const idBuscado = pedidoLocal.id.toString().trim();
+            
+            let estadoEncontrado = "Pendiente";
 
-            if (filaEncontrada) {
-                const estadoReal = filaEncontrada[3].trim();
-                
-                if (badge) {
-                    badge.innerText = estadoReal;
-                    badge.classList.remove("updating");
-
-                    // Actualizar barra de progreso según texto
-                    const st = estadoReal.toLowerCase();
-                    if (st.includes("entregado")) {
-                        barra.style.width = "100%";
-                        badge.className = "badge badge-primary p-2";
-                    } else if (st.includes("camino") || st.includes("reparto")) {
-                        barra.style.width = "75%";
-                        badge.className = "badge badge-info p-2";
-                    } else if (st.includes("preparando") || st.includes("cocina")) {
-                        barra.style.width = "40%";
-                        badge.className = "badge badge-warning p-2";
-                    }
+            for (let i = 0; i < filas.length; i++) {
+                const columnas = filas[i].split(",");
+                // Columna C (indice 2) es el ID de 6 dígitos
+                if (columnas[2] && columnas[2].trim() === idBuscado) {
+                    // Columna E (indice 4) es el Estado
+                    estadoEncontrado = columnas[4] ? columnas[4].trim() : "Pendiente";
+                    break;
                 }
             }
+
+            actualizarVista(estadoEncontrado);
         } catch (error) {
-            console.error("Error al consultar Google Sheets:", error);
+            console.error("Error de conexión:", error);
+            const badge = document.getElementById("statusBadge");
+            if(badge) badge.innerText = "Error de conexión";
+        }
+    }
+
+    function actualizarVista(estado) {
+        const badge = document.getElementById("statusBadge");
+        const barra = document.getElementById("pBar");
+        if (!badge) return;
+
+        badge.innerText = estado;
+        const e = estado.toLowerCase();
+
+        // Lógica de progreso
+        if (e.includes("entregado")) {
+            barra.style.width = "100%";
+            badge.className = "badge badge-primary p-2";
+        } else if (e.includes("camino") || e.includes("reparto")) {
+            barra.style.width = "75%";
+            badge.className = "badge badge-info p-2";
+        } else if (e.includes("preparando") || e.includes("cocina")) {
+            barra.style.width = "40%";
+            badge.className = "badge badge-warning p-2";
+        } else {
+            barra.style.width = "20%";
+            badge.className = "badge badge-success p-2";
         }
     }
 
@@ -101,7 +104,7 @@
         const contenedor = document.getElementById("contenido-seguimiento");
 
         if (!pedido) {
-            contenedor.innerHTML = `<div class="text-center mt-5"><p>No tienes pedidos activos.</p></div>`;
+            contenedor.innerHTML = `<div class="text-center mt-5"><p>No hay órdenes activas.</p></div>`;
             return;
         }
 
@@ -118,7 +121,7 @@
                 </div>
                 
                 <div class="progress mb-4" style="height: 10px;">
-                    <div id="pBar" class="progress-bar progress-bar-striped progress-bar-animated bg-success" style="width: 20%"></div>
+                    <div id="pBar" class="progress-bar progress-bar-striped progress-bar-animated bg-success" style="width: 15%"></div>
                 </div>
 
                 <div class="row text-center mb-4">
@@ -133,24 +136,22 @@
                 </div>
 
                 <div class="address-box">
-                    <h6 class="font-weight-bold" style="color: #6f1a07;"><i class="fas fa-map-marker-alt mr-2"></i>Entregar en:</h6>
+                    <h6 class="font-weight-bold" style="color: #6f1a07;"><i class="fas fa-map-marker-alt mr-2"></i>Dirección:</h6>
                     <p class="mb-0 small text-muted">${pedido.direccion || "No especificada"}</p>
                 </div>
 
-                <h6>Detalle:</h6>
+                <h6>Productos:</h6>
                 <ul class="list-group list-group-flush mb-3">${listaProd}</ul>
-
-                <div class="alert alert-warning small mb-0 text-center">
-                    <i class="fas fa-sync fa-spin mr-2"></i> Actualizando estado automáticamente cada minuto.
+                
+                <div class="text-center mt-3">
+                    <small class="text-muted"><i class="fas fa-sync fa-spin mr-1"></i> Actualización automática activa</small>
                 </div>
             </div>
         `;
 
-        // Ejecutar inmediatamente y luego cada 60 segundos
-        actualizarDesdeHoja();
-        setInterval(actualizarDesdeHoja, 60000);
+        consultarEstado();
+        setInterval(consultarEstado, 60000);
     };
 </script>
 </body>
 </html>
-
