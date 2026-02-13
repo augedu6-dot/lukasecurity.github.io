@@ -2,143 +2,127 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Carrito - DeMasita</title>
     <link href="https://fonts.googleapis.com/css2?family=Marck+Script&family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
     <style>
-        /* RESET PARA EVITAR DESBORDAMIENTO */
-        html, body {
-            width: 100%;
-            overflow-x: hidden;
-            margin: 0;
-            padding: 0;
-            font-family: "Ubuntu", sans-serif;
-            background-color: #fefcf5;
-        }
-        body { padding-bottom: 120px; }
-        
-        /* NAVBAR RESPONSIVO EN UNA SOLA LÍNEA */
-        .navbar { 
-            background-color: white; 
-            border-bottom: 2px solid #ffdab3; 
-            position: sticky; 
-            top: 0; 
-            z-index: 1050; 
-            padding: 0.5rem 0.4rem;
-        }
-        .navbar .container {
-            display: flex;
-            flex-wrap: nowrap !important; 
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 5px;
-        }
-        .navbar-brand { 
-            font-family: 'Marck Script', cursive; 
-            font-size: 1.2rem; 
-            color: #6f1a07 !important; 
-            white-space: nowrap;
-            margin-right: 5px;
-        }
+        body { font-family: "Ubuntu", sans-serif; background-color: #fefcf5; padding-bottom: 120px; }
+        .navbar { background-color: white; border-bottom: 2px solid #ffdab3; position: sticky; top: 0; z-index: 1000; }
+        .navbar-brand { font-family: 'Marck Script', cursive; font-size: 2rem; color: #6f1a07 !important; text-decoration: none; }
         
         .nav-user-link {
             color: #d35400 !important;
             font-weight: 700;
-            padding: 4px 6px;
-            background: #fff5eb;
-            border-radius: 15px;
-            font-size: 0.7rem;
-            white-space: nowrap;
+            cursor: pointer;
             display: flex;
             align-items: center;
+            padding: 5px 12px;
+            background: #fff5eb;
+            border-radius: 20px;
+            text-decoration: none !important;
+            font-size: 0.9rem;
         }
 
-        .cart-icon { font-size: 1.2rem; color: #6f1a07; position: relative; cursor: pointer; }
-        .cart-count { background: #f44336; color: white; border-radius: 50%; padding: 1px 5px; font-size: 0.6rem; position: absolute; top: -8px; right: -8px; }
+        .modal-content { border-radius: 20px; border: none; }
+        .modal-header { background: #6f1a07; color: white; border-radius: 20px 20px 0 0; }
+        .user-avatar { width: 70px; height: 70px; background: #ffdab3; color: #6f1a07; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 15px; }
+
+        .cart-icon { font-size: 1.5rem; color: #6f1a07; position: relative; cursor: pointer; }
+        .cart-count { background: #f44336; color: white; border-radius: 50%; padding: 2px 6px; font-size: 0.7rem; position: absolute; top: -10px; right: -10px; }
         
-        /* CONTENEDORES FLEXIBLES */
-        .food-item { 
-            background: white; 
-            padding: 12px; 
-            border-bottom: 1px solid #eee; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center;
-            width: 100%;
-        }
+        .menu-container { padding: 20px; }
+        .category-title { color: #6f1a07; font-weight: bold; margin-top: 20px; font-size: 1.2rem; border-left: 4px solid #f44336; padding-left: 10px; }
         
-        /* MODAL CORREGIDO PARA QUE NO SE SALGA */
-        #resumenCuerpo table { 
-            font-size: 0.8rem; 
-            width: 100%; 
-            table-layout: fixed; /* Esto evita el desbordamiento lateral */
-        }
-        #resumenCuerpo td, #resumenCuerpo th {
-            word-wrap: break-word;
-            padding: 5px 2px;
-        }
-        .col-prod { width: 45%; }
-        .col-cant { width: 20%; text-align: center; }
-        .col-sub { width: 35%; text-align: right; }
+        .food-item { background: white; padding: 15px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+        
+        .quantity-controls { display: flex; align-items: center; background: #f8f9fa; border-radius: 25px; padding: 2px; border: 1px solid #ddd; }
+        .btn-qty { width: 32px; height: 32px; border-radius: 50%; border: none; background: white; color: #6f1a07; font-weight: bold; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .qty-number { margin: 0 12px; font-weight: bold; }
+
+        .delivery-selection { background: #fff3e0; margin: 20px; padding: 15px; border-radius: 15px; border: 1px dashed #6f1a07; }
+        .delivery-info { font-size: 0.9rem; color: #6f1a07; margin-bottom: 0; }
+        .btn-change-addr { font-size: 0.8rem; color: #f44336; text-decoration: underline; cursor: pointer; border: none; background: none; padding: 0; }
 
         .floating-cart { 
             position: fixed; bottom: 0; left: 0; width: 100%; 
-            background: #6f1a07; color: white; padding: 15px; 
-            border-radius: 20px 20px 0 0; z-index: 1001;
+            background: #6f1a07; color: white; padding: 20px; 
+            border-radius: 20px 20px 0 0; cursor: pointer; 
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.2); z-index: 1001;
         }
-        .dropdown-menu { font-size: 0.85rem; border-radius: 12px; }
     </style>
 </head>
 <body>
 
-<nav class="navbar navbar-light">
+<nav class="navbar navbar-expand-lg navbar-light">
     <div class="container">
         <a class="navbar-brand" href="menu.html">DeMasita</a>
         
-        <div class="d-flex align-items-center">
-            <div class="nav-user-link mr-1" onclick="window.location.href='https://augedu6-dot.github.io/lukasecurity.github.io/seguimiento.html'" style="background: #e8f5e9; color: #2e7d32 !important;">
-                <i class="fas fa-truck mr-1"></i><span>Seguir</span>
+        <div class="d-flex align-items-center ml-auto">
+            <div class="nav-user-link mr-2" onclick="window.location.href='https://augedu6-dot.github.io/lukasecurity.github.io/seguimiento.html'" style="background: #e8f5e9; color: #2e7d32 !important;">
+                <i class="fas fa-truck mr-1"></i>
+                <span>Seguir Pedido</span>
             </div>
 
-            <div class="cart-icon mr-2" onclick="window.location.href='https://augedu6-dot.github.io/lukasecurity.github.io/carrito.html'">
+            <div class="cart-icon mr-3" onclick="window.location.href='https://augedu6-dot.github.io/lukasecurity.github.io/carrito.html'">
                 <i class="fas fa-shopping-cart"></i>
                 <span class="cart-count" id="cartCount">0</span>
             </div>
 
-            <div class="dropdown">
-                <div class="nav-user-link dropdown-toggle" id="userMenu" data-toggle="dropdown">
-                    <i class="fas fa-user-circle mr-1"></i><span id="navUser">Cuenta</span>
-                </div>
-                <div class="dropdown-menu dropdown-menu-right shadow border-0">
-                    <a class="dropdown-item py-2" href="https://augedu6-dot.github.io/lukasecurity.github.io/menu.html">Ver Menú</a>
-                    <a class="dropdown-item py-2" href="https://augedu6-dot.github.io/lukasecurity.github.io/direccion.html">Direcciones</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item py-2" href="#" data-toggle="modal" data-target="#userModal">Perfil</a>
-                </div>
+            <div class="nav-user-link" data-toggle="modal" data-target="#userModal">
+                <i class="fas fa-user-circle mr-1"></i>
+                <span id="navUser">Cuenta</span>
             </div>
         </div>
     </div>
 </nav>
 
-<div class="container mt-3">
-    <div class="delivery-selection p-2 bg-light rounded border mb-3">
-        <p class="mb-0 small text-truncate"><strong>Entregar en:</strong> <span id="currentAddress">Cargando...</span></p>
+<div class="delivery-selection" id="deliverySection">
+    <div class="d-flex align-items-center">
+        <i class="fas fa-map-marker-alt mr-3" style="font-size: 1.2rem; color: #f44336;"></i>
+        <div>
+            <p class="delivery-info"><strong>Entregar en:</strong></p>
+            <p id="currentAddress" class="delivery-info">Cargando dirección...</p>
+            <button class="btn-change-addr" onclick="window.location.href='https://augedu6-dot.github.io/lukasecurity.github.io/direccion.html'">Cambiar o agregar domicilio</button>
+        </div>
     </div>
+</div>
+
+<div class="container menu-container">
+    <div class="category-title">Tu Pedido</div>
     <div id="lista-carrito"></div>
 </div>
 
-<div class="modal fade" id="resumenModal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered mx-2" role="document">
+<div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-            <div class="modal-header bg-success text-white border-0 py-2">
-                <h6 class="modal-title">Confirmar Pedido</h6>
+            <div class="modal-header border-0">
+                <h5 class="modal-title">Mi Perfil</h5>
                 <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
             </div>
-            <div class="modal-body p-2" id="resumenCuerpo"></div>
-            <div class="modal-footer border-0 p-2">
-                <button type="button" class="btn btn-success btn-block rounded-pill" onclick="confirmarPedidoFinal()">Confirmar y Pagar</button>
+            <div class="modal-body text-center p-4">
+                <div class="user-avatar"><i class="fas fa-user"></i></div>
+                <h3 class="h5 font-weight-bold">¡Bienvenido!</h3>
+                <p class="user-email font-weight-bold mb-4" id="displayEmail"></p>
+                <button class="btn btn-danger btn-block rounded-pill py-2" onclick="cerrarSesion()">Cerrar Sesión</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="resumenModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white border-0">
+                <h5 class="modal-title">Confirmar Pedido</h5>
+                <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body" id="resumenCuerpo">
+                </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-secondary rounded-pill" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success rounded-pill px-4" onclick="confirmarPedidoFinal()">Confirmar y Pagar</button>
             </div>
         </div>
     </div>
@@ -146,43 +130,28 @@
 
 <div class="floating-cart" onclick="irAFinalizar()">
     <div class="container d-flex justify-content-between align-items-center">
-        <small><span id="itemsTotal">0</span> prods</small>
-        <strong>Finalizar Pedido</strong>
-        <small>$<span id="totalFloat">0</span></small>
+        <div><span id="itemsTotal">0</span> productos</div>
+        <div class="text-right">
+            <strong>Finalizar Pedido</strong><br>
+            <small>Total: $<span id="totalFloat">0</span></small>
+        </div>
     </div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 
 <script>
     let carrito = JSON.parse(localStorage.getItem("carrito_obj")) || {};
 
-    function actualizarInterfaz() {
-        let totalItems = 0; let precioTotal = 0;
-        const lista = document.getElementById('lista-carrito');
-        lista.innerHTML = "";
-
-        for (const [nombre, item] of Object.entries(carrito)) {
-            totalItems += item.cantidad;
-            precioTotal += item.cantidad * item.precio;
-            lista.innerHTML += `
-                <div class="food-item">
-                    <div style="flex:1; min-width:0" class="pr-2">
-                        <p class="mb-0 font-weight-bold small text-truncate">${nombre}</p>
-                        <small class="text-muted">$${item.precio}</small>
-                    </div>
-                    <div class="quantity-controls">
-                        <button class="btn-qty" onclick="cambiarCantidad('${nombre}', ${item.precio}, -1)">-</button>
-                        <span class="qty-number mx-2">${item.cantidad}</span>
-                        <button class="btn-qty" onclick="cambiarCantidad('${nombre}', ${item.precio}, 1)">+</button>
-                    </div>
-                </div>`;
+    function cargarDireccion() {
+        const d = JSON.parse(localStorage.getItem('domicilio'));
+        const display = document.getElementById('currentAddress');
+        if (d) {
+            display.innerText = `${d.calle} #${d.numero}, ${d.ciudad}`;
+        } else {
+            display.innerHTML = `<span class="text-danger">No has registrado dirección</span>`;
         }
-        document.getElementById("cartCount").innerText = totalItems;
-        document.getElementById("itemsTotal").innerText = totalItems;
-        document.getElementById("totalFloat").innerText = precioTotal;
     }
 
     function cambiarCantidad(nombre, precio, cambio) {
@@ -193,30 +162,110 @@
         actualizarInterfaz();
     }
 
+    function actualizarInterfaz() {
+        let totalItems = 0;
+        let precioTotal = 0;
+        const lista = document.getElementById('lista-carrito');
+        lista.innerHTML = "";
+
+        for (const [nombre, item] of Object.entries(carrito)) {
+            totalItems += item.cantidad;
+            precioTotal += item.cantidad * item.precio;
+
+            lista.innerHTML += `
+                <div class="food-item">
+                    <div><p class="mb-0 font-weight-bold">${nombre}</p><small class="text-muted">$${item.precio} c/u</small></div>
+                    <div class="quantity-controls">
+                        <button class="btn-qty" onclick="cambiarCantidad('${nombre}', ${item.precio}, -1)">-</button>
+                        <span class="qty-number">${item.cantidad}</span>
+                        <button class="btn-qty" onclick="cambiarCantidad('${nombre}', ${item.precio}, 1)">+</button>
+                    </div>
+                </div>`;
+        }
+
+        if (totalItems === 0) {
+            lista.innerHTML = "<div class='text-center mt-5'><i class='fas fa-shopping-basket fa-3x mb-3' style='color:#ccc'></i><p>Tu carrito está vacío.</p></div>";
+        }
+
+        document.getElementById("cartCount").innerText = totalItems;
+        document.getElementById("itemsTotal").innerText = totalItems;
+        document.getElementById("totalFloat").innerText = precioTotal;
+    }
+
     function irAFinalizar() {
-        if (Object.keys(carrito).length === 0) return alert("Carrito vacío");
-        let tabla = `<table class="table table-sm table-borderless">
-            <thead><tr class="border-bottom"><th class="col-prod">Item</th><th class="col-cant">Cant</th><th class="col-sub">Sub</th></tr></thead>
+        if (Object.keys(carrito).length === 0) {
+            alert("Tu carrito está vacío");
+            return;
+        }
+        const d = JSON.parse(localStorage.getItem('domicilio'));
+        if (!d) {
+            alert("Por favor, registra una dirección de entrega primero.");
+            window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/direccion.html";
+            return;
+        }
+
+        // Crear tabla de resumen para el Modal
+        let tabla = `<table class="table table-borderless sm-table">
+            <thead><tr class="border-bottom"><th>Producto</th><th>Cant.</th><th>Subtotal</th></tr></thead>
             <tbody>`;
         let total = 0;
         for (const [nombre, item] of Object.entries(carrito)) {
-            let sub = item.cantidad * item.precio; total += sub;
-            tabla += `<tr><td class="small">${nombre}</td><td class="text-center">${item.cantidad}</td><td class="text-right">$${sub}</td></tr>`;
+            let sub = item.cantidad * item.precio;
+            total += sub;
+            tabla += `<tr><td>${nombre}</td><td>${item.cantidad}</td><td>$${sub}</td></tr>`;
         }
-        tabla += `</tbody></table><h6 class="text-right pr-2">Total: $${total}</h6>`;
+        tabla += `</tbody></table>
+        <div class="bg-light p-3 rounded">
+            <p class="mb-1 small"><strong>Entregar en:</strong></p>
+            <p class="mb-0 small">${d.calle} #${d.numero}, ${d.ciudad}</p>
+        </div>
+        <h4 class="text-right mt-3">Total: $${total}</h4>`;
+
         document.getElementById('resumenCuerpo').innerHTML = tabla;
         $('#resumenModal').modal('show');
     }
 
     function confirmarPedidoFinal() {
-        alert("¡Pedido recibido!");
+        // Generar ID Hexadecimal de 6 dígitos aleatorios
+        const idPedido = Math.floor(Math.random() * 0xFFFFFF).toString(16).toUpperCase().padStart(6, '0');
+        
+        // Calcular hora de entrega (+45 minutos)
+        const ahora = new Date();
+        ahora.setMinutes(ahora.getMinutes() + 45);
+        const horaEntrega = ahora.getHours() + ":" + (ahora.getMinutes() < 10 ? '0' : '') + ahora.getMinutes();
+
+        const dataPedido = {
+            id: idPedido,
+            productos: carrito,
+            total: document.getElementById("totalFloat").innerText,
+            hora: horaEntrega,
+            direccion: document.getElementById('currentAddress').innerText,
+            fecha: new Date().toLocaleDateString()
+        };
+
+        // Guardar pedido y limpiar carrito
+        localStorage.setItem("ultimoPedido", JSON.stringify(dataPedido));
         localStorage.removeItem("carrito_obj");
-        window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/menu.html";
+        
+        $('#resumenModal').modal('hide');
+        alert("¡Pedido #" + idPedido + " recibido!");
+        window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/seguimiento.html";
+    }
+
+    function cerrarSesion() {
+        localStorage.removeItem("usuarioLogueado");
+        window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/login2.html";
     }
 
     window.onload = function() {
         const usuario = localStorage.getItem("usuarioLogueado");
-        if (usuario) document.getElementById("navUser").innerText = usuario.split('@')[0];
+        if (!usuario) {
+            window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/login2.html";
+        } else {
+            document.getElementById("displayEmail").innerText = usuario;
+            document.getElementById("navUser").innerText = usuario.split('@')[0];
+        }
+        cargarDireccion();
         actualizarInterfaz();
     };
 </script>
