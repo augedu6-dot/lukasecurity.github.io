@@ -217,7 +217,7 @@
 
         // VARIABLE SOLICITADA: Junta toda la información del pedido
         const infoCompleta = `Pedido: #${idPedido} | Usuario: ${usuarioEmail} | Entrega: ${direccion} |Productos: [${productosTexto}] |  Total: $${totalPagar}`;
-    const infoPedido = `#${idPedido}`;
+
         // Enviar a Google Sheets (idéntico a direccion.html)
         try {
             await fetch(GOOGLE_SCRIPT_URL, {
@@ -260,3 +260,4 @@
 </script>
 </body>
 </html>
+
