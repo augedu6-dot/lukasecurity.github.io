@@ -212,35 +212,43 @@
         actualizarInterfaz();
     }
 
-    function actualizarContador() {
-    const carrito = JSON.parse(localStorage.getItem("carrito_obj")) || {};
-    let total = 0;
-    for (const item of Object.values(carrito)) {
-        total += item.cantidad;
+    function actualizarInterfaz() {
+        let totalItems = 0; let precioTotal = 0;
+        for (const [nombre, id] of Object.entries(itemIds)) {
+            const container = document.getElementById(`controls-${id}`);
+            const item = carrito[nombre];
+            if (item && item.cantidad > 0) {
+                totalItems += item.cantidad; precioTotal += item.cantidad * item.precio;
+                container.innerHTML = `
+                    <div class="quantity-controls">
+                        <button class="btn-qty" onclick="cambiarCantidad('${nombre}', ${item.precio}, -1)">-</button>
+                        <span class="qty-number">${item.cantidad}</span>
+                        <button class="btn-qty" onclick="cambiarCantidad('${nombre}', ${item.precio}, 1)">+</button>
+                    </div>`;
+            } else {
+                const pOrig = nombre === 'Empanada de Queso' ? 15 : (nombre === 'Gorditas de Huevo' ? 20 : 30);
+                container.innerHTML = `<button class="btn-add-initial" onclick="cambiarCantidad('${nombre}', ${pOrig}, 1)">Añadir</button>`;
+            }
+        }
+        document.getElementById("cartCount").innerText = totalItems;
+        document.getElementById("totalFloat").innerText = precioTotal;
     }
-    const badge = document.getElementById("cartCount");
-    if (badge) badge.innerText = total;
-}
 
-function cerrarSesion() {
-    localStorage.removeItem("usuarioLogueado");
-    window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/login2.html";
-}
+    window.onload = function() {
+        const usuario = localStorage.getItem("usuarioLogueado");
+        if (!usuario) {
+            window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/login2.html";
+        } else {
+            document.getElementById("displayEmail").innerText = usuario;
+            document.getElementById("navUser").innerText = usuario.split('@')[0];
+        }
+        actualizarInterfaz();
+    };
 
-// Integrar en el window.onload existente
-window.onload = function() {
-    const usuario = localStorage.getItem("usuarioLogueado");
-    if (usuario) {
-        document.getElementById("navUser").innerText = usuario.split('@')[0];
-    } else {
+    function cerrarSesion() {
+        localStorage.removeItem("usuarioLogueado");
         window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/login2.html";
     }
-    actualizarContador();
-    
-    // Aquí puedes llamar a las funciones específicas de cada página (ej: cargarDatos() o actualizarInterfaz())
-    if (typeof cargarDatos === 'function') cargarDatos();
-    if (typeof actualizarInterfaz === 'function') actualizarInterfaz();
-};
 
     function irADireccion() {
         if (Object.keys(carrito).length === 0) alert("Tu carrito está vacío");
