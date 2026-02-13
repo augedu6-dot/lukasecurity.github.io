@@ -10,11 +10,40 @@
     <style>
         body { font-family: "Ubuntu", sans-serif; background-color: #fefcf5; padding-bottom: 90px; }
         
+        /* Navbar y Usuario */
         .navbar { background-color: white; border-bottom: 2px solid #ffdab3; position: sticky; top: 0; z-index: 1000; }
         .navbar-brand { font-family: 'Marck Script', cursive; font-size: 2rem; color: #6f1a07 !important; }
-        .nav-link { color: #6f1a07 !important; font-weight: 500; }
         
-        .cart-icon { font-size: 1.5rem; color: #6f1a07; position: relative; cursor: pointer; margin-left: 15px; }
+        .nav-user-link {
+            color: #d35400 !important;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            padding: 5px 12px;
+            background: #fff5eb;
+            border-radius: 20px;
+            text-decoration: none !important;
+            font-size: 0.9rem;
+        }
+
+        /* Modal / Popup */
+        .modal-content { border-radius: 20px; border: none; }
+        .modal-header { background: #6f1a07; color: white; border-radius: 20px 20px 0 0; }
+        .user-avatar {
+            width: 70px; height: 70px;
+            background: #ffdab3;
+            color: #6f1a07;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto 15px;
+        }
+
+        /* Elementos del Menú */
+        .cart-icon { font-size: 1.5rem; color: #6f1a07; position: relative; cursor: pointer; }
         .cart-count { background: #f44336; color: white; border-radius: 50%; padding: 2px 6px; font-size: 0.7rem; position: absolute; top: -10px; right: -10px; }
         
         .menu-container { padding: 20px; }
@@ -24,14 +53,11 @@
         .food-name { font-weight: 500; margin-bottom: 0; }
         .food-price { color: #888; font-size: 0.9rem; margin-bottom: 0; }
 
-        /* Estilos de botones de cantidad */
         .quantity-controls { display: flex; align-items: center; background: #f8f9fa; border-radius: 25px; padding: 2px; border: 1px solid #ddd; }
-        .btn-qty { width: 32px; height: 32px; border-radius: 50%; border: none; background: white; color: #6f1a07; font-weight: bold; display: flex; align-items: center; justify-content: center; transition: 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .btn-qty:active { transform: scale(0.9); }
-        .qty-number { margin: 0 12px; font-weight: bold; min-width: 20px; text-align: center; }
+        .btn-qty { width: 32px; height: 32px; border-radius: 50%; border: none; background: white; color: #6f1a07; font-weight: bold; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .qty-number { margin: 0 12px; font-weight: bold; }
         
-        .btn-add-initial { background: #f44336; color: white; border-radius: 20px; border: none; padding: 5px 18px; font-weight: 500; transition: 0.3s; }
-        .btn-add-initial:hover { background: #d32f2f; }
+        .btn-add-initial { background: #f44336; color: white; border-radius: 20px; border: none; padding: 5px 18px; font-weight: 500; }
         
         .floating-cart { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #6f1a07; color: white; padding: 12px 25px; border-radius: 30px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.3); z-index: 1001; width: 90%; max-width: 400px; display: flex; justify-content: space-between; }
     </style>
@@ -41,18 +67,17 @@
 <nav class="navbar navbar-expand-lg navbar-light">
     <div class="container">
         <a class="navbar-brand" href="#">DeMasita</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item"><a class="nav-link" href="#antojitos">Antojitos</a></li>
-                <li class="nav-item"><a class="nav-link" href="#comidas">Comidas</a></li>
-            </ul>
-        </div>
-        <div class="cart-icon" onclick="irADireccion()">
-            <i class="fas fa-shopping-cart"></i>
-            <span class="cart-count" id="cartCount">0</span>
+        
+        <div class="d-flex align-items-center ml-auto">
+            <div class="cart-icon mr-3" onclick="irADireccion()">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-count" id="cartCount">0</span>
+            </div>
+
+            <div class="nav-user-link" data-toggle="modal" data-target="#userModal">
+                <i class="fas fa-user-circle mr-1"></i>
+                <span id="navUser">Cuenta</span>
+            </div>
         </div>
     </div>
 </nav>
@@ -61,20 +86,14 @@
     <div id="antojitos" class="category-title">Antojitos</div>
     
     <div class="food-item">
-        <div>
-            <p class="food-name">Empanada de Queso</p>
-            <p class="food-price">$15</p>
-        </div>
+        <div><p class="food-name">Empanada de Queso</p><p class="food-price">$15</p></div>
         <div id="controls-empanada">
             <button class="btn-add-initial" onclick="cambiarCantidad('Empanada de Queso', 15, 1)">Añadir</button>
         </div>
     </div>
 
     <div class="food-item">
-        <div>
-            <p class="food-name">Gorditas de Huevo</p>
-            <p class="food-price">$20</p>
-        </div>
+        <div><p class="food-name">Gorditas de Huevo</p><p class="food-price">$20</p></div>
         <div id="controls-gorditas">
             <button class="btn-add-initial" onclick="cambiarCantidad('Gorditas de Huevo', 20, 1)">Añadir</button>
         </div>
@@ -83,12 +102,30 @@
     <div id="comidas" class="category-title">Comidas</div>
     
     <div class="food-item">
-        <div>
-            <p class="food-name">Taco de Carne</p>
-            <p class="food-price">$30</p>
-        </div>
+        <div><p class="food-name">Taco de Carne</p><p class="food-price">$30</p></div>
         <div id="controls-taco">
             <button class="btn-add-initial" onclick="cambiarCantidad('Taco de Carne', 30, 1)">Añadir</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title">Mi Perfil</h5>
+                <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body text-center p-4">
+                <div class="user-avatar"><i class="fas fa-user"></i></div>
+                <h3 class="h5 font-weight-bold">¡Bienvenido al Sistema!</h3>
+                <p class="text-muted small">Has iniciado sesión como:</p>
+                <p class="user-email font-weight-bold mb-4" id="displayEmail"></p>
+                
+                <button class="btn btn-danger btn-block rounded-pill py-2" onclick="cerrarSesion()">
+                    <i class="fas fa-sign-out-alt mr-2"></i>Cerrar Sesión
+                </button>
+            </div>
         </div>
     </div>
 </div>
@@ -97,38 +134,18 @@
     <span>Ver pedido</span>
     <span>$<span id="totalFloat">0</span></span>
 </div>
-<div class="card">
-    <h1>¡Bienvenido al Sistema!</h1>
-    <p>Has iniciado sesión correctamente como:</p>
-    <p class="user-email" id="displayEmail"></p>
-    
-    <button onclick="cerrarSesion()">Cerrar Sesión</button>
-</div>
-<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 
 <script>
-    // Estructura del carrito: { "Nombre": { precio: 15, cantidad: 2 } }
     let carrito = JSON.parse(localStorage.getItem("carrito_obj")) || {};
-
-    // Mapeo de IDs para facilitar la actualización de la interfaz
-    const itemIds = {
-        'Empanada de Queso': 'empanada',
-        'Gorditas de Huevo': 'gorditas',
-        'Taco de Carne': 'taco'
-    };
+    const itemIds = { 'Empanada de Queso': 'empanada', 'Gorditas de Huevo': 'gorditas', 'Taco de Carne': 'taco' };
 
     function cambiarCantidad(nombre, precio, cambio) {
-        if (!carrito[nombre]) {
-            carrito[nombre] = { precio: precio, cantidad: 0 };
-        }
-
+        if (!carrito[nombre]) carrito[nombre] = { precio: precio, cantidad: 0 };
         carrito[nombre].cantidad += cambio;
-
-        if (carrito[nombre].cantidad <= 0) {
-            delete carrito[nombre];
-        }
-
+        if (carrito[nombre].cantidad <= 0) delete carrito[nombre];
         guardarYActualizar();
     }
 
@@ -138,63 +155,46 @@
     }
 
     function actualizarInterfaz() {
-        let totalItems = 0;
-        let precioTotal = 0;
-
-        // Actualizar cada bloque de control en el HTML
+        let totalItems = 0; let precioTotal = 0;
         for (const [nombre, id] of Object.entries(itemIds)) {
             const container = document.getElementById(`controls-${id}`);
             const item = carrito[nombre];
-
             if (item && item.cantidad > 0) {
-                totalItems += item.cantidad;
-                precioTotal += item.cantidad * item.precio;
-
+                totalItems += item.cantidad; precioTotal += item.cantidad * item.precio;
                 container.innerHTML = `
                     <div class="quantity-controls">
                         <button class="btn-qty" onclick="cambiarCantidad('${nombre}', ${item.precio}, -1)">-</button>
                         <span class="qty-number">${item.cantidad}</span>
                         <button class="btn-qty" onclick="cambiarCantidad('${nombre}', ${item.precio}, 1)">+</button>
-                    </div>
-                `;
+                    </div>`;
             } else {
-                // Volver al botón original si la cantidad es 0
-                const precioOriginal = nombre === 'Empanada de Queso' ? 15 : (nombre === 'Gorditas de Huevo' ? 20 : 30);
-                container.innerHTML = `<button class="btn-add-initial" onclick="cambiarCantidad('${nombre}', ${precioOriginal}, 1)">Añadir</button>`;
+                const pOrig = nombre === 'Empanada de Queso' ? 15 : (nombre === 'Gorditas de Huevo' ? 20 : 30);
+                container.innerHTML = `<button class="btn-add-initial" onclick="cambiarCantidad('${nombre}', ${pOrig}, 1)">Añadir</button>`;
             }
         }
-
         document.getElementById("cartCount").innerText = totalItems;
         document.getElementById("totalFloat").innerText = precioTotal;
     }
 
-    function irADireccion() {
-        if (Object.keys(carrito).length === 0) {
-            alert("Tu carrito está vacío");
-        } else {
-            window.location.href = "carrito.html";
-        }
-    }
-
-    // Al cargar la página
-    actualizarInterfaz();
-// Al cargar la página, verificamos el LocalStorage
     window.onload = function() {
         const usuario = localStorage.getItem("usuarioLogueado");
-
         if (!usuario) {
-            // Si no hay nada en LocalStorage, lo mandamos al login
-            alert("Acceso denegado. Por favor inicia sesión.");
-            window.location.href = "login2.html"; // Cambia esto al nombre de tu archivo de login
+            window.location.href = "login2.html";
         } else {
-            // Si existe, lo mostramos en pantalla
             document.getElementById("displayEmail").innerText = usuario;
+            document.getElementById("navUser").innerText = usuario.split('@')[0];
         }
+        actualizarInterfaz();
     };
 
     function cerrarSesion() {
-        localStorage.removeItem("usuarioLogueado"); // Borramos el dato
-        window.location.href = "login2.html"; // Volvemos al login
+        localStorage.removeItem("usuarioLogueado");
+        window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/login2.html";
+    }
+
+    function irADireccion() {
+        if (Object.keys(carrito).length === 0) alert("Tu carrito está vacío");
+        else window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/carrito.html";
     }
 </script>
 </body>
