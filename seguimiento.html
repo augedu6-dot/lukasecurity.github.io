@@ -47,6 +47,15 @@
             alert("Android interface not found");
         }
     }
+      function sendData1() {
+        var dataToSend = "¡El repartidor va en camino al destino!";
+        // Call the Android method using the 'Android' interface name
+        if (typeof Android !== 'undefined' && Android !== null) {
+            Android.sendDataToAndroid(dataToSend);
+        } else {
+            alert("Android interface not found");
+        }
+    }
 </script>
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 
@@ -101,6 +110,7 @@
             barra.style.width = "100%";
             badge.className = "badge badge-primary p-2";
         } else if (e.includes("en camino") || e.includes("reparto")) {
+            sendData1();
             barra.style.width = "75%";
             badge.className = "badge badge-info p-2";
         } else if (e.includes("preparando") || e.includes("cocina")) {
@@ -174,6 +184,7 @@
 </script>
 </body>
 </html>
+
 
 
 
