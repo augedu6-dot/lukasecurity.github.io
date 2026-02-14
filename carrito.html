@@ -148,7 +148,7 @@
 
 <script>
     let carrito = JSON.parse(localStorage.getItem("carrito_obj")) || {};
-    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxeE8NaqRpHD1eztqcSCWT7aCKzrhZSjBoGyZbdrhif3uAMRt1mfJ9E9stKIv7Bfl2p/exec";
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxitLq0Q0KkyK4iPB6a7Ctzj86fY2xCIi2zgmTQ9LHjKn5zM_wHkVI3Jq3Lnqjphgc0/exec";
 
     function cargarDireccion() {
         const d = JSON.parse(localStorage.getItem('domicilio'));
@@ -187,21 +187,39 @@
         document.getElementById("totalFloat").innerText = precioTotal;
     }
 
-    function irAFinalizar() {
-        if (Object.keys(carrito).length === 0) return alert("Tu carrito está vacío");
-        if (!localStorage.getItem('domicilio')) {
-            alert("Registra una dirección primero.");
-            window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/direccion.html";
-            return;
-        }
-        let tabla = `<table class="table table-borderless table-resumen"><thead><tr><th>Producto</th><th>Cant.</th><th>Subtotal</th></tr></thead><tbody>`;
-        for (const [nombre, item] of Object.entries(carrito)) {
-            tabla += `<tr><td>${nombre}</td><td>${item.cantidad}</td><td>$${item.cantidad * item.precio}</td></tr>`;
-        }
-        tabla += `</tbody></table><h4 class="text-right">Total: $${document.getElementById("totalFloat").innerText}</h4>`;
-        document.getElementById('resumenCuerpo').innerHTML = tabla;
-        $('#resumenModal').modal('show');
+function irAFinalizar() {
+    if (Object.keys(carrito).length === 0) return alert("Tu carrito está vacío");
+    
+    // Obtener la dirección actual del elemento de la interfaz
+    const direccionActual = document.getElementById('currentAddress').innerText;
+    
+    if (!localStorage.getItem('domicilio')) {
+        alert("Registra una dirección primero.");
+        window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/direccion.html";
+        return;
     }
+
+    // Construcción del contenido del modal
+    let contenidoModal = `
+        <div class="mb-3 p-2" style="background: #f8f9fa; border-radius: 10px; border-left: 4px solid #28a745;">
+            <p class="mb-1"><strong><i class="fas fa-map-marker-alt"></i> Entregar en:</strong></p>
+            <p class="small mb-0">${direccionActual}</p>
+        </div>
+        <table class="table table-borderless table-resumen">
+            <thead>
+                <tr><th>Producto</th><th>Cant.</th><th>Subtotal</th></tr>
+            </thead>
+            <tbody>`;
+
+    for (const [nombre, item] of Object.entries(carrito)) {
+        contenidoModal += `<tr><td>${nombre}</td><td>${item.cantidad}</td><td>$${item.cantidad * item.precio}</td></tr>`;
+    }
+
+    contenidoModal += `</tbody></table><h4 class="text-right">Total: $${document.getElementById("totalFloat").innerText}</h4>`;
+    
+    // Inyectar el contenido en el cuerpo del modal
+    document.getElementById('resumenCuerpo').innerHTML = contenidoModal;
+    $('#resumenModal').modal('show');
 
     async function confirmarPedidoFinal() {
         const usuarioEmail = localStorage.getItem("usuarioLogueado") || "Sin Email";
@@ -225,7 +243,7 @@ const datosx = { nombre: infoCompleta, pedido: idPedido };
                 method: 'POST',
                 mode: 'no-cors',
                 headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(datosx)
+                body: JSON.stringify(datosx)
             });
         } catch (e) { console.error("Error envío:", e); }
 
@@ -261,7 +279,5 @@ const datosx = { nombre: infoCompleta, pedido: idPedido };
 </script>
 </body>
 </html>
-
-
 
 
