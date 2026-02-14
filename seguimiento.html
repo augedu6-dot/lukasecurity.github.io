@@ -62,8 +62,8 @@
                 const columnas = filas[i].split(",");
                 // Columna C es índice 2, Columna E es índice 4
             
-                if (columnas[2] && columnas[2].trim() === idBuscado) {
-                    estadoEncontrado = columnas[3] ? columnas[3].trim() : "Pendiente";
+                if (columnas[3] && columnas[3].trim() === idBuscado) {
+                    estadoEncontrado = columnas[4] ? columnas[4].trim() : "Pendiente";
                     break;
                 }
             }
@@ -87,7 +87,7 @@
         if (e.includes("entregado")) {
             barra.style.width = "100%";
             badge.className = "badge badge-primary p-2";
-        } else if (e.includes("camino") || e.includes("reparto")) {
+        } else if (e.includes("en camino") || e.includes("reparto")) {
             barra.style.width = "75%";
             badge.className = "badge badge-info p-2";
         } else if (e.includes("preparando") || e.includes("cocina")) {
@@ -161,6 +161,7 @@
 </script>
 </body>
 </html>
+
 
 
 
