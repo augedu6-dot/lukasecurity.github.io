@@ -62,6 +62,15 @@
         .delivery-info { font-size: 0.9rem; color: #6f1a07; margin-bottom: 0; }
         .btn-change-addr { font-size: 0.8rem; color: #f44336; text-decoration: underline; cursor: pointer; border: none; background: none; padding: 0; }
         .floating-cart { position: fixed; bottom: 0; left: 0; width: 100%; background: #6f1a07; color: white; padding: 20px; border-radius: 20px 20px 0 0; cursor: pointer; box-shadow: 0 -4px 15px rgba(0,0,0,0.2); z-index: 1001; }
+        
+        /* Estilo para la dirección en el resumen */
+        .resumen-direccion {
+            background-color: #fcf3cf;
+            padding: 12px;
+            border-radius: 10px;
+            border-left: 5px solid #f39c12;
+            margin-bottom: 15px;
+        }
     </style>
 </head>
 <body>
@@ -124,7 +133,8 @@
                 <h5 class="modal-title">Confirmar Pedido</h5>
                 <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
             </div>
-            <div class="modal-body" id="resumenCuerpo"></div>
+            <div class="modal-body" id="resumenCuerpo">
+                </div>
             <div class="modal-footer border-0">
                 <button type="button" class="btn btn-secondary rounded-pill" data-dismiss="modal">Cancelar</button>
                 <button type="button" class="btn btn-success rounded-pill px-4" onclick="confirmarPedidoFinal()">Confirmar y Pagar</button>
@@ -187,39 +197,41 @@
         document.getElementById("totalFloat").innerText = precioTotal;
     }
 
-function irAFinalizar() {
-    if (Object.keys(carrito).length === 0) return alert("Tu carrito está vacío");
-    
-    // Obtener la dirección actual del elemento de la interfaz
-    const direccionActual = document.getElementById('currentAddress').innerText;
-    
-    if (!localStorage.getItem('domicilio')) {
-        alert("Registra una dirección primero.");
-        window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/direccion.html";
-        return;
+    // FUNCIÓN CORREGIDA PARA MOSTRAR LA DIRECCIÓN EN EL MODAL
+    function irAFinalizar() {
+        if (Object.keys(carrito).length === 0) return alert("Tu carrito está vacío");
+        
+        const direccionActual = document.getElementById('currentAddress').innerText;
+        if (!localStorage.getItem('domicilio')) {
+            alert("Registra una dirección primero.");
+            window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/direccion.html";
+            return;
+        }
+
+        // Construir el HTML del resumen incluyendo la dirección
+        let contenidoResumen = `
+            <div class="resumen-direccion">
+                <p class="mb-1"><strong><i class="fas fa-map-marker-alt"></i> Dirección de Envío:</strong></p>
+                <p class="mb-0 small">${direccionActual}</p>
+            </div>
+            <table class="table table-borderless table-resumen">
+                <thead>
+                    <tr><th>Producto</th><th>Cant.</th><th>Subtotal</th></tr>
+                </thead>
+                <tbody>`;
+
+        for (const [nombre, item] of Object.entries(carrito)) {
+            contenidoResumen += `<tr><td>${nombre}</td><td>${item.cantidad}</td><td>$${item.cantidad * item.precio}</td></tr>`;
+        }
+
+        contenidoResumen += `
+                </tbody>
+            </table>
+            <h4 class="text-right mt-3">Total a Pagar: $${document.getElementById("totalFloat").innerText}</h4>`;
+        
+        document.getElementById('resumenCuerpo').innerHTML = contenidoResumen;
+        $('#resumenModal').modal('show');
     }
-
-    // Construcción del contenido del modal
-    let contenidoModal = `
-        <div class="mb-3 p-2" style="background: #f8f9fa; border-radius: 10px; border-left: 4px solid #28a745;">
-            <p class="mb-1"><strong><i class="fas fa-map-marker-alt"></i> Entregar en:</strong></p>
-            <p class="small mb-0">${direccionActual}</p>
-        </div>
-        <table class="table table-borderless table-resumen">
-            <thead>
-                <tr><th>Producto</th><th>Cant.</th><th>Subtotal</th></tr>
-            </thead>
-            <tbody>`;
-
-    for (const [nombre, item] of Object.entries(carrito)) {
-        contenidoModal += `<tr><td>${nombre}</td><td>${item.cantidad}</td><td>$${item.cantidad * item.precio}</td></tr>`;
-    }
-
-    contenidoModal += `</tbody></table><h4 class="text-right">Total: $${document.getElementById("totalFloat").innerText}</h4>`;
-    
-    // Inyectar el contenido en el cuerpo del modal
-    document.getElementById('resumenCuerpo').innerHTML = contenidoModal;
-    $('#resumenModal').modal('show');
 
     async function confirmarPedidoFinal() {
         const usuarioEmail = localStorage.getItem("usuarioLogueado") || "Sin Email";
@@ -233,12 +245,10 @@ function irAFinalizar() {
         }
         productosTexto = productosTexto.slice(0, -2);
 
-        // VARIABLE SOLICITADA: Junta toda la información del pedido
         const infoCompleta = `Pedido: #${idPedido} | Usuario: ${usuarioEmail} | Entrega: ${direccion} |Productos: [${productosTexto}] |  Total: $${totalPagar}`;
 
-        // Enviar a Google Sheets (idéntico a direccion.html)
         try {
-const datosx = { nombre: infoCompleta, pedido: idPedido };
+            const datosx = { nombre: infoCompleta, pedido: idPedido };
             await fetch(GOOGLE_SCRIPT_URL, {
                 method: 'POST',
                 mode: 'no-cors',
@@ -279,5 +289,3 @@ const datosx = { nombre: infoCompleta, pedido: idPedido };
 </script>
 </body>
 </html>
-
-
