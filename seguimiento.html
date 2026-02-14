@@ -36,6 +36,18 @@
         </div>
 </div>
 
+
+<script type="text/javascript">
+    function sendData() {
+        var dataToSend = "Hello from JavaScript!";
+        // Call the Android method using the 'Android' interface name
+        if (typeof Android !== 'undefined' && Android !== null) {
+            Android.sendDataToAndroid(dataToSend);
+        } else {
+            alert("Android interface not found");
+        }
+    }
+</script>
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 
 <script>
@@ -85,6 +97,7 @@
         // Lógica de colores y barra según el texto
         const e = estado.toLowerCase();
         if (e.includes("entregado")) {
+            sendData();
             barra.style.width = "100%";
             badge.className = "badge badge-primary p-2";
         } else if (e.includes("en camino") || e.includes("reparto")) {
@@ -101,7 +114,7 @@
 
     window.onload = function() {
         const usuario = localStorage.getItem("usuarioLogueado");
-        if (!usuario) { window.location.href = "login2.html"; return; }
+        if (!usuario) { window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/login2.html"; return; }
         document.getElementById("navUser").innerText = usuario.split('@')[0];
 
         const pedido = JSON.parse(localStorage.getItem("ultimoPedido"));
@@ -161,6 +174,7 @@
 </script>
 </body>
 </html>
+
 
 
 
