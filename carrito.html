@@ -211,7 +211,7 @@
 
         try {
             // 1. Guardar en Firebase (Realtime Database)
-            await fetch(`${FIREBASE_URL}/${idPedido}.json`, {
+            await fetch(`${FIREBASE_URL}${idPedido}.json`, {
                 method: 'PUT',
                 body: JSON.stringify(dataPedido)
             });
@@ -251,5 +251,6 @@
 </script>
 </body>
 </html>
+
 
 
