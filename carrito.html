@@ -129,7 +129,7 @@
     const auth = getAuth(app);
 
     let carrito = JSON.parse(localStorage.getItem("carrito_obj")) || {};
-    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxeE8NaqRpHD1eztqcSCWT7aCKzrhZSjBoGyZbdrhif3uAMRt1mfJ9E9stKIv7Bfl2p/exec";
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwDQQRAD_eUCbTj-AJYf755J8v7ySfvm3DCYW6SMI9fnNBJ6qJN9Qx7m2idFG_JkZBP/exec";
 
     // Autenticación anónima para cumplir reglas Firebase
     signInAnonymously(auth).catch((error) => console.error("Error Auth:", error));
@@ -262,3 +262,4 @@
 </script>
 </body>
 </html>
+
