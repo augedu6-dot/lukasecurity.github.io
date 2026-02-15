@@ -58,7 +58,7 @@
         <div>
             <p class="delivery-info"><strong>Entregar en:</strong></p>
             <p id="currentAddress" class="delivery-info">Cargando dirección...</p>
-            <button class="btn-change-addr" onclick="window.location.href='direccion.html'">Cambiar domicilio</button>
+            <button class="btn-change-addr" onclick="window.location.href='https://augedu6-dot.github.io/lukasecurity.github.io/direccion.html'">Cambiar domicilio</button>
         </div>
     </div>
 </div>
@@ -111,7 +111,7 @@
 <script>
     let carrito = JSON.parse(localStorage.getItem("carrito_obj")) || {};
     const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxeE8NaqRpHD1eztqcSCWT7aCKzrhZSjBoGyZbdrhif3uAMRt1mfJ9E9stKIv7Bfl2p/exec";
-    const FIREBASE_URL = "https://dbnot-50172.firebaseio.com/pedidos";
+    const FIREBASE_URL = "https://dbnot-50172-default-rtdb.firebaseio.com/pedidos";
 
     function cargarDireccion() {
         const d = JSON.parse(localStorage.getItem('domicilio'));
@@ -251,3 +251,4 @@
 </script>
 </body>
 </html>
+
