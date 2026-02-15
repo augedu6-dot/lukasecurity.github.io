@@ -29,79 +29,81 @@
         </div>
     </div>
 </nav>
+
 <div class="container py-4">
     <h2 class="text-center mb-4" style="color: #6f1a07;">Seguimiento de Pedido</h2>
-    <div id="contenido-seguimiento"></div>
+    <div id="contenido-seguimiento">
+        <div class="text-center py-5">
+            <div class="spinner-border text-warning" role="status"></div>
+            <p class="mt-2">Buscando información de tu pedido...</p>
+        </div>
+    </div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 
 <script>
-    // 1. Configuración de URLs
+    // 1. Configuración
     const URL_CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRvlRhwdMH5fof8Od9MtSjd7teTPRIh-_qsKsA_jjTVIxekrDYHrJFQAr1C--LccAbSCTm-gCNjVppn/pub?gid=0&single=true&output=csv";
-    const FIREBASE_URL = "https://dbnot-50172.firebaseio.com/"; // Verifica si es /pedidos o raíz
+    const FIREBASE_BASE_URL = "https://dbnot-50172.firebaseio.com/pedidos"; 
 
-    // 2. Notificaciones
-    if (Notification.permission !== "granted" && Notification.permission !== "denied") {
-        Notification.requestPermission();
-    }
+    let ultimoEstadoConocido = "";
 
-    function enviarNotificacionEmergente(nuevoEstado) {
-        if (Notification.permission === "granted") {
-            new Notification("DeMasita: Actualización", {
-                body: `Tu pedido ahora está: ${nuevoEstado}`,
-                icon: "https://tu-web.com/logo.png" 
-            });
-        }
-    }
-
-    // 3. Lógica Realtime (Firebase)
+    // 2. Lógica Realtime (Firebase SSE)
     function escucharCambiosRealTime(idPedido) {
-        const eventSource = new EventSource(`${FIREBASE_URL}/${idPedido}.json`);
+        // Firebase Realtime Database soporta EventSource agregando el header de auth o reglas libres
+        const eventSource = new EventSource(`${FIREBASE_BASE_URL}/${idPedido}/estado.json`);
 
         eventSource.onmessage = function(event) {
-            const data = JSON.parse(event.data);
-            if (data) {
-                const nuevoEstado = (typeof data === 'string') ? data : data.estado;
-                if (nuevoEstado) {
-                    actualizarInterfaz(nuevoEstado);
-                    enviarNotificacionEmergente(nuevoEstado);
+            try {
+                const data = JSON.parse(event.data);
+                // En Firebase SSE, el primer mensaje suele ser {path: "/", data: "Estado"}
+                const nuevoEstado = (data && data.data) ? data.data : data;
+                
+                if (nuevoEstado && typeof nuevoEstado === 'string' && nuevoEstado !== ultimoEstadoConocido) {
+                    ultimoEstadoConocido = nuevoEstado;
+                    actualizarInterfazUI(nuevoEstado);
+                    enviarNotificacion(nuevoEstado);
                 }
+            } catch (e) {
+                console.error("Error procesando tiempo real:", e);
             }
         };
 
-        eventSource.onerror = function(err) {
-            console.log("Esperando conexión Firebase...");
+        eventSource.onerror = function() {
+            console.log("Reconectando con el servidor de seguimiento...");
         };
     }
 
-    // 4. Lógica de Respaldo (Google Sheets)
-    async function consultarHoja() {
+    // 3. Lógica de Respaldo (Google Sheets)
+    async function consultarGoogleSheets() {
         const pedidoLocal = JSON.parse(localStorage.getItem("ultimoPedido"));
         if (!pedidoLocal) return;
 
         try {
-            const respuesta = await fetch(`${URL_CSV}&cachebuster=${new Date().getTime()}`);
-            const data = await respuesta.text();
-            const filas = data.split(/\r?\n/);
+            const respuesta = await fetch(`${URL_CSV}&cb=${new Date().getTime()}`);
+            const texto = await respuesta.text();
+            const filas = texto.split(/\r?\n/);
             const idBuscado = pedidoLocal.id.toString().trim();
 
             for (let i = 1; i < filas.length; i++) {
                 const columnas = filas[i].split(",");
-                // Ajustamos índices: ID en col C (2) y Estado en col D (3)
                 if (columnas[2] && columnas[2].trim() === idBuscado) {
-                    const estado = columnas[3] ? columnas[3].trim() : "Pendiente";
-                    actualizarInterfaz(estado);
+                    const estadoSheet = columnas[3] ? columnas[3].trim() : "Pendiente";
+                    if (estadoSheet !== ultimoEstadoConocido) {
+                        ultimoEstadoConocido = estadoSheet;
+                        actualizarInterfazUI(estadoSheet);
+                    }
                     break;
                 }
             }
         } catch (error) {
-            console.error("Error leyendo Google Sheets:", error);
+            console.warn("Sheets no disponible, usando caché local.");
         }
     }
 
-    // 5. UI Update
-    function actualizarInterfaz(estado) {
+    // 4. Actualización de Interfaz
+    function actualizarInterfazUI(estado) {
         const badge = document.getElementById("statusBadge");
         const barra = document.getElementById("pBar");
         if (!badge || !barra) return;
@@ -109,36 +111,59 @@
         badge.innerText = estado;
         const e = estado.toLowerCase();
 
+        // Lógica de colores y progreso
         if (e.includes("entregado")) {
             barra.style.width = "100%";
-            badge.className = "badge badge-primary p-2";
+            barra.className = "progress-bar bg-success";
+            badge.className = "badge badge-success p-2";
         } else if (e.includes("camino") || e.includes("reparto")) {
             barra.style.width = "75%";
+            barra.className = "progress-bar bg-info progress-bar-animated";
             badge.className = "badge badge-info p-2";
         } else if (e.includes("preparando") || e.includes("cocina")) {
             barra.style.width = "40%";
-            badge.className = "badge badge-warning p-2";
+            barra.className = "progress-bar bg-warning progress-bar-animated";
+            badge.className = "badge badge-warning p-2 text-dark";
         } else {
             barra.style.width = "20%";
-            badge.className = "badge badge-success p-2";
+            barra.className = "progress-bar bg-secondary progress-bar-animated";
+            badge.className = "badge badge-secondary p-2";
         }
     }
 
-    // 6. Inicialización
+    function enviarNotificacion(estado) {
+        if (Notification.permission === "granted") {
+            new Notification("DeMasita: ¡Actualización!", {
+                body: `Tu pedido #${JSON.parse(localStorage.getItem("ultimoPedido")).id} ahora está: ${estado}`,
+                icon: "https://cdn-icons-png.flaticon.com/512/1048/1048329.png"
+            });
+        }
+    }
+
+    // 5. Carga inicial
     window.onload = function() {
         const contenedor = document.getElementById("contenido-seguimiento");
         const pedido = JSON.parse(localStorage.getItem("ultimoPedido"));
+        const usuario = localStorage.getItem("usuarioLogueado");
+
+        if (usuario) document.getElementById("navUser").innerText = usuario.split('@')[0];
 
         if (!pedido) {
-            contenedor.innerHTML = "<div class='alert alert-warning text-center'>No se encontró ningún pedido activo en este dispositivo.</div>";
+            contenedor.innerHTML = `
+                <div class='alert alert-info text-center shadow-sm'>
+                    <i class="fas fa-info-circle mb-2 d-block" style="font-size: 2rem;"></i>
+                    No tienes pedidos activos actualmente.
+                    <br><a href="menu.html" class="btn btn-warning btn-sm mt-3 rounded-pill">Ir al Menú</a>
+                </div>`;
             return;
         }
 
+        // Renderizar estructura base
         let listaProd = "";
         if (pedido.productos && Array.isArray(pedido.productos)) {
             listaProd = pedido.productos.map(p => 
                 `<li class="list-group-item d-flex justify-content-between align-items-center py-2 small">
-                    ${p.nombre} x${p.cantidad} <span>$${p.precio}</span>
+                    ${p.nombre} x${p.cantidad} <span>$${p.precio * p.cantidad}</span>
                 </li>`
             ).join('');
         }
@@ -147,42 +172,39 @@
             <div class="card card-tracking p-4">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <span>Orden: <span class="order-id">#${pedido.id}</span></span>
-                    <span class="badge badge-success p-2" id="statusBadge">Cargando...</span>
+                    <span class="badge badge-secondary p-2" id="statusBadge">Pendiente</span>
                 </div>
-                <div class="progress mb-4" style="height: 10px;">
-                    <div id="pBar" class="progress-bar progress-bar-striped progress-bar-animated bg-success" style="width: 20%"></div>
+                <div class="progress mb-4" style="height: 12px; border-radius: 10px; background: #eee;">
+                    <div id="pBar" class="progress-bar progress-bar-striped progress-bar-animated bg-secondary" style="width: 20%"></div>
                 </div>
                 <div class="row text-center mb-4">
                     <div class="col-6 border-right">
                         <small class="text-muted d-block">Llegada estimada</small>
-                        <h4 class="font-weight-bold">${pedido.hora || '--:--'}</h4>
+                        <h4 class="font-weight-bold" style="color: #6f1a07;">${pedido.hora || '--:--'}</h4>
                     </div>
                     <div class="col-6">
                         <small class="text-muted d-block">Total pagado</small>
-                        <h4 class="font-weight-bold">$${pedido.total}</h4>
+                        <h4 class="font-weight-bold" style="color: #6f1a07;">$${pedido.total}</h4>
                     </div>
                 </div>
                 <div class="address-box">
-                    <h6 class="font-weight-bold" style="color: #6f1a07;"><i class="fas fa-map-marker-alt mr-2"></i>Dirección:</h6>
-                    <p class="mb-0 small text-muted">${pedido.direccion || "No especificada"}</p>
+                    <h6 class="font-weight-bold" style="color: #6f1a07;"><i class="fas fa-map-marker-alt mr-2"></i>Dirección de entrega:</h6>
+                    <p class="mb-0 small text-muted">${pedido.direccion}</p>
                 </div>
-                <h6>Productos:</h6>
-                <ul class="list-group list-group-flush mb-3">${listaProd}</ul>
+                <h6 class="font-weight-bold mb-3">Detalle de productos:</h6>
+                <ul class="list-group list-group-flush mb-2">${listaProd}</ul>
             </div>
+            <p class="text-center mt-3 small text-muted">La información se actualiza automáticamente.</p>
         `;
 
+        // Pedir permiso notificaciones
+        if (Notification.permission !== "granted") Notification.requestPermission();
+
+        // Iniciar escuchas
         escucharCambiosRealTime(pedido.id);
-        consultarHoja(); 
-        setInterval(consultarHoja, 60000); 
+        consultarGoogleSheets();
+        setInterval(consultarGoogleSheets, 30000); // Respaldo cada 30 segundos
     };
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
