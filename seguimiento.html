@@ -15,6 +15,19 @@
         .card-tracking { border: none; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); background: white; }
         .order-id { font-family: monospace; font-weight: bold; color: #6f1a07; }
         .progress { border-radius: 10px; background-color: #eee; height: 12px; }
+        
+        /* CORRECCIÓN PARA EL ESTATUS EN CELULARES */
+        #statusBadge { 
+            white-space: normal !important; /* Permite saltos de línea */
+            word-wrap: break-word; 
+            max-width: 150px; /* Limita el ancho para forzar el salto si es necesario */
+            text-align: center;
+            line-height: 1.2;
+            display: inline-block;
+            vertical-align: middle;
+            padding: 8px 12px !important;
+        }
+
         .address-box { background: #fff9f0; padding: 15px; border-radius: 12px; border-left: 4px solid #6f1a07; margin-bottom: 20px; }
         .product-item { border-bottom: 1px solid #eee; padding: 8px 0; font-size: 0.9rem; }
         .product-item:last-child { border-bottom: none; }
@@ -29,10 +42,6 @@
                 <a class="nav-link nav-link-custom mr-3" href="menu.html">
                     <i class="fas fa-utensils mr-1"></i> Menú
                 </a>
-                <div id="user-info" class="small d-none d-md-block text-muted">
-                    <i class="fas fa-user-circle mr-1"></i>
-                    <span id="username-nav" class="font-weight-bold">Cliente</span>
-                </div>
             </div>
         </div>
     </nav>
@@ -60,12 +69,9 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // FUNCIÓN PARA MANDAR MENSAJE AL ANDROID WEBVIEW
         function notificarAndroid(mensaje) {
             if (typeof Android !== 'undefined' && Android !== null) {
                 Android.sendDataToAndroid(mensaje);
-            } else {
-                console.log("Interfaz Android no detectada: " + mensaje);
             }
         }
 
@@ -90,7 +96,6 @@
             barra.style.width = porcentaje + "%";
             barra.className = `progress-bar progress-bar-striped progress-bar-animated ${color}`;
             
-            // DISPARAR MENSAJE EMERGENTE EN EL CELULAR
             notificarAndroid("DeMasita: Tu pedido está " + estado);
         }
 
@@ -103,8 +108,6 @@
                 return;
             }
 
-            document.getElementById("username-nav").innerText = pedidoLocal.nombre || "Cliente";
-
             let listaProdHTML = "";
             if (pedidoLocal.productos && Array.isArray(pedidoLocal.productos)) {
                 listaProdHTML = pedidoLocal.productos.map(p => `
@@ -113,8 +116,6 @@
                         <span class="text-muted">$${p.precio * p.cantidad}</span>
                     </div>
                 `).join("");
-            } else {
-                listaProdHTML = `<p class="small text-muted">${pedidoLocal.pedido || "Detalles no disponibles"}</p>`;
             }
 
             contenedor.innerHTML = `
@@ -134,7 +135,7 @@
                             <h4 class="font-weight-bold" style="color: #6f1a07;">${pedidoLocal.hora || '--:--'}</h4>
                         </div>
                         <div class="col-6">
-                            <small class="text-muted d-block">Total pagado</small>
+                            <small class="text-muted d-block">Total</small>
                             <h4 class="font-weight-bold" style="color: #6f1a07;">$${pedidoLocal.total}</h4>
                         </div>
                     </div>
@@ -153,22 +154,13 @@
                 </div>
             `;
 
-            // ESCUCHA DE CAMBIOS EN FIREBASE
             const pedidoRef = ref(db, 'pedidos/' + pedidoLocal.id);
             onValue(pedidoRef, (snapshot) => {
                 const data = snapshot.val();
                 if (data && data.estado) {
-                    const status = data.estado.toLowerCase().trim();
-                    
-                    if (status === "finalizado") {
+                    if (data.estado.toLowerCase().trim() === "finalizado") {
                         notificarAndroid("Tu pedido ha sido finalizado. ¡Gracias!");
-                        contenedor.innerHTML = `
-                            <div class="text-center py-5 card card-tracking p-4">
-                                <i class="fas fa-check-circle fa-4x text-success mb-3"></i>
-                                <h3 class="font-weight-bold">¡Pedido Finalizado!</h3>
-                                <p class="text-muted">Tu orden ha sido completada. ¡Esperamos que lo disfrutes!</p>
-                                <a href="menu.html" class="btn btn-danger btn-block rounded-pill mt-3">Pedir de nuevo</a>
-                            </div>`;
+                        contenedor.innerHTML = `<div class="text-center py-5 card card-tracking p-4"><h3>¡Pedido Finalizado!</h3><a href="menu.html" class="btn btn-danger mt-3">Volver al Menú</a></div>`;
                         localStorage.removeItem("ultimoPedido");
                     } else {
                         actualizarUI(data.estado);
