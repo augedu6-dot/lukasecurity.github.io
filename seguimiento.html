@@ -57,8 +57,8 @@
 
     <nav class="navbar navbar-expand-lg navbar-light shadow-sm mb-3">
         <div class="container d-flex justify-content-between align-items-center">
-            <a class="navbar-brand" href="index.html">DeMasita</a>
-            <a class="btn btn-sm btn-outline-danger font-weight-bold" href="menu.html">Menú</a>
+            <a class="navbar-brand" href="https://augedu6-dot.github.io/lukasecurity.github.io/menu.html">DeMasita</a>
+            <a class="btn btn-sm btn-outline-danger font-weight-bold" href="https://augedu6-dot.github.io/lukasecurity.github.io/menu.html">Menú</a>
         </div>
     </nav>
 
@@ -176,7 +176,7 @@
                 if (data && data.estado) {
                     if (data.estado.toLowerCase().trim() === "finalizado") {
                         notificarAndroid("Tu pedido ha sido finalizado. ¡Gracias!");
-                        contenedor.innerHTML = `<div class="text-center py-5"><h4>¡Pedido Finalizado!</h4><a href="menu.html" class="btn btn-danger mt-3">Volver al Menú</a></div>`;
+                        contenedor.innerHTML = `<div class="text-center py-5"><h4>¡Pedido Finalizado!</h4><a href="https://augedu6-dot.github.io/lukasecurity.github.io/menu.html" class="btn btn-danger mt-3">Volver al Menú</a></div>`;
                         localStorage.removeItem("ultimoPedido");
                     } else {
                         actualizarUI(data.estado);
@@ -187,5 +187,6 @@
     </script>
 </body>
 </html>
+
 
 
