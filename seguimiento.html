@@ -1,89 +1,78 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Seguimiento - DeMasita</title>
-    <link href="https://fonts.googleapis.com/css2?family=Marck+Script&family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
-    <style>
-        body { font-family: "Ubuntu", sans-serif; background-color: #fefcf5; }
-        .navbar { background-color: white; border-bottom: 2px solid #ffdab3; position: sticky; top: 0; z-index: 1050; padding: 0.5rem 0.4rem; }
-        .navbar-brand { font-family: 'Marck Script', cursive; font-size: 1.2rem; color: #6f1a07 !important; }
-        .nav-user-link { color: #d35400 !important; font-weight: 700; padding: 4px 10px; background: #fff5eb; border-radius: 15px; font-size: 0.8rem; display: flex; align-items: center; }
-        .card-tracking { border-radius: 15px; border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-top: 20px; background: white; }
-        .order-id { color: #6f1a07; font-weight: bold; font-family: monospace; font-size: 1.2rem; }
-        .address-box { background-color: #fff5eb; border: 1px solid #ffdab3; border-radius: 10px; padding: 15px; margin-bottom: 20px; }
-        #statusBadge { transition: all 0.5s ease; }
-        .progress-bar { transition: width 1s ease-in-out; }
-    </style>
-</head>
-<body>
-
-<nav class="navbar navbar-light">
-    <div class="container d-flex justify-content-between align-items-center">
-        <a class="navbar-brand" href="menu.html">DeMasita</a>
-        <div class="nav-user-link">
-            <i class="fas fa-user-circle mr-1"></i><span id="navUser">Cuenta</span>
-        </div>
-    </div>
-</nav>
-
-<div class="container py-4">
-    <h2 class="text-center mb-4" style="color: #6f1a07;">Seguimiento de Pedido</h2>
-    <div id="contenido-seguimiento">
-        </div>
-</div>
-
-<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-
 <script>
-    // Tu enlace CSV directo
+    // Configuración de URLs
     const URL_CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRvlRhwdMH5fof8Od9MtSjd7teTPRIh-_qsKsA_jjTVIxekrDYHrJFQAr1C--LccAbSCTm-gCNjVppn/pub?gid=0&single=true&output=csv";
-    
+    const FIREBASE_URL = "https://dbnot-50172.firebaseio.com/pedidos"; // Ajustado a tu ID de proyecto
+
+    // 1. Notificaciones
+    if (Notification.permission !== "granted") {
+        Notification.requestPermission();
+    }
+
+    function enviarNotificacionEmergente(nuevoEstado) {
+        if (Notification.permission === "granted") {
+            new Notification("DeMasita: Actualización", {
+                body: `Tu pedido ahora está: ${nuevoEstado}`,
+                icon: "https://tu-web.com/logo.png" 
+            });
+        }
+    }
+
+    // 2. Lógica Realtime (Firebase)
+    function escucharCambiosRealTime(idPedido) {
+        // Firebase requiere que la URL para EventSource sea la del nodo .json
+        const eventSource = new EventSource(`${FIREBASE_URL}/${idPedido}.json`);
+
+        eventSource.onmessage = function(event) {
+            const data = JSON.parse(event.data);
+            // Firebase devuelve null si el ID no existe o 'data' directamente si el nodo cambia
+            if (data) {
+                const nuevoEstado = (typeof data === 'string') ? data : data.estado;
+                if (nuevoEstado) {
+                    actualizarInterfaz(nuevoEstado);
+                    enviarNotificacionEmergente(nuevoEstado);
+                }
+            }
+        };
+
+        eventSource.onerror = function(err) {
+            console.log("Firebase Realtime falló, usando respaldo de Google Sheets.");
+            eventSource.close();
+        };
+    }
+
+    // 3. Lógica de Respaldo (Google Sheets)
     async function consultarHoja() {
         const pedidoLocal = JSON.parse(localStorage.getItem("ultimoPedido"));
         if (!pedidoLocal) return;
 
         try {
-            // Añadimos un parámetro de tiempo para evitar que el navegador guarde una copia vieja (cache)
             const respuesta = await fetch(`${URL_CSV}&cachebuster=${new Date().getTime()}`);
             const data = await respuesta.text();
-            
-            // Dividir por filas
             const filas = data.split(/\r?\n/);
-            
-            let estadoEncontrado = "Procesando...";
             const idBuscado = pedidoLocal.id.toString().trim();
 
-            // Empezamos desde la fila 1 para saltar el encabezado
             for (let i = 1; i < filas.length; i++) {
                 const columnas = filas[i].split(",");
-                // Columna C es índice 2, Columna E es índice 4
-            
                 if (columnas[2] && columnas[2].trim() === idBuscado) {
-                    estadoEncontrado = columnas[3] ? columnas[3].trim() : "Pendiente";
+                    const estado = columnas[3] ? columnas[3].trim() : "Pendiente";
+                    actualizarInterfaz(estado);
                     break;
                 }
             }
-
-            actualizarInterfaz(estadoEncontrado);
         } catch (error) {
             console.error("Error leyendo Google Sheets:", error);
-            document.getElementById("statusBadge").innerText = "Error de conexión";
         }
     }
 
+    // 4. UI Update
     function actualizarInterfaz(estado) {
         const badge = document.getElementById("statusBadge");
         const barra = document.getElementById("pBar");
-        if (!badge) return;
+        if (!badge || !barra) return;
 
         badge.innerText = estado;
-
-        // Lógica de colores y barra según el texto
         const e = estado.toLowerCase();
+
         if (e.includes("entregado")) {
             barra.style.width = "100%";
             badge.className = "badge badge-primary p-2";
@@ -99,52 +88,36 @@
         }
     }
 
+    // 5. Inicialización al cargar la página
     window.onload = function() {
-     const FIREBASE_URL = "https://dbnot-50172.firebaseio.com";
+        const contenedor = document.getElementById("contenido-seguimiento");
+        const pedido = JSON.parse(localStorage.getItem("ultimoPedido"));
 
-// Solicitar permiso de notificaciones al cargar
-if (Notification.permission !== "granted") {
-    Notification.requestPermission();
-}
-
-function escucharCambiosRealTime(idPedido) {
-    // Usamos EventSource para escuchar cambios sin refrescar la página
-    const eventSource = new EventSource(`${FIREBASE_URL}/${idPedido}.json`);
-
-    eventSource.onmessage = function(event) {
-        const data = JSON.parse(event.data);
-        if (data && data.estado) {
-            actualizarInterfaz(data.estado);
-            enviarNotificacionEmergente(data.estado);
+        if (!pedido) {
+            contenedor.innerHTML = "<div class='alert alert-warning'>No se encontró ningún pedido activo.</div>";
+            return;
         }
-    };
-}
 
-function enviarNotificacionEmergente(nuevoEstado) {
-    if (Notification.permission === "granted") {
-        new Notification("DeMasita: Actualización", {
-            body: `Tu pedido ahora está: ${nuevoEstado}`,
-            icon: "https://tu-web.com/logo.png" // Opcional
-        });
-    }
-}
+        // Generar lista de productos
+        let listaProd = "";
+        if (pedido.productos && Array.isArray(pedido.productos)) {
+            listaProd = pedido.productos.map(p => 
+                `<li class="list-group-item d-flex justify-content-between align-items-center py-2 small">
+                    ${p.nombre} x${p.cantidad} <span>$${p.precio}</span>
+                </li>`
+            ).join('');
+        }
 
-// Llama a esta función dentro de tu window.onload actual
-const pedido = JSON.parse(localStorage.getItem("ultimoPedido"));
-if (pedido) {
-    escucharCambiosRealTime(pedido.id);
-}
+        // Renderizar Tarjeta
         contenedor.innerHTML = `
             <div class="card card-tracking p-4">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <span>Orden: <span class="order-id">#${pedido.id}</span></span>
                     <span class="badge badge-success p-2" id="statusBadge">Buscando...</span>
                 </div>
-                
                 <div class="progress mb-4" style="height: 10px;">
                     <div id="pBar" class="progress-bar progress-bar-striped progress-bar-animated bg-success" style="width: 20%"></div>
                 </div>
-
                 <div class="row text-center mb-4">
                     <div class="col-6 border-right">
                         <small class="text-muted d-block">Llegada estimada</small>
@@ -155,32 +128,18 @@ if (pedido) {
                         <h4 class="font-weight-bold">$${pedido.total}</h4>
                     </div>
                 </div>
-
                 <div class="address-box">
                     <h6 class="font-weight-bold" style="color: #6f1a07;"><i class="fas fa-map-marker-alt mr-2"></i>Dirección:</h6>
                     <p class="mb-0 small text-muted">${pedido.direccion || "No especificada"}</p>
                 </div>
-
                 <h6>Productos:</h6>
                 <ul class="list-group list-group-flush mb-3">${listaProd}</ul>
-                
-                <div class="text-center mt-3">
-                    <small class="text-muted"><i class="fas fa-sync fa-spin mr-1"></i> Se actualiza automáticamente cada 60s</small>
-                </div>
             </div>
         `;
 
-        consultarHoja();
-        setInterval(consultarHoja, 60000);
+        // Iniciar escuchas
+        escucharCambiosRealTime(pedido.id);
+        consultarHoja(); // Primera carga desde Sheets por si acaso
+        setInterval(consultarHoja, 60000); // Respaldo cada minuto
     };
 </script>
-</body>
-</html>
-
-
-
-
-
-
-
-
