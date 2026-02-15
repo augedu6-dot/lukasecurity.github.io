@@ -9,20 +9,32 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
     <style>
         body { font-family: "Ubuntu", sans-serif; background-color: #fefcf5; }
-        .navbar { background-color: white; border-bottom: 2px solid #ffdab3; position: sticky; top: 0; z-index: 1050; padding: 0.5rem 0.4rem; }
-        .navbar-brand { font-family: 'Marck Script', cursive; font-size: 1.2rem; color: #6f1a07 !important; }
-        .card-tracking { border: none; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .navbar { background-color: white; border-bottom: 2px solid #ffdab3; position: sticky; top: 0; z-index: 1050; padding: 0.5rem 1rem; }
+        .navbar-brand { font-family: 'Marck Script', cursive; font-size: 1.5rem; color: #6f1a07 !important; }
+        .nav-link-custom { color: #d35400 !important; font-weight: 700; background: #fff5eb; border-radius: 20px; padding: 5px 15px !important; }
+        .card-tracking { border: none; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); background: white; }
         .order-id { font-family: monospace; font-weight: bold; color: #6f1a07; }
-        .progress { border-radius: 10px; background-color: #eee; }
+        .progress { border-radius: 10px; background-color: #eee; height: 12px; }
         .address-box { background: #fff9f0; padding: 15px; border-radius: 12px; border-left: 4px solid #6f1a07; margin-bottom: 20px; }
+        .product-item { border-bottom: 1px solid #eee; padding: 8px 0; }
+        .product-item:last-child { border-bottom: none; }
     </style>
 </head>
 <body>
 
-    <nav class="navbar shadow-sm mb-4">
-        <div class="container d-flex justify-content-between">
-            <a class="navbar-brand" href="index.html text-danger">🍕 DeMasita</a>
-            <span class="small text-muted align-self-center">Seguimiento en vivo</span>
+    <nav class="navbar navbar-expand-lg navbar-light shadow-sm mb-4">
+        <div class="container d-flex justify-content-between align-items-center">
+            <a class="navbar-brand" href="index.html">DeMasita</a>
+            
+            <div class="d-flex align-items-center">
+                <a class="nav-link nav-link-custom mr-3" href="menu.html">
+                    <i class="fas fa-utensils mr-1"></i> Menú
+                </a>
+                <div id="user-info" class="small d-none d-md-block text-muted">
+                    <i class="fas fa-user-circle mr-1"></i>
+                    <span id="username-nav" class="font-weight-bold">Cliente</span>
+                </div>
+            </div>
         </div>
     </nav>
 
@@ -30,7 +42,7 @@
         <div id="contenido-seguimiento">
             <div class="text-center py-5">
                 <div class="spinner-border text-danger" role="status"></div>
-                <p class="mt-2">Sincronizando con la cocina...</p>
+                <p class="mt-2">Sincronizando tu pedido...</p>
             </div>
         </div>
     </div>
@@ -49,20 +61,6 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // Notificaciones del navegador
-        if (Notification.permission !== "granted") {
-            Notification.requestPermission();
-        }
-
-        function notificar(estado) {
-            if (Notification.permission === "granted") {
-                new Notification("DeMasita", {
-                    body: "Tu pedido ahora está: " + estado,
-                    icon: "https://tu-logo-aqui.png"
-                });
-            }
-        }
-
         function actualizarUI(estado) {
             const badge = document.getElementById("statusBadge");
             const barra = document.getElementById("pBar");
@@ -70,16 +68,15 @@
 
             let porcentaje = 10;
             let color = "bg-warning";
-            let texto = estado.toUpperCase();
-
             const e = estado.toLowerCase();
+
             if (e.includes("pendiente")) { porcentaje = 15; color = "bg-warning"; }
             else if (e.includes("preparando")) { porcentaje = 40; color = "bg-warning"; }
             else if (e.includes("camino")) { porcentaje = 75; color = "bg-info"; }
             else if (e.includes("domicilio")) { porcentaje = 90; color = "bg-primary"; }
-            else if (e.includes("recogido") || e.includes("entregado")) { porcentaje = 100; color = "bg-success"; }
+            else if (e.includes("recogido") || e.includes("entregado") || e.includes("finalizar")) { porcentaje = 100; color = "bg-success"; }
 
-            badge.innerText = texto;
+            badge.innerText = estado.toUpperCase();
             barra.style.width = porcentaje + "%";
             barra.className = `progress-bar progress-bar-striped progress-bar-animated ${color}`;
         }
@@ -89,19 +86,38 @@
             const contenedor = document.getElementById("contenido-seguimiento");
 
             if (!pedidoLocal || !pedidoLocal.id) {
-                contenedor.innerHTML = `<div class="alert alert-warning text-center">No se encontró información de tu pedido.</div>`;
+                contenedor.innerHTML = `<div class="alert alert-warning text-center">No hay pedidos activos.</div>`;
                 return;
             }
 
-            // Dibujar la tarjeta una sola vez
+            // Actualizar nombre en el Nav
+            document.getElementById("username-nav").innerText = pedidoLocal.nombre || "Cliente";
+
+            // Procesar lista de productos
+            let listaProdHTML = "";
+            if (pedidoLocal.productos && Array.isArray(pedidoLocal.productos)) {
+                listaProdHTML = pedidoLocal.productos.map(p => `
+                    <div class="product-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="badge badge-danger mr-2">${p.cantidad}</span>
+                            <span class="small font-weight-bold">${p.nombre}</span>
+                        </div>
+                        <span class="small text-muted">$${p.precio * p.cantidad}</span>
+                    </div>
+                `).join("");
+            } else {
+                listaProdHTML = `<p class="small text-muted">${pedidoLocal.pedido || "Sin detalles"}</p>`;
+            }
+
+            // Inyectar HTML de la tarjeta
             contenedor.innerHTML = `
                 <div class="card card-tracking p-4">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <span>Orden <span class="order-id">#${pedidoLocal.id}</span></span>
-                        <span id="statusBadge" class="badge badge-warning p-2 text-uppercase">Cargando...</span>
+                        <span id="statusBadge" class="badge badge-warning p-2">CONECTANDO...</span>
                     </div>
 
-                    <div class="progress mb-4" style="height: 12px;">
+                    <div class="progress mb-4">
                         <div id="pBar" class="progress-bar progress-bar-striped progress-bar-animated bg-warning" style="width: 10%"></div>
                     </div>
 
@@ -118,18 +134,28 @@
 
                     <div class="address-box">
                         <h6 class="font-weight-bold small" style="color: #6f1a07;"><i class="fas fa-map-marker-alt mr-2"></i>ENTREGAR EN:</h6>
-                        <p class="mb-0 small text-muted">${pedidoLocal.direccion || "Dirección no disponible"}</p>
+                        <p class="mb-0 small text-muted">${pedidoLocal.direccion || "Dirección no especificada"}</p>
                     </div>
+
+                    <div class="products-section mt-2">
+                        <h6 class="font-weight-bold small mb-3" style="color: #6f1a07;"><i class="fas fa-shopping-bag mr-2"></i>TU PEDIDO:</h6>
+                        <div class="border rounded p-2 bg-white">
+                            ${listaProdHTML}
+                        </div>
+                    </div>
+                    
+                    <a href="menu.html" class="btn btn-block btn-outline-danger mt-4 btn-sm rounded-pill">
+                        ¿Quieres algo más? Ir al menú
+                    </a>
                 </div>
             `;
 
-            // Escuchar cambios en Firebase para ese ID específico
+            // Escuchar cambios reales en Firebase
             const pedidoRef = ref(db, 'pedidos/' + pedidoLocal.id);
             onValue(pedidoRef, (snapshot) => {
                 const data = snapshot.val();
                 if (data && data.estado) {
                     actualizarUI(data.estado);
-                    notificar(data.estado);
                 }
             });
         };
