@@ -108,29 +108,44 @@
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 
-<script>
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getDatabase, ref, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyB-liGmmv0jHh1hqkBNg0mKfjnSBCZXKHs",
+        authDomain: "dbnot-50172.firebaseapp.com",
+        databaseURL: "https://dbnot-50172-default-rtdb.firebaseio.com",
+        projectId: "dbnot-50172",
+        storageBucket: "dbnot-50172.firebasestorage.app",
+        messagingSenderId: "556269134813",
+        appId: "1:556269134813:web:e053daa0348b06ce420c34",
+        measurementId: "G-S8148WP7H1"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const auth = getAuth(app);
+
     let carrito = JSON.parse(localStorage.getItem("carrito_obj")) || {};
     const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxeE8NaqRpHD1eztqcSCWT7aCKzrhZSjBoGyZbdrhif3uAMRt1mfJ9E9stKIv7Bfl2p/exec";
-    const FIREBASE_URL = "https://dbnot-50172-default-rtdb.firebaseio.com/pedidos";
 
-    function cargarDireccion() {
-        const d = JSON.parse(localStorage.getItem('domicilio'));
-        const display = document.getElementById('currentAddress');
-        if (d) display.innerText = `${d.calle} #${d.numero}, ${d.ciudad}`;
-        else display.innerHTML = `<span class="text-danger">No has registrado dirección</span>`;
-    }
+    // Autenticación anónima para cumplir reglas Firebase
+    signInAnonymously(auth).catch((error) => console.error("Error Auth:", error));
 
-    function cambiarCantidad(nombre, precio, cambio) {
+    window.cambiarCantidad = function(nombre, precio, cambio) {
         if (!carrito[nombre]) carrito[nombre] = { precio, cantidad: 0 };
         carrito[nombre].cantidad += cambio;
         if (carrito[nombre].cantidad <= 0) delete carrito[nombre];
         localStorage.setItem("carrito_obj", JSON.stringify(carrito));
         actualizarInterfaz();
-    }
+    };
 
     function actualizarInterfaz() {
         let totalItems = 0; let precioTotal = 0;
         const lista = document.getElementById('lista-carrito');
+        if(!lista) return;
         lista.innerHTML = "";
         for (const [nombre, item] of Object.entries(carrito)) {
             totalItems += item.cantidad; precioTotal += item.cantidad * item.precio;
@@ -150,14 +165,8 @@
         document.getElementById("totalFloat").innerText = precioTotal;
     }
 
-    function irAFinalizar() {
+    window.irAFinalizar = function() {
         if (Object.keys(carrito).length === 0) return alert("Tu carrito está vacío");
-        if (!localStorage.getItem('domicilio')) {
-            alert("Registra una dirección primero.");
-            window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/direccion.html";
-            return;
-        }
-
         const direccionActual = document.getElementById('currentAddress').innerText;
         let contenidoResumen = `
             <div class="resumen-direccion">
@@ -167,30 +176,27 @@
             <table class="table table-borderless table-resumen">
                 <thead><tr><th>Producto</th><th>Cant.</th><th>Subtotal</th></tr></thead>
                 <tbody>`;
-
         for (const [nombre, item] of Object.entries(carrito)) {
             contenidoResumen += `<tr><td>${nombre}</td><td>${item.cantidad}</td><td>$${item.cantidad * item.precio}</td></tr>`;
         }
         contenidoResumen += `</tbody></table><h4 class="text-right mt-3">Total: $${document.getElementById("totalFloat").innerText}</h4>`;
-        
         document.getElementById('resumenCuerpo').innerHTML = contenidoResumen;
         $('#resumenModal').modal('show');
-    }
+    };
 
-    async function confirmarPedidoFinal() {
+    window.confirmarPedidoFinal = async function() {
         const btn = document.getElementById("btnConfirmarFinal");
         btn.disabled = true; btn.innerText = "Procesando...";
 
+        const idPedido = Math.floor(Math.random() * 0xFFFFFF).toString(16).toUpperCase().padStart(6, '0');
         const usuarioEmail = localStorage.getItem("usuarioLogueado") || "Sin Email";
         const direccion = document.getElementById('currentAddress').innerText;
         const totalPagar = document.getElementById("totalFloat").innerText;
-        const idPedido = Math.floor(Math.random() * 0xFFFFFF).toString(16).toUpperCase().padStart(6, '0');
-        
-        // Formatear productos para que seguimiento.html los lea bien (Array de objetos)
+
         let productosArray = [];
         let productosTexto = "";
         for (const [nombre, item] of Object.entries(carrito)) {
-            productosArray.push({ nombre: nombre, cantidad: item.cantidad, precio: item.precio });
+            productosArray.push({ nombre, cantidad: item.cantidad, precio: item.precio });
             productosTexto += `${nombre} (x${item.cantidad}), `;
         }
         productosTexto = productosTexto.slice(0, -2);
@@ -210,15 +216,11 @@
         };
 
         try {
-            // 1. Guardar en Firebase (Realtime Database)
-         await fetch(`${FIREBASE_URL}/${idPedido}.json`, {
-    method: 'PATCH', // PATCH es mejor para actualizar o crear sin borrar otros campos
-    headers: {
-        'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(dataPedido)
-});
-            // 2. Guardar en Google Sheets
+            // Guardar en Firebase
+            const pedidoRef = ref(db, 'pedidos/' + idPedido);
+            await update(pedidoRef, dataPedido);
+
+            // Guardar en Google Sheets
             const infoSheets = `Pedido: #${idPedido} | Usuario: ${usuarioEmail} | Productos: [${productosTexto}] | Total: $${totalPagar}`;
             fetch(GOOGLE_SCRIPT_URL, {
                 method: 'POST',
@@ -226,28 +228,35 @@
                 body: JSON.stringify({ nombre: infoSheets, pedido: idPedido })
             });
 
-            // 3. Guardar local y redirigir
             localStorage.setItem("ultimoPedido", JSON.stringify(dataPedido));
             localStorage.removeItem("carrito_obj");
             alert("¡Pedido #" + idPedido + " recibido!");
-            window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/seguimiento.html";
+            window.location.href = "seguimiento.html";
 
-        } catch (e) {
-            console.error("Error:", e);
-            alert("Hubo un problema al conectar con el servidor.");
+        } catch (error) {
+            console.error("Error al guardar pedido:", error);
+            alert("Error: " + error.message);
             btn.disabled = false; btn.innerText = "Confirmar y Pagar";
         }
-    }
+    };
 
-    function cerrarSesion() {
+    window.cerrarSesion = function() {
         localStorage.clear();
-        window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/login2.html";
-    }
+        window.location.href = "login2.html";
+    };
 
     window.onload = function() {
-        if (!localStorage.getItem("usuarioLogueado")) window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/login2.html";
-        else document.getElementById("displayEmail").innerText = localStorage.getItem("usuarioLogueado");
-        cargarDireccion();
+        if (!localStorage.getItem("usuarioLogueado")) {
+            window.location.href = "login2.html";
+            return;
+        }
+        document.getElementById("displayEmail").innerText = localStorage.getItem("usuarioLogueado");
+        
+        const d = JSON.parse(localStorage.getItem('domicilio'));
+        const display = document.getElementById('currentAddress');
+        if (d) display.innerText = `${d.calle} #${d.numero}, ${d.ciudad}`;
+        else display.innerHTML = `<span class="text-danger">No has registrado dirección</span>`;
+        
         actualizarInterfaz();
     };
 </script>
