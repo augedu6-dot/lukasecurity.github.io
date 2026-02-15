@@ -9,50 +9,17 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
     <style>
         body { font-family: "Ubuntu", sans-serif; background-color: #fefcf5; padding-bottom: 120px; }
-        
-        .navbar { 
-            background-color: white; 
-            border-bottom: 2px solid #ffdab3; 
-            position: sticky; 
-            top: 0; 
-            z-index: 1000;
-            padding: 0.5rem 1rem;
-        }
-        .navbar .container {
-            display: flex;
-            flex-wrap: nowrap;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .navbar-brand { 
-            font-family: 'Marck Script', cursive; 
-            font-size: 1.5rem; 
-            color: #6f1a07 !important; 
-        }
-        
-        .nav-user-link {
-            color: #d35400 !important;
-            font-weight: 700;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            padding: 4px 8px;
-            background: #fff5eb;
-            border-radius: 20px;
-            text-decoration: none !important;
-            font-size: 0.75rem;
-        }
-
+        .navbar { background-color: white; border-bottom: 2px solid #ffdab3; position: sticky; top: 0; z-index: 1000; padding: 0.5rem 1rem; }
+        .navbar .container { display: flex; flex-wrap: nowrap; justify-content: space-between; align-items: center; }
+        .navbar-brand { font-family: 'Marck Script', cursive; font-size: 1.5rem; color: #6f1a07 !important; }
+        .nav-user-link { color: #d35400 !important; font-weight: 700; cursor: pointer; display: flex; align-items: center; padding: 4px 8px; background: #fff5eb; border-radius: 20px; text-decoration: none !important; font-size: 0.75rem; }
         #resumenCuerpo { padding: 10px; overflow-x: auto; }
         .table-resumen { width: 100%; font-size: 0.85rem; }
-        .table-resumen th, .table-resumen td { padding: 8px 4px; }
-
         .modal-content { border-radius: 20px; border: none; }
         .modal-header { background: #6f1a07; color: white; border-radius: 20px 20px 0 0; }
         .user-avatar { width: 70px; height: 70px; background: #ffdab3; color: #6f1a07; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 15px; }
         .cart-icon { font-size: 1.3rem; color: #6f1a07; position: relative; cursor: pointer; }
         .cart-count { background: #f44336; color: white; border-radius: 50%; padding: 2px 6px; font-size: 0.7rem; position: absolute; top: -10px; right: -10px; }
-        .menu-container { padding: 20px; }
         .category-title { color: #6f1a07; font-weight: bold; margin-top: 20px; font-size: 1.2rem; border-left: 4px solid #f44336; padding-left: 10px; }
         .food-item { background: white; padding: 15px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
         .quantity-controls { display: flex; align-items: center; background: #f8f9fa; border-radius: 25px; padding: 2px; border: 1px solid #ddd; }
@@ -62,15 +29,7 @@
         .delivery-info { font-size: 0.9rem; color: #6f1a07; margin-bottom: 0; }
         .btn-change-addr { font-size: 0.8rem; color: #f44336; text-decoration: underline; cursor: pointer; border: none; background: none; padding: 0; }
         .floating-cart { position: fixed; bottom: 0; left: 0; width: 100%; background: #6f1a07; color: white; padding: 20px; border-radius: 20px 20px 0 0; cursor: pointer; box-shadow: 0 -4px 15px rgba(0,0,0,0.2); z-index: 1001; }
-        
-        /* Estilo para la dirección en el resumen */
-        .resumen-direccion {
-            background-color: #fcf3cf;
-            padding: 12px;
-            border-radius: 10px;
-            border-left: 5px solid #f39c12;
-            margin-bottom: 15px;
-        }
+        .resumen-direccion { background-color: #fcf3cf; padding: 12px; border-radius: 10px; border-left: 5px solid #f39c12; margin-bottom: 15px; }
     </style>
 </head>
 <body>
@@ -79,7 +38,7 @@
     <div class="container">
         <a class="navbar-brand" href="menu.html">DeMasita</a>
         <div class="d-flex align-items-center">
-            <div class="nav-user-link mr-2" onclick="window.location.href='https://augedu6-dot.github.io/lukasecurity.github.io/seguimiento.html'" style="background: #e8f5e9; color: #2e7d32 !important;">
+            <div class="nav-user-link mr-2" onclick="window.location.href='seguimiento.html'" style="background: #e8f5e9; color: #2e7d32 !important;">
                 <i class="fas fa-truck"></i>
             </div>
             <div class="cart-icon mr-3">
@@ -99,29 +58,23 @@
         <div>
             <p class="delivery-info"><strong>Entregar en:</strong></p>
             <p id="currentAddress" class="delivery-info">Cargando dirección...</p>
-            <button class="btn-change-addr" onclick="window.location.href='https://augedu6-dot.github.io/lukasecurity.github.io/direccion.html'">Cambiar domicilio</button>
+            <button class="btn-change-addr" onclick="window.location.href='direccion.html'">Cambiar domicilio</button>
         </div>
     </div>
 </div>
 
-<div class="container menu-container">
+<div class="container">
     <div class="category-title">Tu Pedido</div>
     <div id="lista-carrito"></div>
 </div>
 
 <div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header border-0">
-                <h5 class="modal-title">Mi Perfil</h5>
-                <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
-            </div>
-            <div class="modal-body text-center p-4">
-                <div class="user-avatar"><i class="fas fa-user"></i></div>
-                <h3 class="h5 font-weight-bold">¡Bienvenido!</h3>
-                <p class="user-email font-weight-bold mb-4" id="displayEmail"></p>
-                <button class="btn btn-danger btn-block rounded-pill py-2" onclick="cerrarSesion()">Cerrar Sesión</button>
-            </div>
+        <div class="modal-content text-center p-4">
+            <div class="user-avatar"><i class="fas fa-user"></i></div>
+            <h3 class="h5 font-weight-bold">¡Bienvenido!</h3>
+            <p class="user-email font-weight-bold mb-4" id="displayEmail"></p>
+            <button class="btn btn-danger btn-block rounded-pill py-2" onclick="cerrarSesion()">Cerrar Sesión</button>
         </div>
     </div>
 </div>
@@ -133,11 +86,10 @@
                 <h5 class="modal-title">Confirmar Pedido</h5>
                 <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
             </div>
-            <div class="modal-body" id="resumenCuerpo">
-                </div>
+            <div class="modal-body" id="resumenCuerpo"></div>
             <div class="modal-footer border-0">
                 <button type="button" class="btn btn-secondary rounded-pill" data-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-success rounded-pill px-4" onclick="confirmarPedidoFinal()">Confirmar y Pagar</button>
+                <button type="button" id="btnConfirmarFinal" class="btn btn-success rounded-pill px-4" onclick="confirmarPedidoFinal()">Confirmar y Pagar</button>
             </div>
         </div>
     </div>
@@ -159,6 +111,7 @@
 <script>
     let carrito = JSON.parse(localStorage.getItem("carrito_obj")) || {};
     const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxeE8NaqRpHD1eztqcSCWT7aCKzrhZSjBoGyZbdrhif3uAMRt1mfJ9E9stKIv7Bfl2p/exec";
+    const FIREBASE_URL = "https://dbnot-50172.firebaseio.com/pedidos";
 
     function cargarDireccion() {
         const d = JSON.parse(localStorage.getItem('domicilio'));
@@ -197,92 +150,101 @@
         document.getElementById("totalFloat").innerText = precioTotal;
     }
 
-    // FUNCIÓN CORREGIDA PARA MOSTRAR LA DIRECCIÓN EN EL MODAL
     function irAFinalizar() {
         if (Object.keys(carrito).length === 0) return alert("Tu carrito está vacío");
-        
-        const direccionActual = document.getElementById('currentAddress').innerText;
         if (!localStorage.getItem('domicilio')) {
             alert("Registra una dirección primero.");
             window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/direccion.html";
             return;
         }
 
-        // Construir el HTML del resumen incluyendo la dirección
+        const direccionActual = document.getElementById('currentAddress').innerText;
         let contenidoResumen = `
             <div class="resumen-direccion">
                 <p class="mb-1"><strong><i class="fas fa-map-marker-alt"></i> Dirección de Envío:</strong></p>
                 <p class="mb-0 small">${direccionActual}</p>
             </div>
             <table class="table table-borderless table-resumen">
-                <thead>
-                    <tr><th>Producto</th><th>Cant.</th><th>Subtotal</th></tr>
-                </thead>
+                <thead><tr><th>Producto</th><th>Cant.</th><th>Subtotal</th></tr></thead>
                 <tbody>`;
 
         for (const [nombre, item] of Object.entries(carrito)) {
             contenidoResumen += `<tr><td>${nombre}</td><td>${item.cantidad}</td><td>$${item.cantidad * item.precio}</td></tr>`;
         }
-
-        contenidoResumen += `
-                </tbody>
-            </table>
-            <h4 class="text-right mt-3">Total a Pagar: $${document.getElementById("totalFloat").innerText}</h4>`;
+        contenidoResumen += `</tbody></table><h4 class="text-right mt-3">Total: $${document.getElementById("totalFloat").innerText}</h4>`;
         
         document.getElementById('resumenCuerpo').innerHTML = contenidoResumen;
         $('#resumenModal').modal('show');
     }
 
     async function confirmarPedidoFinal() {
+        const btn = document.getElementById("btnConfirmarFinal");
+        btn.disabled = true; btn.innerText = "Procesando...";
+
         const usuarioEmail = localStorage.getItem("usuarioLogueado") || "Sin Email";
         const direccion = document.getElementById('currentAddress').innerText;
         const totalPagar = document.getElementById("totalFloat").innerText;
         const idPedido = Math.floor(Math.random() * 0xFFFFFF).toString(16).toUpperCase().padStart(6, '0');
         
+        // Formatear productos para que seguimiento.html los lea bien (Array de objetos)
+        let productosArray = [];
         let productosTexto = "";
         for (const [nombre, item] of Object.entries(carrito)) {
+            productosArray.push({ nombre: nombre, cantidad: item.cantidad, precio: item.precio });
             productosTexto += `${nombre} (x${item.cantidad}), `;
         }
         productosTexto = productosTexto.slice(0, -2);
 
-        const infoCompleta = `Pedido: #${idPedido} | Usuario: ${usuarioEmail} | Entrega: ${direccion} |Productos: [${productosTexto}] |  Total: $${totalPagar}`;
-
-        try {
-            const datosx = { nombre: infoCompleta, pedido: idPedido };
-            await fetch(GOOGLE_SCRIPT_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(datosx)
-            });
-        } catch (e) { console.error("Error envío:", e); }
-
-        const ahora = new Date(); ahora.setMinutes(ahora.getMinutes() + 45);
+        const ahora = new Date();
+        const llegada = new Date(ahora.getTime() + 45 * 60000);
+        
         const dataPedido = {
             id: idPedido,
-            productos: carrito,
+            usuario: usuarioEmail,
+            productos: productosArray,
             total: totalPagar,
-            hora: ahora.getHours() + ":" + (ahora.getMinutes() < 10 ? '0' : '') + ahora.getMinutes(),
+            hora: llegada.getHours() + ":" + (llegada.getMinutes() < 10 ? '0' : '') + llegada.getMinutes(),
             direccion: direccion,
-            fecha: new Date().toLocaleDateString()
+            fecha: ahora.toLocaleDateString(),
+            estado: "Pendiente"
         };
 
-        localStorage.setItem("ultimoPedido", JSON.stringify(dataPedido));
-        localStorage.removeItem("carrito_obj");
-        $('#resumenModal').modal('hide');
-        alert("¡Pedido #" + idPedido + " recibido!");
-        window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/seguimiento.html";
+        try {
+            // 1. Guardar en Firebase (Realtime Database)
+            await fetch(`${FIREBASE_URL}/${idPedido}.json`, {
+                method: 'PUT',
+                body: JSON.stringify(dataPedido)
+            });
+
+            // 2. Guardar en Google Sheets
+            const infoSheets = `Pedido: #${idPedido} | Usuario: ${usuarioEmail} | Productos: [${productosTexto}] | Total: $${totalPagar}`;
+            fetch(GOOGLE_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                body: JSON.stringify({ nombre: infoSheets, pedido: idPedido })
+            });
+
+            // 3. Guardar local y redirigir
+            localStorage.setItem("ultimoPedido", JSON.stringify(dataPedido));
+            localStorage.removeItem("carrito_obj");
+            alert("¡Pedido #" + idPedido + " recibido!");
+            window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/seguimiento.html";
+
+        } catch (e) {
+            console.error("Error:", e);
+            alert("Hubo un problema al conectar con el servidor.");
+            btn.disabled = false; btn.innerText = "Confirmar y Pagar";
+        }
     }
 
     function cerrarSesion() {
-        localStorage.removeItem("usuarioLogueado");
+        localStorage.clear();
         window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/login2.html";
     }
 
     window.onload = function() {
-        const usuario = localStorage.getItem("usuarioLogueado");
-        if (!usuario) window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/login2.html";
-        else document.getElementById("displayEmail").innerText = usuario;
+        if (!localStorage.getItem("usuarioLogueado")) window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/login2.html";
+        else document.getElementById("displayEmail").innerText = localStorage.getItem("usuarioLogueado");
         cargarDireccion();
         actualizarInterfaz();
     };
