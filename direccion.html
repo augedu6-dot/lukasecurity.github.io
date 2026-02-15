@@ -92,10 +92,10 @@
 <body>
 <nav class="navbar navbar-light">
     <div class="container">
-        <a class="navbar-brand" href="menu.html">DeMasita</a>
+        <a class="navbar-brand" href="https://augedu6-dot.github.io/lukasecurity.github.io/menu.html">DeMasita</a>
         
         <div class="d-flex align-items-center">
-            <div class="cart-icon mr-3" onclick="window.location.href='carrito.html'">
+            <div class="cart-icon mr-3" onclick="window.location.href='https://augedu6-dot.github.io/lukasecurity.github.io/carrito.html'">
                 <i class="fas fa-shopping-cart"></i>
                 <span class="cart-count" id="cartCount">0</span>
             </div>
@@ -122,10 +122,10 @@
                 <p class="user-email font-weight-bold mb-4" id="displayEmail"></p>
                 
                 <div class="list-group mb-4">
-                    <a href="menu.html" class="list-group-item list-group-item-action border-0 text-left">
+                    <a href="https://augedu6-dot.github.io/lukasecurity.github.io/menu.html" class="list-group-item list-group-item-action border-0 text-left">
                         <i class="fas fa-utensils mr-2"></i> Ver Menú
                     </a>
-                    <a href="direccion.html" class="list-group-item list-group-item-action border-0 text-left">
+                    <a href="https://augedu6-dot.github.io/lukasecurity.github.io/direccion.html" class="list-group-item list-group-item-action border-0 text-left">
                         <i class="fas fa-map-marker-alt mr-2"></i> Mis Direcciones
                     </a>
                 </div>
@@ -264,7 +264,7 @@
         const emailUsuario = localStorage.getItem('usuarioLogueado') || "Sin Email";
         const infoCompleta = `Usuario: ${emailUsuario} | Dirección: ${nuevaDireccion.calle} ${nuevaDireccion.numero}, ${nuevaDireccion.ciudad}, CP: ${nuevaDireccion.cp}`;
 
-        sendToSheets(infoCompleta);
+        
         
         successAlert.style.display = 'block';
         setTimeout(() => { successAlert.style.display = 'none'; }, 3000);
@@ -304,22 +304,11 @@
         window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/login2.html";
     }
 
-    async function sendToSheets(infoCompleta) {
-        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwDQQRAD_eUCbTj-AJYf755J8v7ySfvm3DCYW6SMI9fnNBJ6qJN9Qx7m2idFG_JkZBP/exec";
-        try {
-            await fetch(GOOGLE_SCRIPT_URL, {
-                method: 'POST', 
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ nombre: infoCompleta })
-            });
-        } catch (error) {
-            console.error("Error al enviar:", error);
-        }
-    }
+  
 </script>
 </body>
 </html>
+
 
 
 
