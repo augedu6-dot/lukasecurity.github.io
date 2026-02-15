@@ -16,7 +16,7 @@
         .order-id { font-family: monospace; font-weight: bold; color: #6f1a07; }
         .progress { border-radius: 10px; background-color: #eee; height: 12px; }
         .address-box { background: #fff9f0; padding: 15px; border-radius: 12px; border-left: 4px solid #6f1a07; margin-bottom: 20px; }
-        .product-item { border-bottom: 1px solid #eee; padding: 8px 0; }
+        .product-item { border-bottom: 1px solid #eee; padding: 8px 0; font-size: 0.9rem; }
         .product-item:last-child { border-bottom: none; }
     </style>
 </head>
@@ -26,7 +26,7 @@
         <div class="container d-flex justify-content-between align-items-center">
             <a class="navbar-brand" href="index.html">DeMasita</a>
             <div class="d-flex align-items-center">
-                <a class="nav-link nav-link-custom mr-3" href="https://augedu6-dot.github.io/lukasecurity.github.io/menu.html">
+                <a class="nav-link nav-link-custom mr-3" href="menu.html">
                     <i class="fas fa-utensils mr-1"></i> Menú
                 </a>
                 <div id="user-info" class="small d-none d-md-block text-muted">
@@ -41,7 +41,7 @@
         <div id="contenido-seguimiento">
             <div class="text-center py-5">
                 <div class="spinner-border text-danger" role="status"></div>
-                <p class="mt-2">Sincronizando tu pedido...</p>
+                <p class="mt-2 text-muted">Sincronizando con cocina...</p>
             </div>
         </div>
     </div>
@@ -60,6 +60,15 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
+        // FUNCIÓN PARA MANDAR MENSAJE AL ANDROID WEBVIEW
+        function notificarAndroid(mensaje) {
+            if (typeof Android !== 'undefined' && Android !== null) {
+                Android.sendDataToAndroid(mensaje);
+            } else {
+                console.log("Interfaz Android no detectada: " + mensaje);
+            }
+        }
+
         function actualizarUI(estado) {
             const badge = document.getElementById("statusBadge");
             const barra = document.getElementById("pBar");
@@ -69,7 +78,6 @@
             let color = "bg-warning";
             const e = estado.toLowerCase().trim();
 
-            // NUEVA LÓGICA DE ESTADOS Y PORCENTAJES
             if (e === "pedido recibido") { porcentaje = 10; color = "bg-secondary"; }
             else if (e === "confirmado / aceptado") { porcentaje = 25; color = "bg-warning"; }
             else if (e === "preparando") { porcentaje = 45; color = "bg-warning"; }
@@ -81,6 +89,9 @@
             badge.innerText = estado.toUpperCase();
             barra.style.width = porcentaje + "%";
             barra.className = `progress-bar progress-bar-striped progress-bar-animated ${color}`;
+            
+            // DISPARAR MENSAJE EMERGENTE EN EL CELULAR
+            notificarAndroid("DeMasita: Tu pedido está " + estado);
         }
 
         window.onload = function() {
@@ -97,23 +108,20 @@
             let listaProdHTML = "";
             if (pedidoLocal.productos && Array.isArray(pedidoLocal.productos)) {
                 listaProdHTML = pedidoLocal.productos.map(p => `
-                    <div class="product-item d-flex justify-content-between align-items-center">
-                        <div>
-                            <span class="badge badge-danger mr-2">${p.cantidad}</span>
-                            <span class="small font-weight-bold">${p.nombre}</span>
-                        </div>
-                        <span class="small text-muted">$${p.precio * p.cantidad}</span>
+                    <div class="product-item d-flex justify-content-between">
+                        <span><b>${p.cantidad}x</b> ${p.nombre}</span>
+                        <span class="text-muted">$${p.precio * p.cantidad}</span>
                     </div>
                 `).join("");
             } else {
-                listaProdHTML = `<p class="small text-muted">${pedidoLocal.pedido || "Sin detalles"}</p>`;
+                listaProdHTML = `<p class="small text-muted">${pedidoLocal.pedido || "Detalles no disponibles"}</p>`;
             }
 
             contenedor.innerHTML = `
-                <div class="card card-tracking p-4" id="tarjetaPedido">
+                <div class="card card-tracking p-4">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <span>Orden <span class="order-id">#${pedidoLocal.id}</span></span>
-                        <span id="statusBadge" class="badge badge-secondary p-2">ESPERANDO...</span>
+                        <span id="statusBadge" class="badge badge-secondary p-2">CONECTANDO...</span>
                     </div>
 
                     <div class="progress mb-4">
@@ -136,8 +144,8 @@
                         <p class="mb-0 small text-muted">${pedidoLocal.direccion || "No especificada"}</p>
                     </div>
 
-                    <div class="products-section mt-2">
-                        <h6 class="font-weight-bold small mb-3" style="color: #6f1a07;"><i class="fas fa-shopping-bag mr-2"></i>TU PEDIDO:</h6>
+                    <div class="products-section">
+                        <h6 class="font-weight-bold small mb-2" style="color: #6f1a07;"><i class="fas fa-shopping-bag mr-2"></i>PRODUCTOS:</h6>
                         <div class="border rounded p-2 bg-white">
                             ${listaProdHTML}
                         </div>
@@ -145,23 +153,22 @@
                 </div>
             `;
 
-            // Escuchar cambios en Firebase
+            // ESCUCHA DE CAMBIOS EN FIREBASE
             const pedidoRef = ref(db, 'pedidos/' + pedidoLocal.id);
             onValue(pedidoRef, (snapshot) => {
                 const data = snapshot.val();
                 if (data && data.estado) {
                     const status = data.estado.toLowerCase().trim();
                     
-                    // SI ES FINALIZADO, ELIMINAR ORDEN Y MOSTRAR MENSAJE
                     if (status === "finalizado") {
+                        notificarAndroid("Tu pedido ha sido finalizado. ¡Gracias!");
                         contenedor.innerHTML = `
                             <div class="text-center py-5 card card-tracking p-4">
                                 <i class="fas fa-check-circle fa-4x text-success mb-3"></i>
                                 <h3 class="font-weight-bold">¡Pedido Finalizado!</h3>
-                                <p class="text-muted">Tu orden ha sido completada. ¡Gracias por preferir DeMasita!</p>
-                                <a href="menu.html" class="btn btn-danger btn-block rounded-pill">Hacer un nuevo pedido</a>
+                                <p class="text-muted">Tu orden ha sido completada. ¡Esperamos que lo disfrutes!</p>
+                                <a href="menu.html" class="btn btn-danger btn-block rounded-pill mt-3">Pedir de nuevo</a>
                             </div>`;
-                        // Limpiar localStorage para que no vuelva a aparecer al recargar
                         localStorage.removeItem("ultimoPedido");
                     } else {
                         actualizarUI(data.estado);
