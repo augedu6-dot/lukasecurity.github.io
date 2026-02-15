@@ -38,7 +38,7 @@
     <div class="container">
         <a class="navbar-brand" href="menu.html">DeMasita</a>
         <div class="d-flex align-items-center">
-            <div class="nav-user-link mr-2" onclick="window.location.href='https://augedu6-dot.github.io/lukasecurity.github.io/seguimiento.html'" style="background: #e8f5e9; color: #2e7d32 !important;">
+            <div class="nav-user-link mr-2" onclick="window.location.href='seguimiento.html'" style="background: #e8f5e9; color: #2e7d32 !important;">
                 <i class="fas fa-truck"></i>
             </div>
             <div class="cart-icon mr-3">
@@ -58,7 +58,7 @@
         <div>
             <p class="delivery-info"><strong>Entregar en:</strong></p>
             <p id="currentAddress" class="delivery-info">Cargando dirección...</p>
-            <button class="btn-change-addr" onclick="window.location.href='https://augedu6-dot.github.io/lukasecurity.github.io/direccion.html'">Cambiar domicilio</button>
+            <button class="btn-change-addr" onclick="window.location.href='direccion.html'">Cambiar domicilio</button>
         </div>
     </div>
 </div>
@@ -111,7 +111,7 @@
 <script>
     let carrito = JSON.parse(localStorage.getItem("carrito_obj")) || {};
     const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxeE8NaqRpHD1eztqcSCWT7aCKzrhZSjBoGyZbdrhif3uAMRt1mfJ9E9stKIv7Bfl2p/exec";
-    const FIREBASE_URL = "https://dbnot-50172-default-rtdb.firebaseio.com/";
+    const FIREBASE_URL = https://dbnot-50172-default-rtdb.firebaseio.com/pedidos";
 
     function cargarDireccion() {
         const d = JSON.parse(localStorage.getItem('domicilio'));
@@ -211,11 +211,13 @@
 
         try {
             // 1. Guardar en Firebase (Realtime Database)
-            await fetch(`${FIREBASE_URL}/${idPedido}.json`, {
-                method: 'PUT',
-                body: JSON.stringify(dataPedido)
-            });
-
+         await fetch(`${FIREBASE_URL}/${idPedido}.json`, {
+    method: 'PATCH', // PATCH es mejor para actualizar o crear sin borrar otros campos
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(dataPedido)
+});
             // 2. Guardar en Google Sheets
             const infoSheets = `Pedido: #${idPedido} | Usuario: ${usuarioEmail} | Productos: [${productosTexto}] | Total: $${totalPagar}`;
             fetch(GOOGLE_SCRIPT_URL, {
@@ -251,8 +253,3 @@
 </script>
 </body>
 </html>
-
-
-
-
-
