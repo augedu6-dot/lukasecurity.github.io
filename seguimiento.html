@@ -2,55 +2,71 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Seguimiento - DeMasita</title>
     <link href="https://fonts.googleapis.com/css2?family=Marck+Script&family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
     <style>
-        body { font-family: "Ubuntu", sans-serif; background-color: #fefcf5; }
-        .navbar { background-color: white; border-bottom: 2px solid #ffdab3; position: sticky; top: 0; z-index: 1050; padding: 0.5rem 1rem; }
+        body { font-family: "Ubuntu", sans-serif; background-color: #fefcf5; overflow-x: hidden; }
+        .navbar { background-color: white; border-bottom: 2px solid #ffdab3; padding: 0.5rem 1rem; }
         .navbar-brand { font-family: 'Marck Script', cursive; font-size: 1.5rem; color: #6f1a07 !important; }
-        .nav-link-custom { color: #d35400 !important; font-weight: 700; background: #fff5eb; border-radius: 20px; padding: 5px 15px !important; }
-        .card-tracking { border: none; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); background: white; }
-        .order-id { font-family: monospace; font-weight: bold; color: #6f1a07; }
-        .progress { border-radius: 10px; background-color: #eee; height: 12px; }
         
-        /* CORRECCIÓN PARA EL ESTATUS EN CELULARES */
+        /* TARJETA PRINCIPAL ADAPTADA */
+        .card-tracking { 
+            border: none; 
+            border-radius: 20px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
+            background: white;
+            margin: 0 auto;
+            max-width: 100%; /* Evita que la tarjeta sea más ancha que la pantalla */
+        }
+
+        /* CONTENEDOR DE CABECERA (ID + ESTATUS) */
+        .status-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start; /* Alinea arriba para que si el texto crece no mueva todo */
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .order-id { font-family: monospace; font-weight: bold; color: #6f1a07; font-size: 0.9rem; }
+
+        /* EL BADGE CORREGIDO PARA QUE NO SE SALGA */
         #statusBadge { 
             white-space: normal !important; /* Permite saltos de línea */
             word-wrap: break-word; 
-            max-width: 150px; /* Limita el ancho para forzar el salto si es necesario */
+            overflow-wrap: break-word;
             text-align: center;
             line-height: 1.2;
-            display: inline-block;
-            vertical-align: middle;
-            padding: 8px 12px !important;
+            padding: 6px 10px !important;
+            font-size: 0.75rem; /* Tamaño optimizado para móvil */
+            max-width: 50%; /* No permite que el badge ocupe más de la mitad de la tarjeta */
+            display: block;
         }
 
-        .address-box { background: #fff9f0; padding: 15px; border-radius: 12px; border-left: 4px solid #6f1a07; margin-bottom: 20px; }
-        .product-item { border-bottom: 1px solid #eee; padding: 8px 0; font-size: 0.9rem; }
-        .product-item:last-child { border-bottom: none; }
+        .progress { border-radius: 10px; background-color: #eee; height: 12px; }
+        .address-box { background: #fff9f0; padding: 12px; border-radius: 12px; border-left: 4px solid #6f1a07; margin-bottom: 15px; }
+        .address-box p { font-size: 0.85rem; line-height: 1.3; }
+
+        .product-item { border-bottom: 1px solid #eee; padding: 8px 0; font-size: 0.85rem; }
     </style>
 </head>
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-light shadow-sm mb-4">
+    <nav class="navbar navbar-expand-lg navbar-light shadow-sm mb-3">
         <div class="container d-flex justify-content-between align-items-center">
             <a class="navbar-brand" href="index.html">DeMasita</a>
-            <div class="d-flex align-items-center">
-                <a class="nav-link nav-link-custom mr-3" href="menu.html">
-                    <i class="fas fa-utensils mr-1"></i> Menú
-                </a>
-            </div>
+            <a class="btn btn-sm btn-outline-danger font-weight-bold" href="menu.html">Menú</a>
         </div>
     </nav>
 
-    <div class="container">
+    <div class="container" style="padding: 0 10px;">
         <div id="contenido-seguimiento">
             <div class="text-center py-5">
                 <div class="spinner-border text-danger" role="status"></div>
-                <p class="mt-2 text-muted">Sincronizando con cocina...</p>
+                <p class="mt-2 text-muted small">Cargando pedido...</p>
             </div>
         </div>
     </div>
@@ -104,7 +120,7 @@
             const contenedor = document.getElementById("contenido-seguimiento");
 
             if (!pedidoLocal || !pedidoLocal.id) {
-                contenedor.innerHTML = `<div class="alert alert-warning text-center">No hay pedidos activos.</div>`;
+                contenedor.innerHTML = `<div class="alert alert-warning text-center small">No hay pedidos activos.</div>`;
                 return;
             }
 
@@ -119,10 +135,10 @@
             }
 
             contenedor.innerHTML = `
-                <div class="card card-tracking p-4">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <span>Orden <span class="order-id">#${pedidoLocal.id}</span></span>
-                        <span id="statusBadge" class="badge badge-secondary p-2">CONECTANDO...</span>
+                <div class="card card-tracking p-3">
+                    <div class="status-header">
+                        <span class="order-id">Orden #${pedidoLocal.id}</span>
+                        <span id="statusBadge" class="badge badge-secondary">CONECTANDO...</span>
                     </div>
 
                     <div class="progress mb-4">
@@ -131,22 +147,22 @@
 
                     <div class="row text-center mb-4">
                         <div class="col-6 border-right">
-                            <small class="text-muted d-block">Entrega aprox.</small>
-                            <h4 class="font-weight-bold" style="color: #6f1a07;">${pedidoLocal.hora || '--:--'}</h4>
+                            <small class="text-muted d-block font-weight-bold" style="font-size: 0.7rem;">ENTREGA APROX.</small>
+                            <h5 class="font-weight-bold mb-0" style="color: #6f1a07;">${pedidoLocal.hora || '--:--'}</h5>
                         </div>
                         <div class="col-6">
-                            <small class="text-muted d-block">Total</small>
-                            <h4 class="font-weight-bold" style="color: #6f1a07;">$${pedidoLocal.total}</h4>
+                            <small class="text-muted d-block font-weight-bold" style="font-size: 0.7rem;">TOTAL</small>
+                            <h5 class="font-weight-bold mb-0" style="color: #6f1a07;">$${pedidoLocal.total}</h5>
                         </div>
                     </div>
 
                     <div class="address-box">
-                        <h6 class="font-weight-bold small" style="color: #6f1a07;"><i class="fas fa-map-marker-alt mr-2"></i>ENTREGAR EN:</h6>
-                        <p class="mb-0 small text-muted">${pedidoLocal.direccion || "No especificada"}</p>
+                        <h6 class="font-weight-bold" style="color: #6f1a07; font-size: 0.75rem;"><i class="fas fa-map-marker-alt mr-2"></i>ENTREGAR EN:</h6>
+                        <p class="mb-0 text-muted">${pedidoLocal.direccion || "No especificada"}</p>
                     </div>
 
                     <div class="products-section">
-                        <h6 class="font-weight-bold small mb-2" style="color: #6f1a07;"><i class="fas fa-shopping-bag mr-2"></i>PRODUCTOS:</h6>
+                        <h6 class="font-weight-bold mb-2" style="color: #6f1a07; font-size: 0.75rem;"><i class="fas fa-shopping-bag mr-2"></i>TUS PRODUCTOS:</h6>
                         <div class="border rounded p-2 bg-white">
                             ${listaProdHTML}
                         </div>
@@ -160,7 +176,7 @@
                 if (data && data.estado) {
                     if (data.estado.toLowerCase().trim() === "finalizado") {
                         notificarAndroid("Tu pedido ha sido finalizado. ¡Gracias!");
-                        contenedor.innerHTML = `<div class="text-center py-5 card card-tracking p-4"><h3>¡Pedido Finalizado!</h3><a href="menu.html" class="btn btn-danger mt-3">Volver al Menú</a></div>`;
+                        contenedor.innerHTML = `<div class="text-center py-5"><h4>¡Pedido Finalizado!</h4><a href="menu.html" class="btn btn-danger mt-3">Volver al Menú</a></div>`;
                         localStorage.removeItem("ultimoPedido");
                     } else {
                         actualizarUI(data.estado);
