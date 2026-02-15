@@ -29,23 +29,20 @@
         </div>
     </div>
 </nav>
-
 <div class="container py-4">
     <h2 class="text-center mb-4" style="color: #6f1a07;">Seguimiento de Pedido</h2>
-    <div id="contenido-seguimiento">
-        </div>
+    <div id="contenido-seguimiento"></div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 
 <script>
-
-    // Configuración de URLs
+    // 1. Configuración de URLs
     const URL_CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRvlRhwdMH5fof8Od9MtSjd7teTPRIh-_qsKsA_jjTVIxekrDYHrJFQAr1C--LccAbSCTm-gCNjVppn/pub?gid=0&single=true&output=csv";
-    const FIREBASE_URL = "https://dbnot-50172.firebaseio.com"; // Ajustado a tu ID de proyecto
+    const FIREBASE_URL = "https://dbnot-50172.firebaseio.com/pedidos"; // Verifica si es /pedidos o raíz
 
-    // 1. Notificaciones
-    if (Notification.permission !== "granted") {
+    // 2. Notificaciones
+    if (Notification.permission !== "granted" && Notification.permission !== "denied") {
         Notification.requestPermission();
     }
 
@@ -58,14 +55,12 @@
         }
     }
 
-    // 2. Lógica Realtime (Firebase)
+    // 3. Lógica Realtime (Firebase)
     function escucharCambiosRealTime(idPedido) {
-        // Firebase requiere que la URL para EventSource sea la del nodo .json
         const eventSource = new EventSource(`${FIREBASE_URL}/${idPedido}.json`);
 
         eventSource.onmessage = function(event) {
             const data = JSON.parse(event.data);
-            // Firebase devuelve null si el ID no existe o 'data' directamente si el nodo cambia
             if (data) {
                 const nuevoEstado = (typeof data === 'string') ? data : data.estado;
                 if (nuevoEstado) {
@@ -76,12 +71,11 @@
         };
 
         eventSource.onerror = function(err) {
-            console.log("Firebase Realtime falló, usando respaldo de Google Sheets.");
-            eventSource.close();
+            console.log("Esperando conexión Firebase...");
         };
     }
 
-    // 3. Lógica de Respaldo (Google Sheets)
+    // 4. Lógica de Respaldo (Google Sheets)
     async function consultarHoja() {
         const pedidoLocal = JSON.parse(localStorage.getItem("ultimoPedido"));
         if (!pedidoLocal) return;
@@ -94,6 +88,7 @@
 
             for (let i = 1; i < filas.length; i++) {
                 const columnas = filas[i].split(",");
+                // Ajustamos índices: ID en col C (2) y Estado en col D (3)
                 if (columnas[2] && columnas[2].trim() === idBuscado) {
                     const estado = columnas[3] ? columnas[3].trim() : "Pendiente";
                     actualizarInterfaz(estado);
@@ -105,7 +100,7 @@
         }
     }
 
-    // 4. UI Update
+    // 5. UI Update
     function actualizarInterfaz(estado) {
         const badge = document.getElementById("statusBadge");
         const barra = document.getElementById("pBar");
@@ -129,17 +124,16 @@
         }
     }
 
-    // 5. Inicialización al cargar la página
+    // 6. Inicialización
     window.onload = function() {
         const contenedor = document.getElementById("contenido-seguimiento");
         const pedido = JSON.parse(localStorage.getItem("ultimoPedido"));
 
         if (!pedido) {
-            contenedor.innerHTML = "<div class='alert alert-warning'>No se encontró ningún pedido activo.</div>";
+            contenedor.innerHTML = "<div class='alert alert-warning text-center'>No se encontró ningún pedido activo en este dispositivo.</div>";
             return;
         }
 
-        // Generar lista de productos
         let listaProd = "";
         if (pedido.productos && Array.isArray(pedido.productos)) {
             listaProd = pedido.productos.map(p => 
@@ -149,12 +143,11 @@
             ).join('');
         }
 
-        // Renderizar Tarjeta
         contenedor.innerHTML = `
             <div class="card card-tracking p-4">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <span>Orden: <span class="order-id">#${pedido.id}</span></span>
-                    <span class="badge badge-success p-2" id="statusBadge">Buscando...</span>
+                    <span class="badge badge-success p-2" id="statusBadge">Cargando...</span>
                 </div>
                 <div class="progress mb-4" style="height: 10px;">
                     <div id="pBar" class="progress-bar progress-bar-striped progress-bar-animated bg-success" style="width: 20%"></div>
@@ -178,17 +171,13 @@
             </div>
         `;
 
-        // Iniciar escuchas
         escucharCambiosRealTime(pedido.id);
-        consultarHoja(); // Primera carga desde Sheets por si acaso
-        setInterval(consultarHoja, 60000); // Respaldo cada minuto
+        consultarHoja(); 
+        setInterval(consultarHoja, 60000); 
     };
-
 </script>
 </body>
 </html>
-
-
 
 
 
