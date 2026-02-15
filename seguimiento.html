@@ -11,175 +11,128 @@
         body { font-family: "Ubuntu", sans-serif; background-color: #fefcf5; }
         .navbar { background-color: white; border-bottom: 2px solid #ffdab3; position: sticky; top: 0; z-index: 1050; padding: 0.5rem 0.4rem; }
         .navbar-brand { font-family: 'Marck Script', cursive; font-size: 1.2rem; color: #6f1a07 !important; }
-        .nav-user-link { color: #d35400 !important; font-weight: 700; padding: 4px 10px; background: #fff5eb; border-radius: 15px; font-size: 0.8rem; display: flex; align-items: center; text-decoration: none !important; }
-        .card-tracking { border-radius: 15px; border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-top: 20px; background: white; }
-        .order-id { color: #6f1a07; font-weight: bold; font-family: monospace; font-size: 1.2rem; }
-        .address-box { background-color: #fff5eb; border: 1px solid #ffdab3; border-radius: 10px; padding: 15px; margin-bottom: 20px; }
-        #statusBadge { transition: all 0.5s ease; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px; }
-        .progress { background-color: #eee; border-radius: 20px; overflow: hidden; }
-        .progress-bar { transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
+        .card-tracking { border: none; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .order-id { font-family: monospace; font-weight: bold; color: #6f1a07; }
+        .progress { border-radius: 10px; background-color: #eee; }
+        .address-box { background: #fff9f0; padding: 15px; border-radius: 12px; border-left: 4px solid #6f1a07; margin-bottom: 20px; }
     </style>
 </head>
 <body>
 
-<nav class="navbar navbar-light">
-    <div class="container d-flex justify-content-between align-items-center">
-        <a class="navbar-brand" href="menu.html">DeMasita</a>
-        <a href="menu.html" class="nav-user-link">
-            <i class="fas fa-arrow-left mr-1"></i><span>Volver al menú</span>
-        </a>
-    </div>
-</nav>
+    <nav class="navbar shadow-sm mb-4">
+        <div class="container d-flex justify-content-between">
+            <a class="navbar-brand" href="index.html text-danger">🍕 DeMasita</a>
+            <span class="small text-muted align-self-center">Seguimiento en vivo</span>
+        </div>
+    </nav>
 
-<div class="container py-4">
-    <h2 class="text-center mb-4" style="color: #6f1a07;">Estado de tu Pedido</h2>
-    <div id="contenido-seguimiento">
-        <div class="text-center py-5">
-            <div class="spinner-border text-warning" role="status"></div>
-            <p class="mt-2 text-muted">Sincronizando con cocina...</p>
+    <div class="container">
+        <div id="contenido-seguimiento">
+            <div class="text-center py-5">
+                <div class="spinner-border text-danger" role="status"></div>
+                <p class="mt-2">Sincronizando con la cocina...</p>
+            </div>
         </div>
     </div>
-</div>
 
-<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-<script>
-    // CONFIGURACIÓN
-    const FIREBASE_URL = "https://dbnot-50172-default-rtdb.firebaseio.com/pedidos";
-
-    // Notificaciones
-    if (Notification.permission !== "granted" && Notification.permission !== "denied") {
-        Notification.requestPermission();
-    }
-
-    function enviarNotificacion(nuevoEstado) {
-        if (Notification.permission === "granted") {
-            new Notification("DeMasita", {
-                body: `Estado actualizado: ${nuevoEstado}`,
-                icon: "https://tu-web.com/logo.png"
-            });
-        }
-    }
-
-    // LÓGICA DE ETAPAS
-    function actualizarInterfaz(estado) {
-        const badge = document.getElementById("statusBadge");
-        const barra = document.getElementById("pBar");
-        if (!badge || !barra) return;
-
-        const e = estado.toLowerCase().trim();
-        let porcentaje = 0;
-        let colorBarra = "bg-secondary";
-        let claseBadge = "badge-secondary";
-
-        // Mapeo de las 6 etapas
-        if (e.includes("pendiente")) {
-            porcentaje = 15;
-            colorBarra = "bg-warning";
-            claseBadge = "badge-warning text-dark";
-        } else if (e.includes("preparando")) {
-            porcentaje = 35;
-            colorBarra = "bg-warning";
-            claseBadge = "badge-warning text-dark";
-        } else if (e.includes("recolecta")) {
-            porcentaje = 55;
-            colorBarra = "bg-info";
-            claseBadge = "badge-info";
-        } else if (e.includes("camino")) {
-            porcentaje = 75;
-            colorBarra = "bg-info";
-            claseBadge = "badge-info";
-        } else if (e.includes("domicilio")) {
-            porcentaje = 90;
-            colorBarra = "bg-primary";
-            claseBadge = "badge-primary";
-        } else if (e.includes("recogido")) {
-            porcentaje = 100;
-            colorBarra = "bg-success";
-            claseBadge = "badge-success";
-        }
-
-        badge.innerText = estado;
-        badge.className = `badge ${claseBadge} p-2`;
-        barra.style.width = porcentaje + "%";
-        barra.className = `progress-bar progress-bar-striped progress-bar-animated ${colorBarra}`;
-    }
-
-    function escucharRealTime(idPedido) {
-        const eventSource = new EventSource(`${FIREBASE_URL}/${idPedido}.json`);
-
-        eventSource.onmessage = function(event) {
-            const data = JSON.parse(event.data);
-            if (data) {
-                const nuevoEstado = (typeof data === 'string') ? data : data.estado;
-                if (nuevoEstado) {
-                    actualizarInterfaz(nuevoEstado);
-                    enviarNotificacion(nuevoEstado);
-                }
-            }
+        const firebaseConfig = {
+            apiKey: "AIzaSyB-liGmmv0jHh1hqkBNg0mKfjnSBCZXKHs",
+            authDomain: "dbnot-50172.firebaseapp.com",
+            databaseURL: "https://dbnot-50172-default-rtdb.firebaseio.com",
+            projectId: "dbnot-50172"
         };
-    }
 
-    window.onload = function() {
-        const contenedor = document.getElementById("contenido-seguimiento");
-        const pedido = JSON.parse(localStorage.getItem("ultimoPedido"));
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
 
-        if (!pedido) {
+        // Notificaciones del navegador
+        if (Notification.permission !== "granted") {
+            Notification.requestPermission();
+        }
+
+        function notificar(estado) {
+            if (Notification.permission === "granted") {
+                new Notification("DeMasita", {
+                    body: "Tu pedido ahora está: " + estado,
+                    icon: "https://tu-logo-aqui.png"
+                });
+            }
+        }
+
+        function actualizarUI(estado) {
+            const badge = document.getElementById("statusBadge");
+            const barra = document.getElementById("pBar");
+            if (!badge || !barra) return;
+
+            let porcentaje = 10;
+            let color = "bg-warning";
+            let texto = estado.toUpperCase();
+
+            const e = estado.toLowerCase();
+            if (e.includes("pendiente")) { porcentaje = 15; color = "bg-warning"; }
+            else if (e.includes("preparando")) { porcentaje = 40; color = "bg-warning"; }
+            else if (e.includes("camino")) { porcentaje = 75; color = "bg-info"; }
+            else if (e.includes("domicilio")) { porcentaje = 90; color = "bg-primary"; }
+            else if (e.includes("recogido") || e.includes("entregado")) { porcentaje = 100; color = "bg-success"; }
+
+            badge.innerText = texto;
+            barra.style.width = porcentaje + "%";
+            barra.className = `progress-bar progress-bar-striped progress-bar-animated ${color}`;
+        }
+
+        window.onload = function() {
+            const pedidoLocal = JSON.parse(localStorage.getItem("ultimoPedido"));
+            const contenedor = document.getElementById("contenido-seguimiento");
+
+            if (!pedidoLocal || !pedidoLocal.id) {
+                contenedor.innerHTML = `<div class="alert alert-warning text-center">No se encontró información de tu pedido.</div>`;
+                return;
+            }
+
+            // Dibujar la tarjeta una sola vez
             contenedor.innerHTML = `
-                <div class="card p-4 text-center">
-                    <i class="fas fa-search mb-3 text-muted" style="font-size: 3rem;"></i>
-                    <h5>No hay pedidos activos</h5>
-                    <p class="small text-muted">Realiza una compra para ver el seguimiento aquí.</p>
-                    <a href="menu.html" class="btn btn-danger rounded-pill">Ir al Menú</a>
-                </div>`;
-            return;
-        }
-
-        let listaProd = "";
-        if (pedido.productos) {
-            listaProd = pedido.productos.map(p => 
-                `<li class="list-group-item d-flex justify-content-between py-2 small">
-                    ${p.nombre} (x${p.cantidad}) <span>$${p.precio * p.cantidad}</span>
-                </li>`
-            ).join('');
-        }
-
-        contenedor.innerHTML = `
-            <div class="card card-tracking p-4">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <span>Orden: <span class="order-id">#${pedido.id}</span></span>
-                    <span class="badge badge-warning p-2" id="statusBadge">PENDIENTE</span>
-                </div>
-                
-                <div class="progress mb-4" style="height: 12px;">
-                    <div id="pBar" class="progress-bar progress-bar-striped progress-bar-animated bg-warning" style="width: 15%"></div>
-                </div>
-
-                <div class="row text-center mb-4">
-                    <div class="col-6 border-right">
-                        <small class="text-muted d-block">Entrega aprox.</small>
-                        <h4 class="font-weight-bold" style="color: #6f1a07;">${pedido.hora || '--:--'}</h4>
+                <div class="card card-tracking p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span>Orden <span class="order-id">#${pedidoLocal.id}</span></span>
+                        <span id="statusBadge" class="badge badge-warning p-2 text-uppercase">Cargando...</span>
                     </div>
-                    <div class="col-6">
-                        <small class="text-muted d-block">Total pagado</small>
-                        <h4 class="font-weight-bold" style="color: #6f1a07;">$${pedido.total}</h4>
+
+                    <div class="progress mb-4" style="height: 12px;">
+                        <div id="pBar" class="progress-bar progress-bar-striped progress-bar-animated bg-warning" style="width: 10%"></div>
+                    </div>
+
+                    <div class="row text-center mb-4">
+                        <div class="col-6 border-right">
+                            <small class="text-muted d-block">Entrega aprox.</small>
+                            <h4 class="font-weight-bold" style="color: #6f1a07;">${pedidoLocal.hora || '--:--'}</h4>
+                        </div>
+                        <div class="col-6">
+                            <small class="text-muted d-block">Total pagado</small>
+                            <h4 class="font-weight-bold" style="color: #6f1a07;">$${pedidoLocal.total}</h4>
+                        </div>
+                    </div>
+
+                    <div class="address-box">
+                        <h6 class="font-weight-bold small" style="color: #6f1a07;"><i class="fas fa-map-marker-alt mr-2"></i>ENTREGAR EN:</h6>
+                        <p class="mb-0 small text-muted">${pedidoLocal.direccion || "Dirección no disponible"}</p>
                     </div>
                 </div>
+            `;
 
-                <div class="address-box">
-                    <h6 class="font-weight-bold small" style="color: #6f1a07;"><i class="fas fa-map-marker-alt mr-2"></i>ENTREGAR EN:</h6>
-                    <p class="mb-0 small text-muted">${pedido.direccion || "No especificada"}</p>
-                </div>
-
-                <h6 class="font-weight-bold small mb-2">DETALLE DEL PEDIDO:</h6>
-                <ul class="list-group list-group-flush mb-2">${listaProd}</ul>
-            </div>
-        `;
-
-        escucharRealTime(pedido.id);
-        // Carga inicial del estado guardado
-        if(pedido.estado) actualizarInterfaz(pedido.estado);
-    };
-</script>
+            // Escuchar cambios en Firebase para ese ID específico
+            const pedidoRef = ref(db, 'pedidos/' + pedidoLocal.id);
+            onValue(pedidoRef, (snapshot) => {
+                const data = snapshot.val();
+                if (data && data.estado) {
+                    actualizarUI(data.estado);
+                    notificar(data.estado);
+                }
+            });
+        };
+    </script>
 </body>
 </html>
