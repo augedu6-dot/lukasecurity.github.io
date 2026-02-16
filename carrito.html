@@ -269,9 +269,9 @@
             estado: "Pendiente"
         };
 
-        try {
-      // 2. Enviar a Google Sheets adaptado a tu App Script ('nombre' y 'pedido')
-            fetch(GOOGLE_URL, {
+        try {         
+           await update(ref(db, 'pedidos/' + idPedido), dataPedido);
+    fetch(GOOGLE_URL, {
                 method: 'POST',
                 mode: 'no-cors',
                 body: JSON.stringify({ 
@@ -280,8 +280,6 @@
                     pedidoID: idPedido // Enviamos el ID para que luego el panel admin pueda actualizarlo
                 })
             });
-
-            await update(ref(db, 'pedidos/' + idPedido), dataPedido);
             localStorage.setItem("ultimoPedido", JSON.stringify(dataPedido));
             localStorage.removeItem("carrito_obj");
             window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/seguimiento.html";
