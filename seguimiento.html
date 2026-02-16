@@ -9,230 +9,208 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
     <style>
         body { font-family: "Ubuntu", sans-serif; background-color: #fefcf5; overflow-x: hidden; }
+        .navbar { background-color: white; border-bottom: 2px solid #ffdab3; padding: 0.5rem 1rem; }
+        .navbar-brand { font-family: 'Marck Script', cursive; font-size: 1.5rem; color: #6f1a07 !important; }
         
-        /* NAVBAR AJUSTADO A UNA SOLA LINEA */
-        .navbar { 
-            background-color: white; 
-            border-bottom: 2px solid #ffdab3; 
-            padding: 0.5rem 0.8rem; 
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-        .navbar .container { 
-            display: flex !important; 
-            flex-direction: row !important; 
-            flex-wrap: nowrap !important; 
-            justify-content: space-between; 
-            align-items: center; 
-        }
-        .navbar-brand { 
-            font-family: 'Marck Script', cursive; 
-            font-size: 1.6rem; 
-            color: #6f1a07 !important; 
-            white-space: nowrap;
-        }
-
-        /* TARJETA DE SEGUIMIENTO */
         .card-tracking { 
             border: none; 
             border-radius: 20px; 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05); 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
             background: white;
-            margin-top: 20px;
+            margin: 0 auto;
+            max-width: 100%; 
         }
 
-        /* ESTADOS DEL PEDIDO */
-        .step { text-align: center; position: relative; flex: 1; }
-        .step-icon { 
-            width: 45px; height: 45px; border-radius: 50%; background: #eee; 
-            display: flex; align-items: center; justify-content: center; 
-            margin: 0 auto 8px; color: #999; transition: all 0.3s;
-            font-size: 1.2rem;
+        .status-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 15px;
         }
-        .step.active .step-icon { background: #6f1a07; color: white; transform: scale(1.1); }
-        .step-text { font-size: 0.7rem; font-weight: 700; color: #999; text-transform: uppercase; }
-        .step.active .step-text { color: #6f1a07; }
 
-        /* PRODUCTOS EN SEGUIMIENTO - SOPORTE PARA NOMBRES LARGOS */
-        .prod-item { 
+        .order-id { font-family: monospace; font-weight: bold; color: #6f1a07; font-size: 0.9rem; }
+
+        #statusBadge { 
+            white-space: normal !important; 
+            word-wrap: break-word; 
+            overflow-wrap: break-word;
+            text-align: center;
+            line-height: 1.2;
+            padding: 6px 10px !important;
+            font-size: 0.75rem; 
+            max-width: 50%; 
+            display: block;
+        }
+
+        .progress { border-radius: 10px; background-color: #eee; height: 12px; }
+        .address-box { background: #fff9f0; padding: 12px; border-radius: 12px; border-left: 4px solid #6f1a07; margin-bottom: 15px; }
+        .address-box p { font-size: 0.85rem; line-height: 1.3; }
+
+        /* --- CORRECCIÓN DE PRODUCTOS LARGOS --- */
+        .product-item { 
+            border-bottom: 1px solid #eee; 
+            padding: 10px 0; 
+            font-size: 0.85rem; 
             display: flex; 
             justify-content: space-between; 
             align-items: flex-start; 
-            padding: 10px 0; 
-            border-bottom: 1px solid #eee; 
-        }
-        .prod-item:last-child { border-bottom: none; }
-        
-        .prod-info { 
-            flex: 1; 
-            min-width: 0; /* Permite que el texto se ajuste */
-            padding-right: 10px;
-        }
-        .prod-name { 
-            font-size: 0.9rem; 
-            font-weight: 600; 
-            margin-bottom: 0; 
-            white-space: normal; /* Permite varias líneas */
-            word-wrap: break-word;
-            line-height: 1.2;
-        }
-        .prod-qty { 
-            font-size: 0.9rem; 
-            font-weight: 700; 
-            color: #6f1a07; 
-            flex-shrink: 0; 
+            gap: 12px;
         }
 
-        .info-box { background: #fffcf5; border-radius: 15px; padding: 15px; border: 1px solid #ffdab3; }
+        .product-info {
+            flex: 1; 
+            word-break: break-word; 
+            overflow-wrap: break-word;
+            line-height: 1.2;
+        }
+
+        .product-price {
+            white-space: nowrap; 
+            font-weight: bold;
+            color: #6f1a07;
+            text-align: right;
+        }
+        /* -------------------------------------- */
     </style>
 </head>
 <body>
 
-<nav class="navbar text-center">
-    <div class="container">
-        <a class="navbar-brand" href="menu.html">DeMasita</a>
-        <div style="width: 40px;"></div> </div>
-</nav>
+    <nav class="navbar navbar-expand-lg navbar-light shadow-sm mb-3">
+        <div class="container d-flex justify-content-between align-items-center">
+            <a class="navbar-brand" href="https://augedu6-dot.github.io/lukasecurity.github.io/menu.html">DeMasita</a>
+            <a class="btn btn-sm btn-outline-danger font-weight-bold" href="https://augedu6-dot.github.io/lukasecurity.github.io/menu.html">Menú</a>
+        </div>
+    </nav>
 
-<div class="container mb-5">
-    <div id="contenedor-seguimiento">
-        <div class="text-center py-5">
-            <div class="spinner-border text-danger" role="status"></div>
-            <p class="mt-3">Buscando tu pedido...</p>
+    <div class="container" style="padding: 0 10px;">
+        <div id="contenido-seguimiento">
+            <div class="text-center py-5">
+                <div class="spinner-border text-danger" role="status"></div>
+                <p class="mt-2 text-muted small">Cargando pedido...</p>
+            </div>
         </div>
     </div>
-</div>
 
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-    const firebaseConfig = {
-        apiKey: "AIzaSyB-liGmmv0jHh1hqkBNg0mKfjnSBCZXKHs",
-        authDomain: "dbnot-50172.firebaseapp.com",
-        databaseURL: "https://dbnot-50172-default-rtdb.firebaseio.com",
-        projectId: "dbnot-50172",
-        storageBucket: "dbnot-50172.firebasestorage.app",
-        messagingSenderId: "556269134813",
-        appId: "1:556269134813:web:e053daa0348b06ce420c34"
-    };
+        const firebaseConfig = {
+            apiKey: "AIzaSyB-liGmmv0jHh1hqkBNg0mKfjnSBCZXKHs",
+            authDomain: "dbnot-50172.firebaseapp.com",
+            databaseURL: "https://dbnot-50172-default-rtdb.firebaseio.com",
+            projectId: "dbnot-50172"
+        };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
 
-    const contenedor = document.getElementById("contenedor-seguimiento");
-
-    function actualizarUI(estado) {
-        const steps = document.querySelectorAll('.step');
-        let currentStep = 0;
-        
-        const est = estado.toLowerCase().trim();
-        if (est === "pendiente") currentStep = 1;
-        if (est === "preparando" || est === "en preparacion") currentStep = 2;
-        if (est === "en camino" || est === "en ruta") currentStep = 3;
-
-        steps.forEach((step, index) => {
-            if (index + 1 <= currentStep) step.classList.add('active');
-            else step.classList.remove('active');
-        });
-    }
-
-    function cargarPedido() {
-        const pedidoLocal = JSON.parse(localStorage.getItem("ultimoPedido"));
-
-        if (!pedidoLocal) {
-            contenedor.innerHTML = `
-                <div class="text-center py-5">
-                    <img src="https://cdn-icons-png.flaticon.com/512/11329/11329973.png" width="100" class="mb-4" style="opacity: 0.5;">
-                    <h4>No tienes pedidos activos</h4>
-                    <p class="text-muted">¡Pide algo rico ahora!</p>
-                    <a href="menu.html" class="btn btn-danger rounded-pill px-5">Ir al Menú</a>
-                </div>`;
-            return;
+        function notificarAndroid(mensaje) {
+            if (typeof Android !== 'undefined' && Android !== null) {
+                Android.sendDataToAndroid(mensaje);
+            }
         }
 
-        let listaProdHTML = "";
-        pedidoLocal.productos.forEach(p => {
-            listaProdHTML += `
-                <div class="prod-item">
-                    <div class="prod-info">
-                        <p class="prod-name">${p.nombre}</p>
-                    </div>
-                    <div class="prod-qty">x${p.cantidad}</div>
-                </div>`;
-        });
+        function actualizarUI(estado) {
+            const badge = document.getElementById("statusBadge");
+            const barra = document.getElementById("pBar");
+            if (!badge || !barra) return;
 
-        contenedor.innerHTML = `
-            <div class="card card-tracking p-4">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <div>
-                        <h6 class="text-muted mb-0" style="font-size: 0.7rem;">ORDEN #${pedidoLocal.id}</h6>
-                        <h4 class="font-weight-bold" style="color: #6f1a07;">Seguimiento</h4>
-                    </div>
-                    <div class="text-right">
-                        <span class="badge badge-pill badge-warning px-3 py-2">Entrega aprox: ${pedidoLocal.hora}</span>
-                    </div>
-                </div>
+            let porcentaje = 0;
+            let color = "bg-warning";
+            const e = estado.toLowerCase().trim();
 
-                <div class="d-flex justify-content-between mb-4">
-                    <div class="step" id="step1">
-                        <div class="step-icon"><i class="fas fa-clock"></i></div>
-                        <div class="step-text">Recibido</div>
-                    </div>
-                    <div class="step" id="step2">
-                        <div class="step-icon"><i class="fas fa-utensils"></i></div>
-                        <div class="step-text">Cocina</div>
-                    </div>
-                    <div class="step" id="step3">
-                        <div class="step-icon"><i class="fas fa-motorcycle"></i></div>
-                        <div class="step-text">Ruta</div>
-                    </div>
-                </div>
+            if (e === "pedido recibido") { porcentaje = 10; color = "bg-secondary"; }
+            else if (e === "confirmar / aceptado") { porcentaje = 25; color = "bg-warning"; }
+            else if (e === "cocinando") { porcentaje = 45; color = "bg-warning"; }
+            else if (e === "repartido / recolectar") { porcentaje = 60; color = "bg-info"; }
+            else if (e === "en camino") { porcentaje = 75; color = "bg-info"; }
+            else if (e === "afuera del domicilio") { porcentaje = 90; color = "bg-primary"; }
+            else if (e === "entregado") { porcentaje = 100; color = "bg-success"; }
 
-                <div class="info-box">
-                    <div class="mb-3">
-                        <h6 class="font-weight-bold mb-1" style="color: #6f1a07; font-size: 0.75rem;"><i class="fas fa-map-marker-alt mr-2"></i>DIRECCIÓN DE ENTREGA:</h6>
-                        <p class="mb-0 text-muted" style="font-size: 0.85rem;">${pedidoLocal.direccion}</p>
+            badge.innerText = estado.toUpperCase();
+            barra.style.width = porcentaje + "%";
+            barra.className = `progress-bar progress-bar-striped progress-bar-animated ${color}`;
+            
+            notificarAndroid("DeMasita: Tu pedido está " + estado);
+        }
+
+        window.onload = function() {
+            const pedidoLocal = JSON.parse(localStorage.getItem("ultimoPedido"));
+            const contenedor = document.getElementById("contenido-seguimiento");
+
+            if (!pedidoLocal || !pedidoLocal.id) {
+                contenedor.innerHTML = `<div class="alert alert-warning text-center small">No hay pedidos activos.</div>`;
+                return;
+            }
+
+            // Lógica de productos corregida para soportar nombres largos
+            let listaProdHTML = "";
+            if (pedidoLocal.productos && Array.isArray(pedidoLocal.productos)) {
+                listaProdHTML = pedidoLocal.productos.map(p => `
+                    <div class="product-item">
+                        <div class="product-info">
+                            <span class="font-weight-bold">${p.cantidad}x</span> 
+                            <span>${p.nombre}</span>
+                        </div>
+                        <div class="product-price">
+                            $${p.precio * p.cantidad}
+                        </div>
                     </div>
-                    <div>
-                        <h6 class="font-weight-bold mb-2" style="color: #6f1a07; font-size: 0.75rem;"><i class="fas fa-shopping-bag mr-2"></i>RESUMEN DE PRODUCTOS:</h6>
-                        <div class="bg-white rounded p-2 border">
+                `).join("");
+            }
+
+            contenedor.innerHTML = `
+                <div class="card card-tracking p-3">
+                    <div class="status-header">
+                        <span class="order-id">Orden #${pedidoLocal.id}</span>
+                        <span id="statusBadge" class="badge badge-secondary">CONECTANDO...</span>
+                    </div>
+
+                    <div class="progress mb-4">
+                        <div id="pBar" class="progress-bar progress-bar-striped progress-bar-animated bg-secondary" style="width: 5%"></div>
+                    </div>
+
+                    <div class="row text-center mb-4">
+                        <div class="col-6 border-right">
+                            <small class="text-muted d-block font-weight-bold" style="font-size: 0.7rem;">ENTREGA APROX.</small>
+                            <h5 class="font-weight-bold mb-0" style="color: #6f1a07;">${pedidoLocal.hora || '--:--'}</h5>
+                        </div>
+                        <div class="col-6">
+                            <small class="text-muted d-block font-weight-bold" style="font-size: 0.7rem;">TOTAL</small>
+                            <h5 class="font-weight-bold mb-0" style="color: #6f1a07;">$${pedidoLocal.total}</h5>
+                        </div>
+                    </div>
+
+                    <div class="address-box">
+                        <h6 class="font-weight-bold" style="color: #6f1a07; font-size: 0.75rem;"><i class="fas fa-map-marker-alt mr-2"></i>ENTREGAR EN:</h6>
+                        <p class="mb-0 text-muted">${pedidoLocal.direccion || "No especificada"}</p>
+                    </div>
+
+                    <div class="products-section">
+                        <h6 class="font-weight-bold mb-2" style="color: #6f1a07; font-size: 0.75rem;"><i class="fas fa-shopping-bag mr-2"></i>TUS PRODUCTOS:</h6>
+                        <div class="border rounded p-2 bg-white">
                             ${listaProdHTML}
                         </div>
                     </div>
                 </div>
-            </div>
-            
-            <div class="text-center mt-4">
-                <p class="text-muted small">Esta página se actualiza automáticamente</p>
-                <a href="menu.html" class="btn btn-outline-secondary btn-sm rounded-pill">Volver al Menú</a>
-            </div>
-        `;
+            `;
 
-        // ESCUCHAR CAMBIOS EN FIREBASE
-        const pedidoRef = ref(db, 'pedidos/' + pedidoLocal.id);
-        onValue(pedidoRef, (snapshot) => {
-            const data = snapshot.val();
-            if (data) {
-                if (data.estado.toLowerCase() === "finalizado") {
-                    localStorage.removeItem("ultimoPedido");
-                    contenedor.innerHTML = `
-                        <div class="text-center py-5">
-                            <h2 class="display-4 text-success"><i class="fas fa-check-circle"></i></h2>
-                            <h4>¡Pedido Entregado!</h4>
-                            <p>Esperamos que disfrutes tu comida.</p>
-                            <a href="menu.html" class="btn btn-danger rounded-pill px-5 mt-3">Pedir de nuevo</a>
-                        </div>`;
-                } else {
-                    actualizarUI(data.estado);
+            const pedidoRef = ref(db, 'pedidos/' + pedidoLocal.id);
+            onValue(pedidoRef, (snapshot) => {
+                const data = snapshot.val();
+                if (data && data.estado) {
+                    if (data.estado.toLowerCase().trim() === "finalizado") {
+                        notificarAndroid("Tu pedido ha sido finalizado. ¡Gracias!");
+                        contenedor.innerHTML = `<div class="text-center py-5"><h4>¡Pedido Finalizado!</h4><a href="https://augedu6-dot.github.io/lukasecurity.github.io/menu.html" class="btn btn-danger mt-3">Volver al Menú</a></div>`;
+                        localStorage.removeItem("ultimoPedido");
+                    } else {
+                        actualizarUI(data.estado);
+                    }
                 }
-            }
-        });
-    }
-
-    window.onload = cargarPedido;
-</script>
-
+            });
+        };
+    </script>
 </body>
 </html>
