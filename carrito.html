@@ -207,6 +207,13 @@
             fecha: new Date().toLocaleDateString(),
             estado: "Pendiente"
         };
+ const dataPedidoss = {
+           id: idPedido,
+            usuario: usuarioEmail,
+            productos: Object.values(carrito),
+            total: document.getElementById("totalFinal").innerText,
+            direccion: `${domicilioData.calle} #${domicilioData.numero}`
+        };
 
         try {
             // 1. Guardar en Firebase
@@ -217,7 +224,7 @@
                 method: 'POST',
                 mode: 'no-cors',
                 body: JSON.stringify({ 
-                    nombre: resumenPedido, 
+                    nombre: dataPedidoss , 
                     pedido: idPedido,
                     pedidoID: idPedido // Enviamos el ID para que luego el panel admin pueda actualizarlo
                 })
