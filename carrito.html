@@ -10,50 +10,80 @@
     <style>
         body { font-family: "Ubuntu", sans-serif; background-color: #fefcf5; padding-bottom: 120px; }
         
-        /* Navbar */
-        .navbar { background-color: white; border-bottom: 2px solid #ffdab3; position: sticky; top: 0; z-index: 1000; padding: 0.5rem 1rem; }
-        .navbar-brand { font-family: 'Marck Script', cursive; font-size: 1.8rem; color: #6f1a07 !important; text-decoration: none; }
-        .nav-icons { display: flex; align-items: center; }
-        .nav-icon-link { color: #d35400 !important; background: #fff5eb; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 12px; margin-left: 10px; cursor: pointer; position: relative; }
-        #cartCount { position: absolute; top: -5px; right: -5px; background: #f44336; color: white; font-size: 0.7rem; padding: 2px 6px; border-radius: 10px; }
+        /* NAVBAR AJUSTADO A UNA SOLA LINEA */
+        .navbar { 
+            background-color: white; 
+            border-bottom: 2px solid #ffdab3; 
+            position: sticky; 
+            top: 0; 
+            z-index: 1000; 
+            padding: 0.5rem 0.8rem;
+        }
+        .navbar .container { 
+            display: flex; 
+            flex-direction: row !important; 
+            flex-wrap: nowrap !important; 
+            justify-content: space-between; 
+            align-items: center; 
+        }
+        .navbar-brand { 
+            font-family: 'Marck Script', cursive; 
+            font-size: 1.6rem; 
+            color: #6f1a07 !important; 
+            text-decoration: none;
+            white-space: nowrap;
+            margin-right: 5px;
+        }
 
-        /* Títulos de sección */
-        .section-title { color: #6f1a07; font-weight: 700; margin: 15px 0 10px; font-size: 1.1rem; display: flex; align-items: center; }
+        .nav-icons { display: flex; align-items: center; flex-shrink: 0; }
+        .nav-icon-link { 
+            color: #d35400 !important; 
+            background: #fff5eb; 
+            width: 38px; 
+            height: 38px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            border-radius: 10px; 
+            margin-left: 8px; 
+            cursor: pointer; 
+            position: relative; 
+        }
+        #cartCount { position: absolute; top: -5px; right: -5px; background: #f44336; color: white; font-size: 0.7rem; padding: 2px 5px; border-radius: 10px; }
+
+        .section-title { color: #6f1a07; font-weight: 700; margin: 15px 0 8px; font-size: 1.05rem; display: flex; align-items: center; }
         .section-title i { margin-right: 10px; color: #f44336; }
 
-        /* PRODUCTOS COMPACTOS Y TEXTO LARGO */
+        /* PRODUCTOS COMPACTOS */
         .food-item { 
-            background: white; padding: 8px 12px; margin-bottom: 6px; border-radius: 12px; 
+            background: white; padding: 8px 12px; margin-bottom: 5px; border-radius: 12px; 
             display: flex; justify-content: space-between; align-items: center;
             box-shadow: 0 2px 6px rgba(0,0,0,0.02); border: 1px solid #f9f0e6;
         }
         .food-item div:first-child { flex: 1; min-width: 0; padding-right: 10px; }
         .food-item p { 
-            font-size: 0.95rem; line-height: 1.2; white-space: normal; 
+            font-size: 0.92rem; line-height: 1.2; white-space: normal; 
             word-wrap: break-word; margin-bottom: 0; font-weight: 700; color: #333;
         }
 
-        /* Controles de cantidad */
         .quantity-controls { display: flex; align-items: center; background: #f1f3f5; border-radius: 10px; padding: 3px; flex-shrink: 0; }
-        .btn-qty { width: 28px; height: 28px; border-radius: 8px; border: none; background: white; color: #6f1a07; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .qty-number { min-width: 22px; text-align: center; font-weight: 700; color: #6f1a07; margin: 0 6px; font-size: 0.9rem; }
+        .btn-qty { width: 28px; height: 28px; border-radius: 8px; border: none; background: white; color: #6f1a07; font-weight: bold; }
+        .qty-number { min-width: 20px; text-align: center; font-weight: 700; color: #6f1a07; margin: 0 5px; font-size: 0.9rem; }
 
-        /* Tarjetas de Resumen y Dirección */
-        .card-custom { background: white; padding: 15px; border-radius: 15px; border: 1px solid #f9f0e6; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
+        .card-custom { background: white; padding: 12px; border-radius: 15px; border: 1px solid #f9f0e6; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
         
-        /* Botón Flotante */
+        /* BOTON FLOTANTE LIMPIO */
         .btn-finalizar {
             position: fixed; bottom: 25px; left: 5%; width: 90%; 
             background: #6f1a07; color: white; padding: 16px; border-radius: 18px;
             font-weight: 700; text-align: center; border: none; z-index: 1000;
-            box-shadow: 0 8px 20px rgba(111, 26, 7, 0.3); font-size: 1.05rem;
+            box-shadow: 0 8px 20px rgba(111, 26, 7, 0.3); font-size: 1.1rem;
         }
         .btn-finalizar.blocked { background: #999; box-shadow: none; cursor: not-allowed; }
 
-        /* Aviso de Orden Activa */
         #avisoHtml { 
             position: fixed; top: -100px; left: 50%; transform: translateX(-50%);
-            background: #f44336; color: white; padding: 15px 25px; border-radius: 0 0 15px 15px;
+            background: #f44336; color: white; padding: 15px; border-radius: 0 0 15px 15px;
             z-index: 2000; transition: top 0.5s ease; width: 90%; text-align: center;
         }
         #avisoHtml.show { top: 0; }
@@ -61,10 +91,10 @@
 </head>
 <body>
 
-<div id="avisoHtml">Ya tienes un pedido en curso. Redirigiendo...</div>
+<div id="avisoHtml">Ya tienes un pedido en curso...</div>
 
 <nav class="navbar">
-    <div class="container d-flex justify-content-between align-items-center">
+    <div class="container">
         <a class="navbar-brand" href="menu.html">DeMasita</a>
         <div class="nav-icons">
             <div class="nav-icon-link" onclick="window.location.href='seguimiento.html'">
@@ -78,15 +108,13 @@
 
 <div class="container">
     <div class="section-title"><i class="fas fa-shopping-basket"></i> Tus Productos (<span id="itemsTotal">0</span>)</div>
-    
     <div id="lista-carrito"></div>
 
     <div class="section-title"><i class="fas fa-map-marker-alt"></i> Entrega en:</div>
     <div class="card-custom mb-3" onclick="window.location.href='direccion.html'" style="cursor:pointer;">
         <div class="d-flex justify-content-between align-items-center">
             <div style="min-width: 0;">
-                <p id="currentAddress" class="mb-0 font-weight-bold" style="font-size: 0.85rem; white-space: normal;">Cargando dirección...</p>
-                <small class="text-muted">Toca para cambiar</small>
+                <p id="currentAddress" class="mb-0 font-weight-bold" style="font-size: 0.85rem; white-space: normal;">Cargando...</p>
             </div>
             <i class="fas fa-chevron-right text-muted ml-2"></i>
         </div>
@@ -103,23 +131,11 @@
     </div>
 </div>
 
-<button id="btnPagarFlotante" class="btn-finalizar" onclick="irAFinalizar()">
-    <span id="textoBotonFlotante">Finalizar Pedido</span> — $<span id="totalFloat">0</span>
+<button id="btnPagarFlotante" class="btn-finalizar" onclick="confirmarPedidoFinal()">
+    <span id="textoBotonFlotante">Finalizar Pedido</span>
 </button>
 
 <div class="modal fade" id="userModal" tabindex="-1" role="dialog"><div class="modal-dialog modal-dialog-centered"><div class="modal-content text-center p-4"><h5 id="displayEmail" style="word-break: break-all;">...</h5><button class="btn btn-danger rounded-pill mt-3" onclick="cerrarSesion()">Cerrar Sesión</button></div></div></div>
-
-<div class="modal fade" id="resumenModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header" style="background: #6f1a07; color: white;"><h5 class="modal-title">Confirmar Pedido</h5></div>
-            <div class="modal-body" id="resumenCuerpo"></div>
-            <div class="modal-footer border-0">
-                <button type="button" id="btnConfirmarFinal" class="btn btn-success btn-block rounded-pill py-3" onclick="confirmarPedidoFinal()">CONFIRMAR Y PAGAR</button>
-            </div>
-        </div>
-    </div>
-</div>
 
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
@@ -136,8 +152,7 @@
         projectId: "dbnot-50172",
         storageBucket: "dbnot-50172.firebasestorage.app",
         messagingSenderId: "556269134813",
-        appId: "1:556269134813:web:e053daa0348b06ce420c34",
-        measurementId: "G-S8148WP7H1"
+        appId: "1:556269134813:web:e053daa0348b06ce420c34"
     };
 
     const app = initializeApp(firebaseConfig);
@@ -145,8 +160,7 @@
     const auth = getAuth(app);
 
     let carrito = JSON.parse(localStorage.getItem("carrito_obj")) || {};
-    
-    signInAnonymously(auth).catch((error) => console.error("Error Auth:", error));
+    signInAnonymously(auth);
 
     window.cambiarCantidad = function(nombre, precio, cambio) {
         if (!carrito[nombre]) carrito[nombre] = { precio, cantidad: 0 };
@@ -165,7 +179,7 @@
             totalItems += item.cantidad; precioTotal += item.cantidad * item.precio;
             lista.innerHTML += `
                 <div class="food-item">
-                    <div><p class="mb-0 font-weight-bold">${nombre}</p><small class="text-muted">$${item.precio} c/u</small></div>
+                    <div><p>${nombre}</p><small class="text-muted">$${item.precio} c/u</small></div>
                     <div class="quantity-controls">
                         <button class="btn-qty" onclick="cambiarCantidad('${nombre}', ${item.precio}, -1)">-</button>
                         <span class="qty-number">${item.cantidad}</span>
@@ -173,15 +187,11 @@
                     </div>
                 </div>`;
         }
-        if (totalItems === 0) lista.innerHTML = "<div class='text-center mt-5'><p>Tu carrito está vacío.</p></div>";
+        if (totalItems === 0) lista.innerHTML = "<div class='text-center py-4'><p>Tu carrito está vacío.</p></div>";
         document.getElementById("cartCount").innerText = totalItems;
         document.getElementById("itemsTotal").innerText = totalItems;
-        document.getElementById("totalFloat").innerText = precioTotal;
-        
-        // Sincronizar también el resumen
-        if(document.getElementById("totalResumen")) document.getElementById("totalResumen").innerText = precioTotal;
-        if(document.getElementById("totalFinal")) document.getElementById("totalFinal").innerText = precioTotal;
-        
+        document.getElementById("totalResumen").innerText = precioTotal;
+        document.getElementById("totalFinal").innerText = precioTotal;
         verificarOrdenActiva();
     }
 
@@ -189,7 +199,6 @@
         const pedidoActivo = JSON.parse(localStorage.getItem("ultimoPedido"));
         const btnF = document.getElementById("btnPagarFlotante");
         const textoB = document.getElementById("textoBotonFlotante");
-
         if (pedidoActivo && pedidoActivo.id) {
             btnF.classList.add("blocked");
             textoB.innerText = "Orden Activa";
@@ -201,44 +210,26 @@
         }
     }
 
-    window.irAFinalizar = function() {
-        const aviso = document.getElementById("avisoHtml");
-
+    // AHORA ESTA FUNCIÓN ENVÍA EL PEDIDO DIRECTAMENTE
+    window.confirmarPedidoFinal = async function() {
         if (verificarOrdenActiva()) {
-            aviso.classList.add("show");
+            document.getElementById("avisoHtml").classList.add("show");
             setTimeout(() => {
-                aviso.classList.remove("show");
                 window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/seguimiento.html";
-            }, 6000);
+            }, 3000);
             return;
         }
 
         if (Object.keys(carrito).length === 0) return;
-        
-        const direccionActual = document.getElementById('currentAddress').innerText;
-        let contenidoResumen = `
-            <div class="resumen-direccion mb-3"><strong>Dirección:</strong><br>${direccionActual}</div>
-            <table class="table table-sm table-borderless">
-                <thead><tr class="border-bottom"><th>Producto</th><th class="text-center">Cant.</th><th class="text-right">Subtotal</th></tr></thead>
-                <tbody>`;
-        for (const [nombre, item] of Object.entries(carrito)) {
-            contenidoResumen += `<tr><td>${nombre}</td><td class="text-center">${item.cantidad}</td><td class="text-right">$${item.cantidad * item.precio}</td></tr>`;
-        }
-        contenidoResumen += `</tbody></table><h4 class="text-right mt-3">Total: $${document.getElementById("totalFloat").innerText}</h4>`;
-        document.getElementById('resumenCuerpo').innerHTML = contenidoResumen;
-        $('#resumenModal').modal('show');
-    };
 
-    window.confirmarPedidoFinal = async function() {
-        if (verificarOrdenActiva()) return;
-
-        const btn = document.getElementById("btnConfirmarFinal");
-        btn.disabled = true; btn.innerText = "Procesando...";
+        const btn = document.getElementById("btnPagarFlotante");
+        btn.disabled = true; 
+        document.getElementById("textoBotonFlotante").innerText = "Procesando...";
 
         const idPedido = Math.floor(Math.random() * 0xFFFFFF).toString(16).toUpperCase().padStart(6, '0');
         const usuarioEmail = localStorage.getItem("usuarioLogueado") || "Sin Email";
         const direccion = document.getElementById('currentAddress').innerText;
-        const totalPagar = document.getElementById("totalFloat").innerText;
+        const totalPagar = document.getElementById("totalFinal").innerText;
 
         let productosArray = [];
         for (const [nombre, item] of Object.entries(carrito)) {
@@ -260,15 +251,13 @@
         };
 
         try {
-            const pedidoRef = ref(db, 'pedidos/' + idPedido);
-            await update(pedidoRef, dataPedido);
-
+            await update(ref(db, 'pedidos/' + idPedido), dataPedido);
             localStorage.setItem("ultimoPedido", JSON.stringify(dataPedido));
             localStorage.removeItem("carrito_obj");
             window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/seguimiento.html";
-
         } catch (error) {
-            btn.disabled = false; btn.innerText = "Confirmar y Pagar";
+            btn.disabled = false; 
+            document.getElementById("textoBotonFlotante").innerText = "Reintentar";
         }
     };
 
@@ -283,12 +272,8 @@
             return;
         }
         document.getElementById("displayEmail").innerText = localStorage.getItem("usuarioLogueado");
-        
         const d = JSON.parse(localStorage.getItem('domicilio'));
-        const display = document.getElementById('currentAddress');
-        if (d) display.innerText = `${d.calle} #${d.numero}, ${d.ciudad}`;
-        else display.innerHTML = `<span class="text-danger">No has registrado dirección</span>`;
-        
+        if (d) document.getElementById('currentAddress').innerText = `${d.calle} #${d.numero}, ${d.ciudad}`;
         actualizarInterfaz();
     };
 </script>
