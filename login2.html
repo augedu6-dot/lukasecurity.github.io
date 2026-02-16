@@ -7,54 +7,35 @@
     <link href="https://fonts.googleapis.com/css2?family=Marck+Script&family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet">
     
     <style>
-        body { font-family: "Ubuntu", sans-serif; background-color: #f3e6d8; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; flex-direction: column; }
-        
-        .estado-tienda { width: 90%; max-width: 400px; padding: 10px; border-radius: 10px; margin-bottom: 15px; text-align: center; font-weight: 700; font-size: 0.9rem; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        .abierto { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-        .cerrado { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
-
+        body { font-family: "Ubuntu", sans-serif; background-color: #f3e6d8; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
         .login-card { background: white; padding: 40px 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(111, 26, 7, 0.1); width: 90%; max-width: 400px; text-align: center; }
         .login-card h2 { font-family: 'Marck Script', cursive; color: #6f1a07; font-size: 2.5rem; margin-bottom: 25px; }
         .input-group { margin-bottom: 20px; text-align: left; }
         label { display: block; margin-bottom: 8px; font-weight: 500; color: #555; font-size: 0.9rem; }
         input { width: 100%; padding: 12px 15px; border: 2px solid #eee; border-radius: 10px; font-size: 1rem; box-sizing: border-box; }
         input:focus { border-color: #d35400; outline: none; }
-        .btn-accion { width: 100%; padding: 14px; background-color: #6f1a07; color: white; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; transition: background 0.3s; }
-        .btn-accion:disabled { background-color: #a5a5a5; cursor: not-allowed; }
+        .btn-accion { width: 100%; padding: 14px; background-color: #6f1a07; color: white; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; transition: background 0.3s; margin-top: 10px; }
         .btn-toggle { background: none; border: none; color: #d35400; font-weight: 700; cursor: pointer; text-decoration: underline; }
         #mensaje { margin-top: 20px; padding: 12px; border-radius: 8px; display: none; font-size: 0.85rem; }
         .success { background-color: #d4edda; color: #155724; }
         .error { background-color: #f8d7da; color: #721c24; }
         .info { background-color: #fff3cd; color: #856404; }
-        .solo-registro { display: none; }
     </style>
 </head>
 <body>
 
-<div id="bannerEstado" class="estado-tienda">Verificando horario...</div>
-
 <div class="login-card">
     <h2 id="titulo">Iniciar Sesión</h2>
     
-    <form id="formAcceso" autocomplete="on">
-        <div class="input-group solo-registro" id="groupNombre">
-            <label for="nombre">Nombre Completo</label>
-            <input type="text" id="nombre" name="nombre" placeholder="Juan Pérez">
-        </div>
-
-        <div class="input-group solo-registro" id="groupTelefono">
-            <label for="telefono">Teléfono</label>
-            <input type="tel" id="telefono" name="telefono" placeholder="5551234567">
-        </div>
-
+    <form id="formAcceso">
         <div class="input-group">
             <label for="email">Correo Electrónico</label>
-            <input type="email" id="email" name="username" autocomplete="username" required>
+            <input type="email" id="email" required placeholder="tu@correo.com">
         </div>
 
         <div class="input-group">
             <label for="password">Contraseña</label>
-            <input type="password" id="password" name="password" autocomplete="current-password" required>
+            <input type="password" id="password" required>
             <small id="reglaPass" style="color: #999; display: none;">Solo letras (1-8 caracteres).</small>
         </div>
 
@@ -70,142 +51,94 @@
 </div>
 
 <script>
+    // URL de tu Script de Google
     const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwNUEScAiNDg_xV5Ep9qQTVW682UHkZMVtZr6CD7V-BDREllVAWmVnMnbM6i6NmdA-MwA/exec";
-    
-    // CONFIGURACIÓN DE HORARIO (Formato 24hs)
-    const HORA_APERTURA = 1;  // 9:00 AM
-    const HORA_CIERRE = 24;   // 8:00 PM
-    
     let modoActual = "login"; 
-    let sistemaAbierto = false;
 
     window.onload = () => {
-        verificarHorario();
-        
+        // Rellenar campos si existen datos guardados, pero SIN enviar automáticamente
         const mail = localStorage.getItem("remember_email");
         const pass = localStorage.getItem("remember_pass");
-        const logueado = localStorage.getItem("sesion_activa");
-
+        
         if(mail && pass) {
             document.getElementById('email').value = mail;
             document.getElementById('password').value = pass;
-            // Solo auto-login si el sistema está abierto
-            if(logueado === "true" && sistemaAbierto) {
-                enviarDatos(mail, pass);
-            }
         }
     };
 
-    function verificarHorario() {
-        const ahora = new Date();
-        const horaActual = ahora.getHours();
-        const banner = document.getElementById('bannerEstado');
-        
-        if (horaActual >= HORA_APERTURA && horaActual < HORA_CIERRE) {
-            sistemaAbierto = true;
-            banner.innerText = `🟢 ABIERTO (Cierra a las ${HORA_CIERRE}:00)`;
-            banner.className = "estado-tienda abierto";
-        } else {
-            sistemaAbierto = false;
-            banner.innerText = `🔴 CERRADO (Abre a las ${HORA_APERTURA}:00)`;
-            banner.className = "estado-tienda cerrado";
-        }
-        
-        // Actualizar el estado del botón según el modo
-        actualizarBoton();
-    }
-
-    function actualizarBoton() {
-        const btnAccion = document.getElementById('btnAccion');
-        
-        if (modoActual === "registro") {
-            // En modo registro, siempre habilitado
-            btnAccion.disabled = false;
-            btnAccion.innerText = "Registrarse";
-        } else {
-            // En modo login, depende del horario
-            btnAccion.disabled = !sistemaAbierto;
-            btnAccion.innerText = sistemaAbierto ? "Ingresar" : "Cerrado";
-        }
-    }
-
     function toggleModo() {
         const titulo = document.getElementById('titulo');
+        const btnAccion = document.getElementById('btnAccion');
         const btnModo = document.getElementById('btnModo');
         const txtToggle = document.getElementById('txtToggle');
         const regla = document.getElementById('reglaPass');
-        const camposRegistro = document.querySelectorAll('.solo-registro');
-        const inputNombre = document.getElementById('nombre');
-        const inputTelefono = document.getElementById('telefono');
 
         if (modoActual === "login") {
             modoActual = "registro";
             titulo.innerText = "Crear Cuenta";
+            btnAccion.innerText = "Registrarse";
             btnModo.innerText = "Inicia sesión";
             txtToggle.innerText = "¿Ya tienes cuenta?";
             regla.style.display = "block";
-            camposRegistro.forEach(div => div.style.display = "block");
-            inputNombre.required = true;
-            inputTelefono.required = true;
         } else {
             modoActual = "login";
             titulo.innerText = "Iniciar Sesión";
+            btnAccion.innerText = "Ingresar";
             btnModo.innerText = "Regístrate aquí";
             txtToggle.innerText = "¿No tienes cuenta?";
             regla.style.display = "none";
-            camposRegistro.forEach(div => div.style.display = "none");
-            inputNombre.required = false;
-            inputTelefono.required = false;
         }
-        actualizarBoton();
     }
 
     document.getElementById('formAcceso').addEventListener('submit', (e) => {
         e.preventDefault();
-        
-        // Validación de seguridad extra: 
-        // Si intenta entrar y está cerrado, bloquear. Si se registra, dejar pasar.
-        if(modoActual === "login" && !sistemaAbierto) {
-            mostrarMensaje("No puedes iniciar sesión fuera de horario.", "error");
-            return;
-        }
-
         const email = document.getElementById('email').value.trim();
         const password = document.getElementById('password').value.trim();
-        const nombre = document.getElementById('nombre').value.trim();
-        const telefono = document.getElementById('telefono').value.trim();
-        
-        enviarDatos(email, password, nombre, telefono);
+        enviarDatos(email, password);
     });
 
-    async function enviarDatos(email, password, nombre = "", telefono = "") {
-        mostrarMensaje("Procesando...", "info");
+    async function enviarDatos(email, password) {
+        // Validación de contraseña solo para registro
+        if (modoActual === "registro") {
+            const soloLetras = /^[A-Za-z]+$/;
+            if (!soloLetras.test(password) || password.length < 1 || password.length > 8) {
+                mostrarMensaje("La contraseña debe tener entre 1 y 8 letras (sin números).", "error");
+                return;
+            }
+        }
+
+        mostrarMensaje("Verificando credenciales...", "info");
 
         try {
-            let urlFinal = `${WEB_APP_URL}?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}&accion=${modoActual}`;
+            const urlFinal = `${WEB_APP_URL}?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}&accion=${modoActual}`;
             
-            if (modoActual === "registro") {
-                urlFinal += `&nombre=${encodeURIComponent(nombre)}&telefono=${encodeURIComponent(telefono)}`;
-            }
-
             const respuesta = await fetch(urlFinal);
             const resultado = await respuesta.text();
             const r = resultado.trim().toLowerCase();
 
             if (r === "exito") {
+                // GUARDADO DE SESIÓN (Importante para menu.html)
+                localStorage.setItem("usuarioLogueado", email); 
                 localStorage.setItem("remember_email", email);
                 localStorage.setItem("remember_pass", password);
                 localStorage.setItem("sesion_activa", "true"); 
-                mostrarMensaje("Cargando...", "success");
-                window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/menu.html?v=" + new Date().getTime();
+                
+                mostrarMensaje("¡Acceso correcto! Entrando...", "success");
+                
+                // Redirigir después de un breve momento
+                setTimeout(() => {
+                    window.location.href = "menu.html";
+                }, 800);
+
             } else if (r === "registro_exitoso") {
-                mostrarMensaje("Registro exitoso. Ahora inicia sesión.", "success");
+                mostrarMensaje("Cuenta creada. Ahora puedes ingresar.", "success");
                 toggleModo();
             } else {
                 mostrarMensaje("Error: " + resultado, "error");
+                localStorage.setItem("sesion_activa", "false");
             }
         } catch (error) {
-            mostrarMensaje("Error de conexión.", "error");
+            mostrarMensaje("Hubo un error de conexión.", "error");
         }
     }
 
