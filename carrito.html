@@ -3,81 +3,197 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi Pedido - DeMasita</title>
+    <title>Carrito - DeMasita</title>
+    <link href="https://fonts.googleapis.com/css2?family=Marck+Script&family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
     <style>
-        body { background-color: #fefcf5; font-family: 'Ubuntu', sans-serif; padding: 20px; }
-        .cart-card { background: white; border-radius: 15px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        .item-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #eee; }
-        .item-name { font-weight: bold; color: #6f1a07; flex: 1; }
-        .btn-confirm { background: #28a745; color: white; width: 100%; padding: 15px; border-radius: 30px; border: none; font-weight: bold; margin-top: 20px; }
+        body { font-family: "Ubuntu", sans-serif; background-color: #fefcf5; padding-bottom: 120px; }
+        
+        /* NAVBAR CORREGIDA: BOTÓN VERDE */
+        .navbar { background-color: white; border-bottom: 2px solid #ffdab3; position: sticky; top: 0; z-index: 1000; padding: 0.5rem 1rem; }
+        .navbar .container { display: flex; flex-wrap: nowrap; justify-content: space-between; align-items: center; }
+        .navbar-brand { font-family: 'Marck Script', cursive; font-size: 1.5rem; color: #6f1a07 !important; }
+        
+        .nav-cart-green {
+            background-color: #28a745;
+            color: white !important;
+            padding: 6px 15px;
+            border-radius: 20px;
+            text-decoration: none !important;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            font-size: 0.85rem;
+        }
+        .cart-count { background: #f44336; color: white; border-radius: 50%; padding: 1px 6px; font-size: 0.7rem; margin-left: 8px; }
+
+        .container { max-width: 600px; }
+        
+        .section-title { font-weight: 700; color: #6f1a07; margin-top: 25px; margin-bottom: 15px; font-size: 1.1rem; display: flex; align-items: center; }
+        .section-title i { margin-right: 10px; color: #f44336; }
+
+        /* TARJETAS SIN IMAGEN Y CON TEXTO ADAPTABLE */
+        .cart-item { 
+            background: white; border-radius: 15px; padding: 15px; margin-bottom: 10px; 
+            display: flex; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border: 1px solid #eee;
+        }
+        .item-info { flex-grow: 1; min-width: 0; padding-right: 10px; }
+        .item-name { 
+            font-weight: 700; color: #333; font-size: 1rem; margin-bottom: 2px; 
+            line-height: 1.2; word-wrap: break-word; overflow-wrap: break-word; display: block;
+        }
+        .item-price { color: #f44336; font-weight: 500; font-size: 0.9rem; }
+
+        .qty-controls { display: flex; align-items: center; background: #f8f9fa; border-radius: 20px; padding: 4px 10px; border: 1px solid #eee; flex-shrink: 0; }
+        .qty-btn { background: none; border: none; color: #6f1a07; font-weight: bold; padding: 0 5px; font-size: 1.2rem; cursor: pointer; }
+        .qty-val { font-weight: 700; margin: 0 10px; font-size: 1rem; }
+
+        .card-custom { background: white; border-radius: 15px; padding: 15px; border: 1px solid #eee; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .btn-pay { 
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); 
+            width: 90%; max-width: 500px; background: #6f1a07; color: white; 
+            border: none; border-radius: 15px; padding: 15px; font-weight: 700; 
+            box-shadow: 0 4px 15px rgba(111,26,7,0.3); z-index: 1000;
+        }
     </style>
 </head>
 <body>
 
+<nav class="navbar">
+    <div class="container">
+        <a class="navbar-brand" href="menu.html">DeMasita</a>
+        <a href="#" class="nav-cart-green">
+            <i class="fas fa-shopping-cart mr-1"></i> Pedido
+            <span class="cart-count" id="cartCountTop">0</span>
+        </a>
+    </div>
+</nav>
+
 <div class="container">
-    <h4 class="mb-4"><a href="menu.html" class="text-dark"><i class="fas fa-arrow-left"></i></a> Mi Pedido</h4>
-    
-    <div class="cart-card">
-        <div id="listaPedido"></div>
-        <hr>
-        <div class="d-flex justify-content-between h5">
-            <span>Total:</span>
-            <span id="total">$0</span>
+    <div class="section-title"><i class="fas fa-shopping-basket"></i> Tus Productos</div>
+    <div id="cartList"></div>
+
+    <div class="section-title"><i class="fas fa-map-marker-alt"></i> Entrega en:</div>
+    <div class="card-custom mb-3" onclick="window.location.href='direccion.html'" style="cursor:pointer;">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <p id="currentAddress" class="mb-0 font-weight-bold" style="font-size: 0.9rem;">Cargando dirección...</p>
+                <small class="text-muted" id="displayEmail"></small>
+            </div>
+            <i class="fas fa-chevron-right text-muted"></i>
         </div>
     </div>
 
-    <button class="btn-confirm" onclick="finalizarPedido()">
-        CONFIRMAR PEDIDO <i class="fas fa-check-circle ml-2"></i>
-    </button>
+    <div class="section-title"><i class="fas fa-credit-card"></i> Resumen</div>
+    <div class="card-custom mb-5">
+        <div class="d-flex justify-content-between mb-2"><span>Subtotal</span><span id="subtotal">$0.00</span></div>
+        <div class="d-flex justify-content-between mb-2"><span>Envío</span><span class="text-success">Gratis</span></div>
+        <hr>
+        <div class="d-flex justify-content-between font-weight-bold" style="font-size: 1.2rem; color: #6f1a07;">
+            <span>Total</span><span id="total">$0.00</span>
+        </div>
+    </div>
 </div>
 
-<script>
+<button class="btn-pay" onclick="confirmarPedido()" id="btnConfirmar">Confirmar y Pedir</button>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getDatabase, ref, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+    const firebaseConfig = {
+        databaseURL: "https://demasita-default-rtdb.firebaseio.com/"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
     let carrito = JSON.parse(localStorage.getItem("carrito_obj")) || {};
 
-    function cargarLista() {
-        const contenedor = document.getElementById("listaPedido");
-        let html = ""; let total = 0;
-        
-        Object.entries(carrito).forEach(([nombre, datos]) => {
-            total += datos.precio * datos.cantidad;
-            html += `
-                <div class="item-row">
-                    <div class="item-name">${nombre} (x${datos.cantidad})</div>
-                    <div class="text-danger font-weight-bold">$${datos.precio * datos.cantidad}</div>
-                </div>`;
-        });
-        contenedor.innerHTML = html || "<p class='text-muted'>No hay productos</p>";
-        document.getElementById("total").innerText = "$" + total;
-    }
+    function cargarCarrito() {
+        const container = document.getElementById("cartList");
+        container.innerHTML = "";
+        let total = 0;
+        let count = 0;
 
-    function finalizarPedido() {
-        if (Object.keys(carrito).length === 0) {
-            alert("El carrito está vacío");
-            return;
+        for (const [nombre, datos] of Object.entries(carrito)) {
+            total += datos.precio * datos.cantidad;
+            count += datos.cantidad;
+            container.innerHTML += `
+                <div class="cart-item">
+                    <div class="item-info">
+                        <span class="item-name">${nombre}</span>
+                        <span class="item-price">$${datos.precio}</span>
+                    </div>
+                    <div class="qty-controls">
+                        <button class="qty-btn" onclick="actualizarCantidad('${nombre}', -1)">-</button>
+                        <span class="qty-val">${datos.cantidad}</span>
+                        <button class="qty-btn" onclick="actualizarCantidad('${nombre}', 1)">+</button>
+                    </div>
+                </div>`;
         }
 
-        // Eliminamos la dependencia de Firebase/Servidores externos que fallan
-        const idPedido = "PED-" + Math.floor(Math.random() * 100000);
-        const pedidoData = {
+        document.getElementById("subtotal").innerText = `$${total.toFixed(2)}`;
+        document.getElementById("total").innerText = `$${total.toFixed(2)}`;
+        document.getElementById("cartCountTop").innerText = count;
+
+        if (count === 0) {
+            container.innerHTML = `<div class="text-center p-4 text-muted">Tu carrito está vacío</div>`;
+            document.getElementById("btnConfirmar").disabled = true;
+        }
+    }
+
+    window.actualizarCantidad = function(nombre, cambio) {
+        carrito[nombre].cantidad += cambio;
+        if (carrito[nombre].cantidad <= 0) delete carrito[nombre];
+        localStorage.setItem("carrito_obj", JSON.stringify(carrito));
+        cargarCarrito();
+    };
+
+    window.confirmarPedido = async function() {
+        const btn = document.getElementById("btnConfirmar");
+        const user = localStorage.getItem("usuarioLogueado");
+        const dom = JSON.parse(localStorage.getItem('domicilio'));
+
+        if (!dom) { alert("Por favor selecciona una dirección"); return; }
+        
+        btn.disabled = true;
+        btn.innerText = "Enviando...";
+
+        const idPedido = "PED-" + Date.now();
+        const dataPedido = {
             id: idPedido,
+            usuario: user,
             productos: carrito,
+            total: document.getElementById("total").innerText,
+            direccion: dom,
             fecha: new Date().toLocaleString(),
             estado: "Pendiente"
         };
 
-        // Guardamos en el historial del navegador
-        localStorage.setItem("ultimoPedido", JSON.stringify(pedidoData));
-        
-        // IMPORTANTE: Limpiar carrito para que no se duplique
-        localStorage.removeItem("carrito_obj");
+        try {
+            await update(ref(db, 'pedidos/' + idPedido), dataPedido);
+            localStorage.setItem("ultimoPedido", JSON.stringify(dataPedido));
+            localStorage.removeItem("carrito_obj");
+            window.location.href = "seguimiento.html";
+        } catch (e) {
+            alert("Error al conectar con el servidor");
+            btn.disabled = false;
+            btn.innerText = "Confirmar y Pedir";
+        }
+    };
 
-        alert("¡Pedido confirmado! Redirigiendo a seguimiento...");
-        window.location.href = "seguimiento.html";
-    }
-
-    window.onload = cargarLista;
+    window.onload = function() {
+        if (!localStorage.getItem("usuarioLogueado")) {
+            window.location.href = "login2.html";
+            return;
+        }
+        document.getElementById("displayEmail").innerText = localStorage.getItem("usuarioLogueado");
+        const d = JSON.parse(localStorage.getItem('domicilio'));
+        if (d) document.getElementById('currentAddress').innerText = `${d.calle} #${d.numero}`;
+        cargarCarrito();
+    };
 </script>
 </body>
 </html>
