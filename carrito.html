@@ -28,8 +28,7 @@
         .delivery-selection { background: #fff3e0; margin: 20px; padding: 15px; border-radius: 15px; border: 1px dashed #6f1a07; }
         .delivery-info { font-size: 0.9rem; color: #6f1a07; margin-bottom: 0; }
         .btn-change-addr { font-size: 0.8rem; color: #f44336; text-decoration: underline; cursor: pointer; border: none; background: none; padding: 0; }
-        .floating-cart { position: fixed; bottom: 0; left: 0; width: 100%; background: #6f1a07; color: white; padding: 20px; border-radius: 20px 20px 0 0; cursor: pointer; box-shadow: 0 -4px 15px rgba(0,0,0,0.2); z-index: 1001; transition: background 0.3s; }
-        .floating-cart.blocked { background: #6c757d; }
+        .floating-cart { position: fixed; bottom: 0; left: 0; width: 100%; background: #6f1a07; color: white; padding: 20px; border-radius: 20px 20px 0 0; cursor: pointer; box-shadow: 0 -4px 15px rgba(0,0,0,0.2); z-index: 1001; }
         .resumen-direccion { background-color: #fcf3cf; padding: 12px; border-radius: 10px; border-left: 5px solid #f39c12; margin-bottom: 15px; }
     </style>
 </head>
@@ -37,7 +36,7 @@
 
 <nav class="navbar navbar-light">
     <div class="container">
-        <a class="navbar-brand" href="https://augedu6-dot.github.io/lukasecurity.github.io/menu.html">DeMasita</a>
+        <a class="navbar-brand" href="menu.html">DeMasita</a>
         <div class="d-flex align-items-center">
             <div class="nav-user-link mr-2" onclick="window.location.href='https://augedu6-dot.github.io/lukasecurity.github.io/seguimiento.html'" style="background: #e8f5e9; color: #2e7d32 !important;">
                 <i class="fas fa-truck"></i>
@@ -96,11 +95,11 @@
     </div>
 </div>
 
-<div id="btnPagarFlotante" class="floating-cart" onclick="irAFinalizar()">
+<div class="floating-cart" onclick="irAFinalizar()">
     <div class="container d-flex justify-content-between align-items-center">
         <div><span id="itemsTotal">0</span> productos</div>
         <div class="text-right">
-            <strong id="textoBotonFlotante">Finalizar Pedido</strong><br>
+            <strong>Finalizar Pedido</strong><br>
             <small>Total: $<span id="totalFloat">0</span></small>
         </div>
     </div>
@@ -130,8 +129,9 @@
     const auth = getAuth(app);
 
     let carrito = JSON.parse(localStorage.getItem("carrito_obj")) || {};
-    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxeE8NaqRpHD1eztqcSCWT7aCKzrhZSjBoGyZbdrhif3uAMRt1mfJ9E9stKIv7Bfl2p/exec";
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwY8qDoH9i_p4eFIRenqhxQ-OSR_fL3Py3TKVjXDHv8_DSkX1XovfEl9xFNK1-CbWBI/exec";
 
+    // Autenticación anónima para cumplir reglas Firebase
     signInAnonymously(auth).catch((error) => console.error("Error Auth:", error));
 
     window.cambiarCantidad = function(nombre, precio, cambio) {
@@ -163,35 +163,9 @@
         document.getElementById("cartCount").innerText = totalItems;
         document.getElementById("itemsTotal").innerText = totalItems;
         document.getElementById("totalFloat").innerText = precioTotal;
-        
-        verificarOrdenActiva();
-    }
-
-    // --- FUNCIÓN DE SEGURIDAD PARA BLOQUEO ---
-    function verificarOrdenActiva() {
-        const pedidoActivo = JSON.parse(localStorage.getItem("ultimoPedido"));
-        const btnF = document.getElementById("btnPagarFlotante");
-        const textoB = document.getElementById("textoBotonFlotante");
-
-        if (pedidoActivo && pedidoActivo.id) {
-            btnF.classList.add("blocked");
-            textoB.innerText = "Orden en Curso";
-            return true;
-        } else {
-            btnF.classList.remove("blocked");
-            textoB.innerText = "Finalizar Pedido";
-            return false;
-        }
     }
 
     window.irAFinalizar = function() {
-        if (verificarOrdenActiva()) {
-            const pedidoActivo = JSON.parse(localStorage.getItem("ultimoPedido"));
-            alert("Ya tienes un pedido activo (#" + pedidoActivo.id + "). Debes esperar a que finalice para crear uno nuevo.");
-            window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/seguimiento.html";
-            return;
-        }
-
         if (Object.keys(carrito).length === 0) return alert("Tu carrito está vacío");
         const direccionActual = document.getElementById('currentAddress').innerText;
         let contenidoResumen = `
@@ -211,8 +185,6 @@
     };
 
     window.confirmarPedidoFinal = async function() {
-        if (verificarOrdenActiva()) return; // Doble verificación técnica
-
         const btn = document.getElementById("btnConfirmarFinal");
         btn.disabled = true; btn.innerText = "Procesando...";
 
@@ -244,9 +216,11 @@
         };
 
         try {
+            // Guardar en Firebase
             const pedidoRef = ref(db, 'pedidos/' + idPedido);
             await update(pedidoRef, dataPedido);
 
+            // Guardar en Google Sheets
             const infoSheets = `Pedido: #${idPedido} | Usuario: ${usuarioEmail} | Productos: [${productosTexto}] | Total: $${totalPagar}`;
             fetch(GOOGLE_SCRIPT_URL, {
                 method: 'POST',
@@ -254,7 +228,7 @@
                 body: JSON.stringify({ nombre: infoSheets, pedido: idPedido })
             });
 
-            localStorage.setItem("ultimoPedido", JSON.stringify(dataPedido)); // Guardamos registro para bloqueo
+            localStorage.setItem("ultimoPedido", JSON.stringify(dataPedido));
             localStorage.removeItem("carrito_obj");
             alert("¡Pedido #" + idPedido + " recibido!");
             window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/seguimiento.html";
@@ -288,3 +262,6 @@
 </script>
 </body>
 </html>
+
+
+
