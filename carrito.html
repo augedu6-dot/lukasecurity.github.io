@@ -208,9 +208,9 @@
             estado: "Pendiente"
         };
  const dataPedidoss = {
-           id: idPedido,
-            usuario: usuarioEmail,
-            productos: Object.values(carrito),
+           idPedido,
+            usuarioEmail,
+            Object.values(carrito),            
             total: document.getElementById("totalFinal").innerText,
             direccion: `${domicilioData.calle} #${domicilioData.numero}`
         };
