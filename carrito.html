@@ -10,30 +10,30 @@
     <style>
         body { font-family: "Ubuntu", sans-serif; background-color: #fefcf5; padding-bottom: 120px; }
         
-        /* NAVBAR CORREGIDA: BOTÓN VERDE */
+        /* NAVBAR ESTILO MENU */
         .navbar { background-color: white; border-bottom: 2px solid #ffdab3; position: sticky; top: 0; z-index: 1000; padding: 0.5rem 1rem; }
         .navbar .container { display: flex; flex-wrap: nowrap; justify-content: space-between; align-items: center; }
-        .navbar-brand { font-family: 'Marck Script', cursive; font-size: 1.5rem; color: #6f1a07 !important; }
+        .navbar-brand { font-family: 'Marck Script', cursive; font-size: 1.5rem; color: #6f1a07 !important; text-decoration: none; }
         
-        .nav-cart-green {
-            background-color: #28a745;
-            color: white !important;
-            padding: 6px 15px;
+        .nav-user-link {
+            color: #d35400 !important;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex; 
+            align-items: center;
+            padding: 4px 12px;
+            background: #fff5eb;
             border-radius: 20px;
             text-decoration: none !important;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
         }
-        .cart-count { background: #f44336; color: white; border-radius: 50%; padding: 1px 6px; font-size: 0.7rem; margin-left: 8px; }
 
         .container { max-width: 600px; }
         
         .section-title { font-weight: 700; color: #6f1a07; margin-top: 25px; margin-bottom: 15px; font-size: 1.1rem; display: flex; align-items: center; }
         .section-title i { margin-right: 10px; color: #f44336; }
 
-        /* TARJETAS SIN IMAGEN Y CON TEXTO ADAPTABLE */
+        /* LISTA SIN IMAGENES Y ADAPTABLE */
         .cart-item { 
             background: white; border-radius: 15px; padding: 15px; margin-bottom: 10px; 
             display: flex; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border: 1px solid #eee;
@@ -63,10 +63,10 @@
 <nav class="navbar">
     <div class="container">
         <a class="navbar-brand" href="menu.html">DeMasita</a>
-        <a href="#" class="nav-cart-green">
-            <i class="fas fa-shopping-cart mr-1"></i> Pedido
-            <span class="cart-count" id="cartCountTop">0</span>
-        </a>
+        <div class="nav-user-link" onclick="window.location.href='menu.html'">
+            <i class="fas fa-user-circle mr-1"></i>
+            <span id="navUser">Cuenta</span>
+        </div>
     </div>
 </nav>
 
@@ -79,7 +79,7 @@
         <div class="d-flex justify-content-between align-items-center">
             <div>
                 <p id="currentAddress" class="mb-0 font-weight-bold" style="font-size: 0.9rem;">Cargando dirección...</p>
-                <small class="text-muted" id="displayEmail"></small>
+                <small class="text-muted">Toca para cambiar</small>
             </div>
             <i class="fas fa-chevron-right text-muted"></i>
         </div>
@@ -136,11 +136,12 @@
 
         document.getElementById("subtotal").innerText = `$${total.toFixed(2)}`;
         document.getElementById("total").innerText = `$${total.toFixed(2)}`;
-        document.getElementById("cartCountTop").innerText = count;
 
         if (count === 0) {
             container.innerHTML = `<div class="text-center p-4 text-muted">Tu carrito está vacío</div>`;
             document.getElementById("btnConfirmar").disabled = true;
+        } else {
+            document.getElementById("btnConfirmar").disabled = false;
         }
     }
 
@@ -162,36 +163,51 @@
         btn.innerText = "Enviando...";
 
         const idPedido = "PED-" + Date.now();
+        const ahora = new Date();
         const dataPedido = {
             id: idPedido,
             usuario: user,
             productos: carrito,
             total: document.getElementById("total").innerText,
             direccion: dom,
-            fecha: new Date().toLocaleString(),
+            fecha: ahora.toLocaleDateString(),
             estado: "Pendiente"
         };
 
         try {
-            await update(ref(db, 'pedidos/' + idPedido), dataPedido);
+            const pedidoRef = ref(db, 'pedidos/' + idPedido);
+            await update(pedidoRef, dataPedido);
+
             localStorage.setItem("ultimoPedido", JSON.stringify(dataPedido));
             localStorage.removeItem("carrito_obj");
-            window.location.href = "seguimiento.html";
-        } catch (e) {
-            alert("Error al conectar con el servidor");
-            btn.disabled = false;
+            window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/seguimiento.html";
+
+        } catch (error) {
+            console.error(error);
+            alert("Error al conectar. Verifica tu internet.");
+            btn.disabled = false; 
             btn.innerText = "Confirmar y Pedir";
         }
     };
 
     window.onload = function() {
-        if (!localStorage.getItem("usuarioLogueado")) {
+        const user = localStorage.getItem("usuarioLogueado");
+        if (!user) {
             window.location.href = "login2.html";
             return;
         }
-        document.getElementById("displayEmail").innerText = localStorage.getItem("usuarioLogueado");
+        
+        // Mostrar nombre de usuario como en el menú
+        document.getElementById("navUser").innerText = user.split('@')[0];
+        
         const d = JSON.parse(localStorage.getItem('domicilio'));
-        if (d) document.getElementById('currentAddress').innerText = `${d.calle} #${d.numero}`;
+        const display = document.getElementById('currentAddress');
+        if (d) {
+            display.innerText = `${d.calle} #${d.numero}`;
+        } else {
+            display.innerText = "Sin dirección seleccionada";
+        }
+        
         cargarCarrito();
     };
 </script>
