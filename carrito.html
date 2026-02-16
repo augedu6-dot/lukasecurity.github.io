@@ -140,31 +140,20 @@
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getDatabase, ref, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
-    import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyB-liGmmv0jHh1hqkBNg0mKfjnSBCZXKHs",
         authDomain: "dbnot-50172.firebaseapp.com",
         databaseURL: "https://dbnot-50172-default-rtdb.firebaseio.com",
-        projectId: "dbnot-50172",
-        storageBucket: "dbnot-50172.firebasestorage.app",
-        messagingSenderId: "556269134813",
-        appId: "1:556269134813:web:e053daa0348b06ce420c34"
+        projectId: "dbnot-50172"
     };
 
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
-    const auth = getAuth(app);
+    // TU URL DE GOOGLE SHEETS
+    const GOOGLE_URL = "https://script.google.com/macros/s/AKfycbxI16EHswwjj_I4pDsYC0DM4hTrfUpTh_FomSBt94pmIGsQMJSjQCHtdMoirT1cCfnM/exec";
 
     let carrito = JSON.parse(localStorage.getItem("carrito_obj")) || {};
-    signInAnonymously(auth);
-
-    function mostrarAviso(msj) {
-        const aviso = document.getElementById("avisoHtml");
-        aviso.innerText = msj;
-        aviso.classList.add("show");
-        setTimeout(() => aviso.classList.remove("show"), 3000);
-    }
 
     window.cambiarCantidad = function(nombre, precio, cambio) {
         if (!carrito[nombre]) carrito[nombre] = { precio, cantidad: 0 };
@@ -177,7 +166,6 @@
     function actualizarInterfaz() {
         let totalItems = 0; let precioTotal = 0;
         const lista = document.getElementById('lista-carrito');
-        if(!lista) return;
         lista.innerHTML = "";
         for (const [nombre, item] of Object.entries(carrito)) {
             totalItems += item.cantidad; precioTotal += item.cantidad * item.precio;
@@ -191,87 +179,41 @@
                     </div>
                 </div>`;
         }
-        if (totalItems === 0) lista.innerHTML = "<div class='text-center py-4'><p>Tu carrito está vacío.</p></div>";
         document.getElementById("cartCount").innerText = totalItems;
         document.getElementById("itemsTotal").innerText = totalItems;
-        document.getElementById("totalResumen").innerText = precioTotal;
         document.getElementById("totalFinal").innerText = precioTotal;
-        verificarOrdenActiva();
-    }
-
-    function verificarOrdenActiva() {
-        const pedidoActivo = JSON.parse(localStorage.getItem("ultimoPedido"));
-        const btnF = document.getElementById("btnPagarFlotante");
-        const textoB = document.getElementById("textoBotonFlotante");
-        if (pedidoActivo && pedidoActivo.id) {
-            btnF.classList.add("blocked");
-            textoB.innerText = "Orden Activa";
-            return true;
-        } else {
-            btnF.classList.remove("blocked");
-            textoB.innerText = "Finalizar Pedido";
-            return false;
-        }
     }
 
     window.confirmarPedidoFinal = async function() {
-        // 1. Verificar si ya hay orden activa
-        if (verificarOrdenActiva()) {
-            mostrarAviso("Ya tienes un pedido en curso...");
-            setTimeout(() => {
-                window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/seguimiento.html";
-            }, 2000);
-            return;
-        }
-
-        // 2. Verificar si el carrito está vacío
-        if (Object.keys(carrito).length === 0) {
-            mostrarAviso("El carrito está vacío");
-            return;
-        }
-
-        // 3. VALIDACIÓN DE DOMICILIO OBLIGATORIA
         const domicilioData = JSON.parse(localStorage.getItem('domicilio'));
-        if (!domicilioData || !domicilioData.calle) {
-            mostrarAviso("¡Error! Debe registrar su domicilio primero.");
-            setTimeout(() => {
-                window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/direccion.html";
-            }, 2500);
-            return;
-        }
+        if (!domicilioData) { alert("Registra tu dirección primero"); return; }
+        if (Object.keys(carrito).length === 0) { alert("Carrito vacío"); return; }
 
         const btn = document.getElementById("btnPagarFlotante");
-        btn.disabled = true; 
-        document.getElementById("textoBotonFlotante").innerText = "Procesando...";
+        btn.disabled = true; btn.innerText = "Procesando...";
 
         const idPedido = Math.floor(Math.random() * 0xFFFFFF).toString(16).toUpperCase().padStart(6, '0');
         const usuarioEmail = localStorage.getItem("usuarioLogueado") || "Sin Email";
-        const direccionFull = `${domicilioData.calle} #${domicilioData.numero}, ${domicilioData.ciudad}`;
-        const totalPagar = document.getElementById("totalFinal").innerText;
-// TU URL DE GOOGLE SHEETS
-    const GOOGLE_URL = "https://script.google.com/macros/s/AKfycbxI16EHswwjj_I4pDsYC0DM4hTrfUpTh_FomSBt94pmIGsQMJSjQCHtdMoirT1cCfnM/exec";
-        let productosArray = [];
-        for (const [nombre, item] of Object.entries(carrito)) {
-            productosArray.push({ nombre, cantidad: item.cantidad, precio: item.precio });
-        }
-
-        const ahora = new Date();
-        const llegada = new Date(ahora.getTime() + 45 * 60000);
         
+        // Formatear productos para Google Sheets como pide tu App Script (campo 'pedido')
+        const resumenPedido = Object.entries(carrito).map(([nombre, item]) => `${item.cantidad}x ${nombre}`).join(", ");
+
         const dataPedido = {
             id: idPedido,
             usuario: usuarioEmail,
-            productos: productosArray,
-            total: totalPagar,
-            hora: llegada.getHours() + ":" + (llegada.getMinutes() < 10 ? '0' : '') + llegada.getMinutes(),
-            direccion: direccionFull,
-            fecha: ahora.toLocaleDateString(),
+            productos: Object.values(carrito),
+            total: document.getElementById("totalFinal").innerText,
+            direccion: `${domicilioData.calle} #${domicilioData.numero}`,
+            fecha: new Date().toLocaleDateString(),
             estado: "Pendiente"
         };
 
-        try {         
-           await update(ref(db, 'pedidos/' + idPedido), dataPedido);
-    fetch(GOOGLE_URL, {
+        try {
+            // 1. Guardar en Firebase
+            await update(ref(db, 'pedidos/' + idPedido), dataPedido);
+
+            // 2. Enviar a Google Sheets adaptado a tu App Script ('nombre' y 'pedido')
+            fetch(GOOGLE_URL, {
                 method: 'POST',
                 mode: 'no-cors',
                 body: JSON.stringify({ 
@@ -280,37 +222,18 @@
                     pedidoID: idPedido // Enviamos el ID para que luego el panel admin pueda actualizarlo
                 })
             });
+
             localStorage.setItem("ultimoPedido", JSON.stringify(dataPedido));
             localStorage.removeItem("carrito_obj");
-            window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/seguimiento.html";
+            window.location.href = "seguimiento.html";
         } catch (error) {
-            btn.disabled = false; 
-            document.getElementById("textoBotonFlotante").innerText = "Reintentar";
+            btn.disabled = false; btn.innerText = "Reintentar";
         }
     };
 
-    window.cerrarSesion = function() {
-        localStorage.clear();
-        window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/login2.html";
-    };
-
-    window.onload = function() {
-        if (!localStorage.getItem("usuarioLogueado")) {
-            window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/login2.html";
-            return;
-        }
-        document.getElementById("displayEmail").innerText = localStorage.getItem("usuarioLogueado");
-        
+    window.onload = () => {
         const d = JSON.parse(localStorage.getItem('domicilio'));
-        const display = document.getElementById('currentAddress');
-        if (d && d.calle) {
-            display.innerText = `${d.calle} #${d.numero}, ${d.ciudad}`;
-            display.style.color = "black";
-        } else {
-            display.innerText = "¡SIN DOMICILIO REGISTRADO!";
-            display.style.color = "red";
-        }
-        
+        if(d) document.getElementById('currentAddress').innerText = `${d.calle} #${d.numero}, ${d.ciudad}`;
         actualizarInterfaz();
     };
 </script>
