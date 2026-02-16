@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
     <style>
-        /* --- ESTÉTICA GENERAL --- */
+        /* --- ESTÉTICA PREMIUM RESTRABLECIDA --- */
         body { 
             font-family: "Ubuntu", sans-serif; 
             background-color: #fcfaf7; 
@@ -16,10 +16,9 @@
             padding-bottom: 140px; 
         }
 
-        /* --- NAVBAR REFINADA --- */
         .navbar { 
             background-color: #fff; 
-            border-bottom: 1px solid #eee; 
+            border-bottom: 1px solid #ffdab3; 
             position: sticky; 
             top: 0; 
             z-index: 1000; 
@@ -30,27 +29,18 @@
             font-family: 'Marck Script', cursive; 
             font-size: 1.8rem; 
             color: #6f1a07 !important; 
-            font-weight: bold;
         }
 
-        /* --- CONTENEDORES --- */
         .category-title { 
             color: #6f1a07; 
             font-weight: 700; 
             margin: 25px 0 15px; 
             font-size: 1.3rem; 
-            display: flex;
-            align-items: center;
-        }
-        .category-title::after {
-            content: "";
-            height: 2px;
-            flex: 1;
-            background: linear-gradient(to right, #ffdab3, transparent);
-            margin-left: 15px;
+            border-left: 4px solid #f44336;
+            padding-left: 12px;
         }
 
-        /* --- LISTA DE PRODUCTOS (MODERNA) --- */
+        /* --- PRODUCTOS (SIN IMÁGENES Y CON AJUSTE DE TEXTO) --- */
         .food-item { 
             background: white; 
             padding: 18px; 
@@ -61,34 +51,33 @@
             align-items: center;
             border: 1px solid rgba(0,0,0,0.04);
             box-shadow: 0 4px 6px rgba(0,0,0,0.02);
-            gap: 12px;
+            gap: 15px;
         }
         
-        /* Ajuste para nombres largos */
+        /* Contenedor del Nombre */
         .food-item > div:first-child {
             flex: 1;
-            min-width: 0;
+            min-width: 0; /* Crítico para que el texto rompa línea */
         }
 
         .food-item .font-weight-bold {
             display: block;
             font-size: 1.05rem;
             color: #2d2d2d;
-            word-wrap: break-word;
+            word-wrap: break-word; /* Rompe palabras si son muy largas */
             overflow-wrap: break-word;
-            white-space: normal;
+            white-space: normal; /* Permite múltiples líneas */
             line-height: 1.3;
-            margin-bottom: 4px;
         }
 
-        /* --- CONTROLES DE CANTIDAD --- */
+        /* Controles de Cantidad */
         .quantity-controls { 
             display: flex; 
             align-items: center; 
             background: #f1f3f5; 
             border-radius: 12px; 
             padding: 4px; 
-            flex-shrink: 0;
+            flex-shrink: 0; /* Evita que los botones se achiquen */
         }
         .btn-qty { 
             width: 34px; 
@@ -102,25 +91,21 @@
             align-items: center; 
             justify-content: center; 
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            transition: 0.2s;
         }
-        .btn-qty:active { transform: scale(0.9); }
         .qty-number { min-width: 25px; text-align: center; font-weight: 700; color: #6f1a07; margin: 0 8px; }
 
-        /* --- SECCIÓN ENTREGA --- */
+        /* --- DIRECCIÓN DE ENTREGA --- */
         .delivery-selection { 
-            background: #ffffff; 
+            background: #fff3e0; 
             margin: 20px 0; 
-            padding: 20px; 
-            border-radius: 20px; 
-            border: 1px solid #ffead1;
-            box-shadow: 0 4px 12px rgba(211, 84, 0, 0.05);
+            padding: 18px; 
+            border-radius: 15px; 
+            border: 1px dashed #6f1a07;
         }
-        .delivery-info strong { color: #6f1a07; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; }
-        #currentAddress { color: #555; font-size: 1rem; margin: 4px 0; }
-        .btn-change-addr { font-size: 0.85rem; color: #d35400; font-weight: 700; text-decoration: none; cursor: pointer; border: none; background: none; padding: 0; }
+        .delivery-info { font-size: 0.9rem; color: #6f1a07; margin-bottom: 0; }
+        .btn-change-addr { font-size: 0.8rem; color: #f44336; text-decoration: underline; cursor: pointer; border: none; background: none; padding: 0; font-weight: 700; }
 
-        /* --- BOTÓN FLOTANTE --- */
+        /* --- BOTÓN FLOTANTE ESTILIZADO --- */
         .floating-cart { 
             position: fixed; 
             bottom: 25px; 
@@ -131,36 +116,39 @@
             padding: 18px 25px; 
             border-radius: 20px; 
             cursor: pointer; 
-            box-shadow: 0 10px 25px rgba(111,26,7,0.4); 
+            box-shadow: 0 10px 25px rgba(111,26,7,0.3); 
             z-index: 1001; 
-            border: none;
             transition: all 0.3s ease;
         }
-        .floating-cart:active { transform: scale(0.97); }
-        .floating-cart.blocked { background: #9e9e9e; box-shadow: none; cursor: not-allowed; }
+        .floating-cart:active { transform: scale(0.98); }
+        .floating-cart.blocked { background: #6c757d; box-shadow: none; }
 
-        /* --- MODALES Y OTROS --- */
-        .modal-content { border-radius: 25px; border: none; overflow: hidden; }
-        .modal-header { background: #6f1a07; color: white; padding: 20px; }
-        .table-resumen td { padding: 10px 0; border-bottom: 1px solid #f1f1f1; }
-        
-        .nav-user-link { 
-            color: #6f1a07 !important; 
-            background: #fff5eb; 
-            border-radius: 12px; 
-            padding: 8px 12px;
-            font-size: 1.1rem;
+        /* --- AVISO Y MODALES --- */
+        .aviso-bloqueo {
+            position: fixed; bottom: 110px; left: 50%; transform: translateX(-50%) translateY(150%);
+            width: 90%; max-width: 380px; background: #6f1a07; color: white; padding: 15px;
+            border-radius: 15px; z-index: 2000; transition: transform 0.4s; display: flex; align-items: center;
         }
+        .aviso-bloqueo.show { transform: translateX(-50%) translateY(0); }
+        
+        .modal-content { border-radius: 20px; border: none; }
+        .modal-header { background: #6f1a07; color: white; border-radius: 20px 20px 0 0; }
+        
+        .nav-user-link { color: #d35400 !important; font-weight: 700; cursor: pointer; display: flex; align-items: center; padding: 6px 12px; background: #fff5eb; border-radius: 15px; text-decoration: none !important; font-size: 0.8rem; }
     </style>
 </head>
 <body>
 
 <nav class="navbar navbar-light">
     <div class="container">
-        <a class="navbar-brand" href="#">DeMasita</a>
+        <a class="navbar-brand" href="https://augedu6-dot.github.io/lukasecurity.github.io/menu.html">DeMasita</a>
         <div class="d-flex align-items-center">
-            <div class="nav-user-link mr-2" onclick="window.location.href='https://augedu6-dot.github.io/lukasecurity.github.io/seguimiento.html'">
+            <div class="nav-user-link mr-2" onclick="window.location.href='https://augedu6-dot.github.io/lukasecurity.github.io/seguimiento.html'" style="background: #e8f5e9; color: #2e7d32 !important;">
                 <i class="fas fa-truck"></i>
+            </div>
+            <div class="cart-icon mr-3" style="position:relative; font-size: 1.3rem; color: #6f1a07;">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-count" id="cartCount" style="position:absolute; top:-10px; right:-10px; background:#f44336; color:white; border-radius:50%; padding:2px 6px; font-size:0.7rem;">0</span>
             </div>
             <div class="nav-user-link" data-toggle="modal" data-target="#userModal">
                 <i class="fas fa-user-circle"></i>
@@ -169,33 +157,29 @@
     </div>
 </nav>
 
-<div class="container">
-    <div class="delivery-selection">
-        <div class="d-flex align-items-center">
-            <div class="mr-3" style="width: 45px; height: 45px; background: #fff5eb; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
-                <i class="fas fa-map-marker-alt" style="font-size: 1.2rem; color: #f44336;"></i>
-            </div>
-            <div>
-                <p class="delivery-info mb-0"><strong>Entregar en</strong></p>
-                <p id="currentAddress" class="mb-0 text-truncate">Cargando dirección...</p>
-                <button class="btn-change-addr" onclick="window.location.href='https://augedu6-dot.github.io/lukasecurity.github.io/direccion.html'">Cambiar domicilio</button>
-            </div>
+<div class="delivery-selection container">
+    <div class="d-flex align-items-center">
+        <i class="fas fa-map-marker-alt mr-3" style="font-size: 1.2rem; color: #f44336;"></i>
+        <div>
+            <p class="delivery-info"><strong>Entregar en:</strong></p>
+            <p id="currentAddress" class="delivery-info">Cargando dirección...</p>
+            <button class="btn-change-addr" onclick="window.location.href='https://augedu6-dot.github.io/lukasecurity.github.io/direccion.html'">Cambiar domicilio</button>
         </div>
     </div>
+</div>
 
-    <div class="category-title">Tu Pedido <span class="badge badge-pill badge-light ml-2" id="cartCount" style="background: #fff5eb; color: #6f1a07; font-size: 0.9rem;">0</span></div>
+<div class="container">
+    <div class="category-title">Tu Pedido</div>
     <div id="lista-carrito"></div>
 </div>
 
 <div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content text-center p-4">
-            <div style="width: 70px; height: 70px; background: #ffdab3; color: #6f1a07; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 15px;">
-                <i class="fas fa-user"></i>
-            </div>
-            <h3 class="h5 font-weight-bold">Tu Cuenta</h3>
-            <p id="displayEmail" class="text-muted mb-4"></p>
-            <button class="btn btn-danger btn-block rounded-pill py-3" onclick="cerrarSesion()">Cerrar Sesión</button>
+            <div style="width:70px; height:70px; background:#ffdab3; color:#6f1a07; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:2rem; margin:0 auto 15px;"><i class="fas fa-user"></i></div>
+            <h3 class="h5 font-weight-bold">¡Bienvenido!</h3>
+            <p class="user-email font-weight-bold mb-4" id="displayEmail"></p>
+            <button class="btn btn-danger btn-block rounded-pill py-2" onclick="cerrarSesion()">Cerrar Sesión</button>
         </div>
     </div>
 </div>
@@ -204,31 +188,32 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header border-0">
-                <h5 class="modal-title font-weight-bold">Confirmar Pedido</h5>
+                <h5 class="modal-title">Confirmar Pedido</h5>
                 <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
             </div>
-            <div class="modal-body px-4" id="resumenCuerpo"></div>
-            <div class="modal-footer border-0 p-3">
-                <button type="button" class="btn btn-link text-muted" data-dismiss="modal">Cancelar</button>
-                <button type="button" id="btnConfirmarFinal" class="btn btn-success px-4 py-2 rounded-pill font-weight-bold" onclick="confirmarPedidoFinal()">Confirmar y Pagar</button>
+            <div class="modal-body" id="resumenCuerpo"></div>
+            <div class="modal-footer border-0 p-2">
+                <button type="button" class="btn btn-sm btn-secondary rounded-pill" data-dismiss="modal">Cancelar</button>
+                <button type="button" id="btnConfirmarFinal" class="btn btn-sm btn-success rounded-pill px-4" onclick="confirmarPedidoFinal()">Confirmar y Pagar</button>
             </div>
         </div>
     </div>
 </div>
 
-<div id="avisoHtml" class="aviso-bloqueo" style="display:none; position: fixed; top: 20px; left: 50%; transform: translateX(-50%); width: 90%; background: #6f1a07; color: white; padding: 15px; border-radius: 15px; z-index: 2001; box-shadow: 0 5px 15px rgba(0,0,0,0.3);">
-    <strong><i class="fas fa-info-circle mr-2"></i> Pedido en curso</strong>
+<div id="avisoHtml" class="aviso-bloqueo">
+    <i class="fas fa-clock mr-3" style="font-size:1.8rem; color:#ffdab3;"></i>
+    <div>
+        <strong>Pedido en curso</strong><br>
+        <span style="font-size:0.8rem; opacity:0.9;">Ya tienes una orden activa. Revisa tu seguimiento.</span>
+    </div>
 </div>
 
 <div id="btnPagarFlotante" class="floating-cart" onclick="irAFinalizar()">
-    <div class="d-flex justify-content-between align-items-center">
-        <div>
-            <span id="itemsTotal" class="font-weight-bold">0</span> productos
-            <div style="font-size: 0.8rem; opacity: 0.8;">Total a pagar</div>
-        </div>
+    <div class="container d-flex justify-content-between align-items-center">
+        <div><span id="itemsTotal" class="font-weight-bold">0</span> productos</div>
         <div class="text-right">
-            <span id="textoBotonFlotante" style="font-size: 1.1rem; font-weight: 700;">Finalizar Pedido</span>
-            <div class="h5 mb-0 font-weight-bold">$<span id="totalFloat">0</span></div>
+            <strong id="textoBotonFlotante">Finalizar Pedido</strong><br>
+            <small>Total: $<span id="totalFloat">0</span></small>
         </div>
     </div>
 </div>
@@ -285,7 +270,7 @@
                     </div>
                 </div>`;
         }
-        if (totalItems === 0) lista.innerHTML = "<div class='text-center mt-5'><p class='text-muted'>Tu carrito está vacío.</p></div>";
+        if (totalItems === 0) lista.innerHTML = "<div class='text-center mt-5'><p>Tu carrito está vacío.</p></div>";
         document.getElementById("cartCount").innerText = totalItems;
         document.getElementById("itemsTotal").innerText = totalItems;
         document.getElementById("totalFloat").innerText = precioTotal;
@@ -310,8 +295,14 @@
     }
 
     window.irAFinalizar = function() {
+        const aviso = document.getElementById("avisoHtml");
+
         if (verificarOrdenActiva()) {
-            window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/seguimiento.html";
+            aviso.classList.add("show");
+            setTimeout(() => {
+                aviso.classList.remove("show");
+                window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/seguimiento.html";
+            }, 6000);
             return;
         }
 
@@ -319,15 +310,16 @@
         
         const direccionActual = document.getElementById('currentAddress').innerText;
         let contenidoResumen = `
-            <div style="background:#fcf3cf; padding:12px; border-radius:12px; margin-bottom:15px; font-size:0.9rem">
-                <strong>Envío a:</strong> ${direccionActual}
+            <div style="background:#fcf3cf; padding:10px; border-radius:10px; margin-bottom:10px; font-size:0.8rem">
+                <strong>Dirección:</strong> ${direccionActual}
             </div>
-            <table class="table table-borderless">
-                <tbody style="font-size:0.9rem">`;
+            <table class="table table-borderless" style="font-size:0.8rem">
+                <thead><tr class="border-bottom"><th>Producto</th><th class="text-center">Cant.</th><th class="text-right">Subtotal</th></tr></thead>
+                <tbody>`;
         for (const [nombre, item] of Object.entries(carrito)) {
-            contenidoResumen += `<tr><td style="word-break:break-word">${nombre}</td><td class="text-center">x${item.cantidad}</td><td class="text-right">$${item.cantidad * item.precio}</td></tr>`;
+            contenidoResumen += `<tr><td style="word-break:break-word">${nombre}</td><td class="text-center">${item.cantidad}</td><td class="text-right">$${item.cantidad * item.precio}</td></tr>`;
         }
-        contenidoResumen += `</tbody></table><div class="text-right h4 font-weight-bold" style="color:#6f1a07">Total: $${document.getElementById("totalFloat").innerText}</div>`;
+        contenidoResumen += `</tbody></table><h4 class="text-right font-weight-bold">Total: $${document.getElementById("totalFloat").innerText}</h4>`;
         document.getElementById('resumenCuerpo').innerHTML = contenidoResumen;
         $('#resumenModal').modal('show');
     };
