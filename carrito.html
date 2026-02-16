@@ -207,10 +207,10 @@
             fecha: new Date().toLocaleDateString(),
             estado: "Pendiente"
         };
- const dataPedidoss = {
+       const dataPedidoss = {
            idPedido,
             usuarioEmail,
-            Object.values(carrito),            
+           resumenPedido ,           
             total: document.getElementById("totalFinal").innerText,
             direccion: `${domicilioData.calle} #${domicilioData.numero}`
         };
