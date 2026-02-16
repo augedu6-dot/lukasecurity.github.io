@@ -9,199 +9,314 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
     <style>
         body { font-family: "Ubuntu", sans-serif; background-color: #fefcf5; padding-bottom: 120px; }
-        
-        /* NAVBAR ESTILO MENU */
         .navbar { background-color: white; border-bottom: 2px solid #ffdab3; position: sticky; top: 0; z-index: 1000; padding: 0.5rem 1rem; }
         .navbar .container { display: flex; flex-wrap: nowrap; justify-content: space-between; align-items: center; }
-        .navbar-brand { font-family: 'Marck Script', cursive; font-size: 1.5rem; color: #6f1a07 !important; text-decoration: none; }
+        .navbar-brand { font-family: 'Marck Script', cursive; font-size: 1.5rem; color: #6f1a07 !important; }
+        .nav-user-link { color: #d35400 !important; font-weight: 700; cursor: pointer; display: flex; align-items: center; padding: 4px 8px; background: #fff5eb; border-radius: 20px; text-decoration: none !important; font-size: 0.75rem; }
         
-        .nav-user-link {
-            color: #d35400 !important;
-            font-weight: 700;
-            cursor: pointer;
-            display: flex; 
-            align-items: center;
-            padding: 4px 12px;
-            background: #fff5eb;
-            border-radius: 20px;
-            text-decoration: none !important;
-            font-size: 0.8rem;
+        /* --- RESUMEN COMPACTO --- */
+        #resumenCuerpo { padding: 5px 15px; overflow-x: hidden; }
+        .table-resumen { width: 100%; font-size: 0.8rem; margin-bottom: 5px; }
+        .table-resumen th, .table-resumen td { padding: 4px 2px !important; line-height: 1.1; vertical-align: middle; }
+        
+        /* Ajuste para nombres largos en el modal de resumen */
+        .table-resumen td:first-child { 
+            word-break: break-word; 
+            min-width: 100px; 
         }
 
-        .container { max-width: 600px; padding-left: 15px; padding-right: 15px; }
-        
-        .section-title { font-weight: 700; color: #6f1a07; margin-top: 25px; margin-bottom: 15px; font-size: 1.1rem; display: flex; align-items: center; }
-        .section-title i { margin-right: 10px; color: #f44336; }
+        .resumen-direccion { background-color: #fcf3cf; padding: 8px; border-radius: 10px; border-left: 5px solid #f39c12; margin-bottom: 8px; font-size: 0.75rem; }
+        .modal-body h4 { font-size: 1.1rem; margin-top: 5px; font-weight: 700; }
+        .modal-header { background: #6f1a07; color: white; border-radius: 20px 20px 0 0; padding: 10px 20px; }
+        /* ------------------------ */
 
-        /* --- CORRECCIÓN CLAVE AQUÍ --- */
-        .cart-item { 
+        .modal-content { border-radius: 20px; border: none; }
+        .user-avatar { width: 70px; height: 70px; background: #ffdab3; color: #6f1a07; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 15px; }
+        .cart-icon { font-size: 1.3rem; color: #6f1a07; position: relative; cursor: pointer; }
+        .cart-count { background: #f44336; color: white; border-radius: 50%; padding: 2px 6px; font-size: 0.7rem; position: absolute; top: -10px; right: -10px; }
+        .category-title { color: #6f1a07; font-weight: bold; margin-top: 20px; font-size: 1.2rem; border-left: 4px solid #f44336; padding-left: 10px; }
+        
+        /* MODIFICACIÓN PARA NOMBRES LARGOS EN LA LISTA */
+        .food-item { 
             background: white; 
-            border-radius: 15px; 
             padding: 15px; 
-            margin-bottom: 10px; 
+            border-bottom: 1px solid #eee; 
             display: flex; 
-            justify-content: space-between; /* Separa el texto de los botones */
-            align-items: center; 
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05); 
-            border: 1px solid #eee;
-            width: 100%;
-            overflow: hidden; /* Evita que nada sobresalga */
+            justify-content: space-between; 
+            align-items: center;
+            gap: 10px; /* Espacio mínimo entre texto y botones */
+        }
+        
+        /* Contenedor del nombre: permite que crezca y rompa líneas */
+        .food-item > div:first-child {
+            flex: 1; /* Ocupa todo el espacio disponible */
+            min-width: 0; /* Permite que el contenedor se encoja para que el texto rompa */
         }
 
-        .item-info { 
-            flex: 1; /* Toma todo el espacio disponible */
-            min-width: 0; /* OBLIGATORIO para que el texto respete el contenedor en Flexbox */
-            padding-right: 10px;
-        }
-
-        .item-name { 
-            font-weight: 700; 
-            color: #333; 
-            font-size: 1rem; 
-            margin-bottom: 2px; 
-            line-height: 1.2; 
+        .food-item .font-weight-bold {
             display: block;
-            word-wrap: break-word; /* Rompe palabras si son muy largas */
-            overflow-wrap: break-word; /* Estándar moderno */
+            word-wrap: break-word; /* Rompe palabras largas */
+            overflow-wrap: break-word;
             white-space: normal; /* Asegura que no se quede en una sola línea */
+            line-height: 1.2;
         }
-        /* ---------------------------- */
 
-        .item-price { color: #f44336; font-weight: 500; font-size: 0.9rem; }
-
-        .qty-controls { 
+        .quantity-controls { 
             display: flex; 
             align-items: center; 
             background: #f8f9fa; 
-            border-radius: 20px; 
-            padding: 4px 10px; 
-            border: 1px solid #eee; 
-            flex-shrink: 0; /* Evita que los botones se hagan chiquitos */
+            border-radius: 25px; 
+            padding: 2px; 
+            border: 1px solid #ddd;
+            flex-shrink: 0; /* Evita que los botones se deformen */
         }
-        .qty-btn { background: none; border: none; color: #6f1a07; font-weight: bold; padding: 0 5px; font-size: 1.2rem; cursor: pointer; }
-        .qty-val { font-weight: 700; margin: 0 10px; font-size: 1rem; }
+        /* ------------------------------------------- */
 
-        .card-custom { background: white; border-radius: 15px; padding: 15px; border: 1px solid #eee; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-        .btn-pay { 
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); 
-            width: 90%; max-width: 500px; background: #6f1a07; color: white; 
-            border: none; border-radius: 15px; padding: 15px; font-weight: 700; 
-            box-shadow: 0 4px 15px rgba(111,26,7,0.3); z-index: 1000;
+        .btn-qty { width: 32px; height: 32px; border-radius: 50%; border: none; background: white; color: #6f1a07; font-weight: bold; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .qty-number { margin: 0 12px; font-weight: bold; }
+        .delivery-selection { background: #fff3e0; margin: 20px; padding: 15px; border-radius: 15px; border: 1px dashed #6f1a07; }
+        .delivery-info { font-size: 0.9rem; color: #6f1a07; margin-bottom: 0; }
+        .btn-change-addr { font-size: 0.8rem; color: #f44336; text-decoration: underline; cursor: pointer; border: none; background: none; padding: 0; }
+        .floating-cart { position: fixed; bottom: 0; left: 0; width: 100%; background: #6f1a07; color: white; padding: 20px; border-radius: 20px 20px 0 0; cursor: pointer; box-shadow: 0 -4px 15px rgba(0,0,0,0.2); z-index: 1001; transition: background 0.3s; }
+        .floating-cart.blocked { background: #6c757d; }
+
+        .aviso-bloqueo {
+            position: fixed;
+            bottom: 110px;
+            left: 50%;
+            transform: translateX(-50%) translateY(150%);
+            width: 90%;
+            max-width: 380px;
+            background: #6f1a07;
+            color: white;
+            padding: 15px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            z-index: 2000;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            align-items: center;
         }
+        .aviso-bloqueo.show { transform: translateX(-50%) translateY(0); }
+        .aviso-bloqueo i { font-size: 1.8rem; margin-right: 15px; color: #ffdab3; }
+        .aviso-bloqueo strong { display: block; font-size: 1rem; }
+        .aviso-bloqueo span { font-size: 0.8rem; opacity: 0.9; }
     </style>
 </head>
 <body>
 
-<nav class="navbar">
+<nav class="navbar navbar-light">
     <div class="container">
         <a class="navbar-brand" href="https://augedu6-dot.github.io/lukasecurity.github.io/menu.html">DeMasita</a>
-        <div class="nav-user-link" onclick="window.location.href='https://augedu6-dot.github.io/lukasecurity.github.io/menu.html'">
-            <i class="fas fa-user-circle mr-1"></i>
-            <span id="navUser">Cuenta</span>
+        <div class="d-flex align-items-center">
+            <div class="nav-user-link mr-2" onclick="window.location.href='https://augedu6-dot.github.io/lukasecurity.github.io/seguimiento.html'" style="background: #e8f5e9; color: #2e7d32 !important;">
+                <i class="fas fa-truck"></i>
+            </div>
+            <div class="cart-icon mr-3">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-count" id="cartCount">0</span>
+            </div>
+            <div class="nav-user-link" data-toggle="modal" data-target="#userModal">
+                <i class="fas fa-user-circle"></i>
+            </div>
         </div>
     </div>
 </nav>
 
-<div class="container">
-    <div class="section-title"><i class="fas fa-shopping-basket"></i> Tus Productos</div>
-    <div id="cartList"></div>
-
-    <div class="section-title"><i class="fas fa-map-marker-alt"></i> Entrega en:</div>
-    <div class="card-custom mb-3" onclick="window.location.href='direccion.html'" style="cursor:pointer;">
-        <div class="d-flex justify-content-between align-items-center">
-            <div>
-                <p id="currentAddress" class="mb-0 font-weight-bold" style="font-size: 0.9rem;">Cargando dirección...</p>
-                <small class="text-muted">Toca para cambiar</small>
-            </div>
-            <i class="fas fa-chevron-right text-muted"></i>
-        </div>
-    </div>
-
-    <div class="section-title"><i class="fas fa-credit-card"></i> Resumen</div>
-    <div class="card-custom mb-5">
-        <div class="d-flex justify-content-between mb-2"><span>Subtotal</span><span id="subtotal">$0.00</span></div>
-        <div class="d-flex justify-content-between mb-2"><span>Envío</span><span class="text-success">Gratis</span></div>
-        <hr>
-        <div class="d-flex justify-content-between font-weight-bold" style="font-size: 1.2rem; color: #6f1a07;">
-            <span>Total</span><span id="total">$0.00</span>
+<div class="delivery-selection">
+    <div class="d-flex align-items-center">
+        <i class="fas fa-map-marker-alt mr-3" style="font-size: 1.2rem; color: #f44336;"></i>
+        <div>
+            <p class="delivery-info"><strong>Entregar en:</strong></p>
+            <p id="currentAddress" class="delivery-info">Cargando dirección...</p>
+            <button class="btn-change-addr" onclick="window.location.href='https://augedu6-dot.github.io/lukasecurity.github.io/direccion.html'">Cambiar domicilio</button>
         </div>
     </div>
 </div>
 
-<button class="btn-pay" onclick="confirmarPedido()" id="btnConfirmar">Confirmar y Pedir</button>
+<div class="container">
+    <div class="category-title">Tu Pedido</div>
+    <div id="lista-carrito"></div>
+</div>
+
+<div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content text-center p-4">
+            <div class="user-avatar"><i class="fas fa-user"></i></div>
+            <h3 class="h5 font-weight-bold">¡Bienvenido!</h3>
+            <p class="user-email font-weight-bold mb-4" id="displayEmail"></p>
+            <button class="btn btn-danger btn-block rounded-pill py-2" onclick="cerrarSesion()">Cerrar Sesión</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="resumenModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title">Confirmar Pedido</h5>
+                <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body" id="resumenCuerpo"></div>
+            <div class="modal-footer border-0 p-2">
+                <button type="button" class="btn btn-sm btn-secondary rounded-pill" data-dismiss="modal">Cancelar</button>
+                <button type="button" id="btnConfirmarFinal" class="btn btn-sm btn-success rounded-pill px-4" onclick="confirmarPedidoFinal()">Confirmar y Pagar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="avisoHtml" class="aviso-bloqueo">
+    <i class="fas fa-clock"></i>
+    <div>
+        <strong>Pedido en curso</strong>
+        <span>Ya tienes una orden activa. Revisa tu pedido actual antes de iniciar otro.</span>
+    </div>
+</div>
+
+<div id="btnPagarFlotante" class="floating-cart" onclick="irAFinalizar()">
+    <div class="container d-flex justify-content-between align-items-center">
+        <div><span id="itemsTotal">0</span> productos</div>
+        <div class="text-right">
+            <strong id="textoBotonFlotante">Finalizar Pedido</strong><br>
+            <small>Total: $<span id="totalFloat">0</span></small>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getDatabase, ref, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
     const firebaseConfig = {
-        databaseURL: "https://demasita-default-rtdb.firebaseio.com/"
+        apiKey: "AIzaSyB-liGmmv0jHh1hqkBNg0mKfjnSBCZXKHs",
+        authDomain: "dbnot-50172.firebaseapp.com",
+        databaseURL: "https://dbnot-50172-default-rtdb.firebaseio.com",
+        projectId: "dbnot-50172",
+        storageBucket: "dbnot-50172.firebasestorage.app",
+        messagingSenderId: "556269134813",
+        appId: "1:556269134813:web:e053daa0348b06ce420c34",
+        measurementId: "G-S8148WP7H1"
     };
 
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
+    const auth = getAuth(app);
 
     let carrito = JSON.parse(localStorage.getItem("carrito_obj")) || {};
+    
+    signInAnonymously(auth).catch((error) => console.error("Error Auth:", error));
 
-    function cargarCarrito() {
-        const container = document.getElementById("cartList");
-        container.innerHTML = "";
-        let total = 0;
-        let count = 0;
-
-        for (const [nombre, datos] of Object.entries(carrito)) {
-            total += datos.precio * datos.cantidad;
-            count += datos.cantidad;
-            container.innerHTML += `
-                <div class="cart-item">
-                    <div class="item-info">
-                        <span class="item-name">${nombre}</span>
-                        <span class="item-price">$${datos.precio}</span>
-                    </div>
-                    <div class="qty-controls">
-                        <button class="qty-btn" onclick="actualizarCantidad('${nombre}', -1)">-</button>
-                        <span class="qty-val">${datos.cantidad}</span>
-                        <button class="qty-btn" onclick="actualizarCantidad('${nombre}', 1)">+</button>
-                    </div>
-                </div>`;
-        }
-
-        document.getElementById("subtotal").innerText = `$${total.toFixed(2)}`;
-        document.getElementById("total").innerText = `$${total.toFixed(2)}`;
-
-        if (count === 0) {
-            container.innerHTML = `<div class="text-center p-4 text-muted">Tu carrito está vacío</div>`;
-            document.getElementById("btnConfirmar").disabled = true;
-        } else {
-            document.getElementById("btnConfirmar").disabled = false;
-        }
-    }
-
-    window.actualizarCantidad = function(nombre, cambio) {
+    window.cambiarCantidad = function(nombre, precio, cambio) {
+        if (!carrito[nombre]) carrito[nombre] = { precio, cantidad: 0 };
         carrito[nombre].cantidad += cambio;
         if (carrito[nombre].cantidad <= 0) delete carrito[nombre];
         localStorage.setItem("carrito_obj", JSON.stringify(carrito));
-        cargarCarrito();
+        actualizarInterfaz();
     };
 
-    window.confirmarPedido = async function() {
-        const btn = document.getElementById("btnConfirmar");
-        const user = localStorage.getItem("usuarioLogueado");
-        const dom = JSON.parse(localStorage.getItem('domicilio'));
-
-        if (!dom) { alert("Por favor selecciona una dirección"); return; }
+    function actualizarInterfaz() {
+        let totalItems = 0; let precioTotal = 0;
+        const lista = document.getElementById('lista-carrito');
+        if(!lista) return;
+        lista.innerHTML = "";
+        for (const [nombre, item] of Object.entries(carrito)) {
+            totalItems += item.cantidad; precioTotal += item.cantidad * item.precio;
+            lista.innerHTML += `
+                <div class="food-item">
+                    <div><p class="mb-0 font-weight-bold">${nombre}</p><small class="text-muted">$${item.precio} c/u</small></div>
+                    <div class="quantity-controls">
+                        <button class="btn-qty" onclick="cambiarCantidad('${nombre}', ${item.precio}, -1)">-</button>
+                        <span class="qty-number">${item.cantidad}</span>
+                        <button class="btn-qty" onclick="cambiarCantidad('${nombre}', ${item.precio}, 1)">+</button>
+                    </div>
+                </div>`;
+        }
+        if (totalItems === 0) lista.innerHTML = "<div class='text-center mt-5'><p>Tu carrito está vacío.</p></div>";
+        document.getElementById("cartCount").innerText = totalItems;
+        document.getElementById("itemsTotal").innerText = totalItems;
+        document.getElementById("totalFloat").innerText = precioTotal;
         
-        btn.disabled = true;
-        btn.innerText = "Enviando...";
+        verificarOrdenActiva();
+    }
 
-        const idPedido = "PED-" + Date.now();
+    function verificarOrdenActiva() {
+        const pedidoActivo = JSON.parse(localStorage.getItem("ultimoPedido"));
+        const btnF = document.getElementById("btnPagarFlotante");
+        const textoB = document.getElementById("textoBotonFlotante");
+
+        if (pedidoActivo && pedidoActivo.id) {
+            btnF.classList.add("blocked");
+            textoB.innerText = "Orden Activa";
+            return true;
+        } else {
+            btnF.classList.remove("blocked");
+            textoB.innerText = "Finalizar Pedido";
+            return false;
+        }
+    }
+
+    window.irAFinalizar = function() {
+        const aviso = document.getElementById("avisoHtml");
+
+        if (verificarOrdenActiva()) {
+            aviso.classList.add("show");
+            // AUMENTADO A 6 SEGUNDOS PARA MEJOR LECTURA
+            setTimeout(() => {
+                aviso.classList.remove("show");
+                window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/seguimiento.html";
+            }, 6000);
+            return;
+        }
+
+        if (Object.keys(carrito).length === 0) return;
+        
+        const direccionActual = document.getElementById('currentAddress').innerText;
+        let contenidoResumen = `
+            <div class="resumen-direccion">
+                <strong>Dirección:</strong> ${direccionActual}
+            </div>
+            <table class="table table-borderless table-resumen">
+                <thead><tr class="border-bottom"><th>Producto</th><th class="text-center">Cant.</th><th class="text-right">Subtotal</th></tr></thead>
+                <tbody>`;
+        for (const [nombre, item] of Object.entries(carrito)) {
+            contenidoResumen += `<tr><td>${nombre}</td><td class="text-center">${item.cantidad}</td><td class="text-right">$${item.cantidad * item.precio}</td></tr>`;
+        }
+        contenidoResumen += `</tbody></table><h4 class="text-right">Total: $${document.getElementById("totalFloat").innerText}</h4>`;
+        document.getElementById('resumenCuerpo').innerHTML = contenidoResumen;
+        $('#resumenModal').modal('show');
+    };
+
+    window.confirmarPedidoFinal = async function() {
+        if (verificarOrdenActiva()) return;
+
+        const btn = document.getElementById("btnConfirmarFinal");
+        btn.disabled = true; btn.innerText = "Procesando...";
+
+        const idPedido = Math.floor(Math.random() * 0xFFFFFF).toString(16).toUpperCase().padStart(6, '0');
+        const usuarioEmail = localStorage.getItem("usuarioLogueado") || "Sin Email";
+        const direccion = document.getElementById('currentAddress').innerText;
+        const totalPagar = document.getElementById("totalFloat").innerText;
+
+        let productosArray = [];
+        for (const [nombre, item] of Object.entries(carrito)) {
+            productosArray.push({ nombre, cantidad: item.cantidad, precio: item.precio });
+        }
+
         const ahora = new Date();
+        const llegada = new Date(ahora.getTime() + 45 * 60000);
+        
         const dataPedido = {
             id: idPedido,
-            usuario: user,
-            productos: carrito,
-            total: document.getElementById("total").innerText,
-            direccion: dom,
+            usuario: usuarioEmail,
+            productos: productosArray,
+            total: totalPagar,
+            hora: llegada.getHours() + ":" + (llegada.getMinutes() < 10 ? '0' : '') + llegada.getMinutes(),
+            direccion: direccion,
             fecha: ahora.toLocaleDateString(),
             estado: "Pendiente"
         };
@@ -215,31 +330,28 @@
             window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/seguimiento.html";
 
         } catch (error) {
-            console.error(error);
-            alert("Error al conectar. Verifica tu internet.");
-            btn.disabled = false; 
-            btn.innerText = "Confirmar y Pedir";
+            btn.disabled = false; btn.innerText = "Confirmar y Pagar";
         }
     };
 
+    window.cerrarSesion = function() {
+        localStorage.clear();
+        window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/login2.html";
+    };
+
     window.onload = function() {
-        const user = localStorage.getItem("usuarioLogueado");
-        if (!user) {
+        if (!localStorage.getItem("usuarioLogueado")) {
             window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/login2.html";
             return;
         }
-        
-        document.getElementById("navUser").innerText = user.split('@')[0];
+        document.getElementById("displayEmail").innerText = localStorage.getItem("usuarioLogueado");
         
         const d = JSON.parse(localStorage.getItem('domicilio'));
         const display = document.getElementById('currentAddress');
-        if (d) {
-            display.innerText = `${d.calle} #${d.numero}`;
-        } else {
-            display.innerText = "Sin dirección seleccionada";
-        }
+        if (d) display.innerText = `${d.calle} #${d.numero}, ${d.ciudad}`;
+        else display.innerHTML = `<span class="text-danger">No has registrado dirección</span>`;
         
-        cargarCarrito();
+        actualizarInterfaz();
     };
 </script>
 </body>
