@@ -66,6 +66,7 @@
 
         .category-title { color: #6f1a07; font-weight: bold; margin: 20px 0 10px; font-size: 1.2rem; border-left: 4px solid #f44336; padding-left: 10px; }
         
+        /* CORRECCIÓN DE TARJETAS Y TEXTO */
         .food-item { 
             background: white; 
             margin-bottom: 12px; 
@@ -75,6 +76,7 @@
             align-items: center; 
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
             border: 1px solid #eee;
+            overflow: hidden;
         }
 
         .img-food {
@@ -84,10 +86,25 @@
             border-radius: 12px;
             margin-right: 12px;
             cursor: pointer;
+            flex-shrink: 0; /* Evita que la imagen se aplaste si el texto es largo */
         }
 
-        .food-info { flex-grow: 1; overflow: hidden; }
-        .food-name { font-weight: 700; color: #6f1a07; margin-bottom: 2px; font-size: 1rem; line-height: 1.2; }
+        .food-info { 
+            flex-grow: 1; 
+            min-width: 0; /* Permite que el contenedor se ajuste al ancho disponible */
+            padding-right: 10px;
+        }
+
+        .food-name { 
+            font-weight: 700; 
+            color: #6f1a07; 
+            margin-bottom: 2px; 
+            font-size: 1rem; 
+            line-height: 1.2;
+            word-wrap: break-word; /* Rompe palabras largas si es necesario */
+            overflow-wrap: break-word;
+        }
+
         .food-price { color: #f44336; font-weight: 500; font-size: 0.95rem; margin-bottom: 6px; }
 
         .quantity-controls { 
@@ -147,124 +164,21 @@
 </nav>
 
 <div class="container menu-container">
- 
-<div class="category-title">Antojitos</div>
+    <div class="category-title">Antojitos</div>
 
-<div class="food-item">
-    <img src="https://plus.unsplash.com/premium_photo-1731884013949-02e2b36e6d74?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="img-food" onclick="verImagen(this.src, 'adasdkl')">
-    <div class="food-info">
-        <p class="food-name">adasdkl</p>
-        <p class="food-price">$112</p>
-        <div id="controls-adasdkl">
-            <button class="btn-add-initial" onclick="cambiarCantidad('adasdkl', 112, 1)">Añadir</button>
+    <div class="food-item">
+        <img src="https://plus.unsplash.com/premium_photo-1731884013949-02e2b36e6d74?q=80&w=870&auto=format&fit=crop" class="img-food" onclick="verImagen(this.src, 'adasdkl')">
+        <div class="food-info">
+            <p class="food-name">adasdkl</p>
+            <p class="food-price">$112</p>
+            <div id="controls-adasdkl">
+                <button class="btn-add-initial" onclick="cambiarCantidad('adasdkl', 112, 1)">Añadir</button>
+            </div>
         </div>
     </div>
-</div>
 
-<div class="food-item">
-    <img src="https://plus.unsplash.com/premium_photo-1695658519389-e966814ab290?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="img-food" onclick="verImagen(this.src, 'dsfsdgsd')">
-    <div class="food-info">
-        <p class="food-name">dsfsdgsd</p>
-        <p class="food-price">$99</p>
-        <div id="controls-dsfsdgsd">
-            <button class="btn-add-initial" onclick="cambiarCantidad('dsfsdgsd', 99, 1)">Añadir</button>
-        </div>
     </div>
-</div>
 
-<div class="food-item">
-    <img src="https://plus.unsplash.com/premium_photo-1664391663321-8d7389ff0290?q=80&w=737&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="img-food" onclick="verImagen(this.src, 'zxcvxcv')">
-    <div class="food-info">
-        <p class="food-name">zxcvxcv</p>
-        <p class="food-price">$88</p>
-        <div id="controls-zxcvxcv">
-            <button class="btn-add-initial" onclick="cambiarCantidad('zxcvxcv', 88, 1)">Añadir</button>
-        </div>
-    </div>
-</div>
-
-<div class="food-item">
-    <img src="https://plus.unsplash.com/premium_photo-1725813912786-94b1e7c5f380?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="img-food" onclick="verImagen(this.src, 'sfasd')">
-    <div class="food-info">
-        <p class="food-name">sfasd</p>
-        <p class="food-price">$77</p>
-        <div id="controls-sfasd">
-            <button class="btn-add-initial" onclick="cambiarCantidad('sfasd', 77, 1)">Añadir</button>
-        </div>
-    </div>
-</div>
-
-<div class="food-item">
-    <img src="https://plus.unsplash.com/premium_photo-1663011511161-22eea0cb8564?q=80&w=871&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="img-food" onclick="verImagen(this.src, 'dsfa')">
-    <div class="food-info">
-        <p class="food-name">dsfa</p>
-        <p class="food-price">$66</p>
-        <div id="controls-dsfa">
-            <button class="btn-add-initial" onclick="cambiarCantidad('dsfa', 66, 1)">Añadir</button>
-        </div>
-    </div>
-</div>
-
-<div class="category-title">Bebidas</div>
-
-<div class="food-item">
-    <img src="https://plus.unsplash.com/premium_photo-1693262738366-c53468522a0a?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="img-food" onclick="verImagen(this.src, 'sdfdasf')">
-    <div class="food-info">
-        <p class="food-name">sdfdasf</p>
-        <p class="food-price">$55</p>
-        <div id="controls-sdfdasf">
-            <button class="btn-add-initial" onclick="cambiarCantidad('sdfdasf', 55, 1)">Añadir</button>
-        </div>
-    </div>
-</div>
-
-<div class="category-title">Comidas</div>
-
-<div class="food-item">
-    <img src="https://plus.unsplash.com/premium_photo-1693221705065-840ece9c50c8?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="img-food" onclick="verImagen(this.src, 'sdf')">
-    <div class="food-info">
-        <p class="food-name">sdf</p>
-        <p class="food-price">$44</p>
-        <div id="controls-sdf">
-            <button class="btn-add-initial" onclick="cambiarCantidad('sdf', 44, 1)">Añadir</button>
-        </div>
-    </div>
-</div>
-
-<div class="food-item">
-    <img src="https://plus.unsplash.com/premium_photo-1693262738227-98dd34c381c3?q=80&w=837&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="img-food" onclick="verImagen(this.src, 'sdfsdfsdfsdf')">
-    <div class="food-info">
-        <p class="food-name">sdfsdfsdfsdf</p>
-        <p class="food-price">$33</p>
-        <div id="controls-sdfsdfsdfsdf">
-            <button class="btn-add-initial" onclick="cambiarCantidad('sdfsdfsdfsdf', 33, 1)">Añadir</button>
-        </div>
-    </div>
-</div>
-
-<div class="food-item">
-    <img src="https://plus.unsplash.com/premium_photo-1723733592587-e25bfd75f2b1?q=80&w=869&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="img-food" onclick="verImagen(this.src, 'sdfsdafsdafasf')">
-    <div class="food-info">
-        <p class="food-name">sdfsdafsdafasf</p>
-        <p class="food-price">$22</p>
-        <div id="controls-sdfsdafsdafasf">
-            <button class="btn-add-initial" onclick="cambiarCantidad('sdfsdafsdafasf', 22, 1)">Añadir</button>
-        </div>
-    </div>
-</div>
-
-<div class="category-title">Bebidas</div>
-
-<div class="food-item">
-    <img src="https://plus.unsplash.com/premium_photo-1693221704955-4d17085ee994?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="img-food" onclick="verImagen(this.src, 'sdfsdfdsfsdfdsfsdf')">
-    <div class="food-info">
-        <p class="food-name">sdfsdfdsfsdfdsfsdf</p>
-        <p class="food-price">$11</p>
-        <div id="controls-sdfsdfdsfsdfdsfsdf">
-            <button class="btn-add-initial" onclick="cambiarCantidad('sdfsdfdsfsdfdsfsdf', 11, 1)">Añadir</button>
-        </div>
-    </div>
-</div>
 <div class="modal fade modal-img-view" id="imageModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content bg-transparent border-0">
@@ -282,7 +196,7 @@
         <div class="modal-content">
             <div class="modal-header border-0">
                 <h5 class="modal-title">Mi Perfil</h5>
-                <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body text-center p-4">
                 <div style="font-size: 3rem; color: #ffdab3;"><i class="fas fa-user-circle"></i></div>
@@ -304,18 +218,20 @@
 
 <script>
     let carrito = JSON.parse(localStorage.getItem("carrito_obj")) || {};
+    
+    // IMPORTANTE: Actualiza esta lista con los IDs generados por tu admin.html
     const itemIds = {
-    'adasdkl': 'adasdkl',
-    'dsfsdgsd': 'dsfsdgsd',
-    'zxcvxcv': 'zxcvxcv',
-    'sfasd': 'sfasd',
-    'dsfa': 'dsfa',
-    'sdfdasf': 'sdfdasf',
-    'sdf': 'sdf',
-    'sdfsdfsdfsdf': 'sdfsdfsdfsdf',
-    'sdfsdafsdafasf': 'sdfsdafsdafasf',
-    'sdfsdfdsfsdfdsfsdf': 'sdfsdfdsfsdfdsfsdf',
-};
+        'adasdkl': 'adasdkl',
+        'dsfsdgsd': 'dsfsdgsd',
+        'zxcvxcv': 'zxcvxcv',
+        'sfasd': 'sfasd',
+        'dsfa': 'dsfa',
+        'sdfdasf': 'sdfdasf',
+        'sdf': 'sdf',
+        'sdfsdfsdfsdf': 'sdfsdfsdfsdf',
+        'sdfsdafsdafasf': 'sdfsdafsdafasf',
+        'sdfsdfdsfsdfdsfsdf': 'sdfsdfdsfsdfdsfsdf',
+    };
 
     function verImagen(src, nombre) {
         document.getElementById('fullImg').src = src;
@@ -333,11 +249,19 @@
 
     function actualizarInterfaz() {
         let totalItems = 0; let precioTotal = 0;
-        for (const [nombre, id] of Object.entries(itemIds)) {
+        
+        // Obtenemos todos los nombres de productos definidos en el HTML actual
+        const productosEnPagina = Object.keys(itemIds);
+
+        productosEnPagina.forEach(nombre => {
+            const id = itemIds[nombre];
             const container = document.getElementById(`controls-${id}`);
+            if (!container) return;
+
             const item = carrito[nombre];
             if (item && item.cantidad > 0) {
-                totalItems += item.cantidad; precioTotal += item.cantidad * item.precio;
+                totalItems += item.cantidad; 
+                precioTotal += item.cantidad * item.precio;
                 container.innerHTML = `
                     <div class="quantity-controls">
                         <button class="btn-qty" onclick="cambiarCantidad('${nombre}', ${item.precio}, -1)">-</button>
@@ -345,10 +269,13 @@
                         <button class="btn-qty" onclick="cambiarCantidad('${nombre}', ${item.precio}, 1)">+</button>
                     </div>`;
             } else {
-                const pOrig = nombre === 'Empanada de Queso' ? 15 : (nombre === 'Gorditas de Huevo' ? 20 : 30);
-                container.innerHTML = `<button class="btn-add-initial" onclick="cambiarCantidad('${nombre}', ${pOrig}, 1)">Añadir</button>`;
+                // Buscamos el precio en el HTML si no está en el carrito para el botón inicial
+                const precioElemento = container.closest('.food-info').querySelector('.food-price').innerText;
+                const precioNumerico = parseFloat(precioElemento.replace('$', ''));
+                container.innerHTML = `<button class="btn-add-initial" onclick="cambiarCantidad('${nombre}', ${precioNumerico}, 1)">Añadir</button>`;
             }
-        }
+        });
+        
         document.getElementById("cartCount").innerText = totalItems;
         document.getElementById("totalFloat").innerText = precioTotal;
     }
@@ -366,6 +293,7 @@
 
     function cerrarSesion() {
         localStorage.removeItem("usuarioLogueado");
+        localStorage.removeItem("sesion_activa"); // Limpia también el estado de login2.html
         window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/login2.html";
     }
 
