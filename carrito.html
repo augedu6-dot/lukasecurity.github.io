@@ -32,7 +32,6 @@
             color: #6f1a07 !important; 
             text-decoration: none;
             white-space: nowrap;
-            margin-right: 5px;
         }
 
         .nav-icons { display: flex; align-items: center; flex-shrink: 0; }
@@ -61,18 +60,14 @@
             box-shadow: 0 2px 6px rgba(0,0,0,0.02); border: 1px solid #f9f0e6;
         }
         .food-item div:first-child { flex: 1; min-width: 0; padding-right: 10px; }
-        .food-item p { 
-            font-size: 0.92rem; line-height: 1.2; white-space: normal; 
-            word-wrap: break-word; margin-bottom: 0; font-weight: 700; color: #333;
-        }
+        .food-item p { font-size: 0.92rem; line-height: 1.2; white-space: normal; word-wrap: break-word; margin-bottom: 0; font-weight: 700; color: #333; }
 
-        .quantity-controls { display: flex; align-items: center; background: #f1f3f5; border-radius: 10px; padding: 3px; flex-shrink: 0; }
+        .quantity-controls { display: flex; align-items: center; background: #f1f3f5; border-radius: 10px; padding: 3px; }
         .btn-qty { width: 28px; height: 28px; border-radius: 8px; border: none; background: white; color: #6f1a07; font-weight: bold; }
         .qty-number { min-width: 20px; text-align: center; font-weight: 700; color: #6f1a07; margin: 0 5px; font-size: 0.9rem; }
 
         .card-custom { background: white; padding: 12px; border-radius: 15px; border: 1px solid #f9f0e6; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
         
-        /* BOTON FLOTANTE LIMPIO */
         .btn-finalizar {
             position: fixed; bottom: 25px; left: 5%; width: 90%; 
             background: #6f1a07; color: white; padding: 16px; border-radius: 18px;
@@ -81,23 +76,24 @@
         }
         .btn-finalizar.blocked { background: #999; box-shadow: none; cursor: not-allowed; }
 
+        /* AVISOS */
         #avisoHtml { 
             position: fixed; top: -100px; left: 50%; transform: translateX(-50%);
             background: #f44336; color: white; padding: 15px; border-radius: 0 0 15px 15px;
-            z-index: 2000; transition: top 0.5s ease; width: 90%; text-align: center;
+            z-index: 2000; transition: top 0.5s ease; width: 90%; text-align: center; font-weight: bold;
         }
         #avisoHtml.show { top: 0; }
     </style>
 </head>
 <body>
 
-<div id="avisoHtml">Ya tienes un pedido en curso...</div>
+<div id="avisoHtml">Aviso</div>
 
 <nav class="navbar">
     <div class="container">
-        <a class="navbar-brand" href="menu.html">DeMasita</a>
+        <a class="navbar-brand" href="https://augedu6-dot.github.io/lukasecurity.github.io/menu.html">DeMasita</a>
         <div class="nav-icons">
-            <div class="nav-icon-link" onclick="window.location.href='seguimiento.html'">
+            <div class="nav-icon-link" onclick="window.location.href='https://augedu6-dot.github.io/lukasecurity.github.io/seguimiento.html'">
                 <i class="fas fa-truck"></i>
                 <span id="cartCount">0</span>
             </div>
@@ -111,10 +107,11 @@
     <div id="lista-carrito"></div>
 
     <div class="section-title"><i class="fas fa-map-marker-alt"></i> Entrega en:</div>
-    <div class="card-custom mb-3" onclick="window.location.href='direccion.html'" style="cursor:pointer;">
+    <div class="card-custom mb-3" onclick="window.location.href='https://augedu6-dot.github.io/lukasecurity.github.io/direccion.html'" style="cursor:pointer;">
         <div class="d-flex justify-content-between align-items-center">
             <div style="min-width: 0;">
-                <p id="currentAddress" class="mb-0 font-weight-bold" style="font-size: 0.85rem; white-space: normal;">Cargando...</p>
+                <p id="currentAddress" class="mb-0 font-weight-bold" style="font-size: 0.85rem; white-space: normal;"></p>
+                <small class="text-muted">Toca para cambiar o agregar</small>
             </div>
             <i class="fas fa-chevron-right text-muted ml-2"></i>
         </div>
@@ -161,6 +158,13 @@
 
     let carrito = JSON.parse(localStorage.getItem("carrito_obj")) || {};
     signInAnonymously(auth);
+
+    function mostrarAviso(msj) {
+        const aviso = document.getElementById("avisoHtml");
+        aviso.innerText = msj;
+        aviso.classList.add("show");
+        setTimeout(() => aviso.classList.remove("show"), 3000);
+    }
 
     window.cambiarCantidad = function(nombre, precio, cambio) {
         if (!carrito[nombre]) carrito[nombre] = { precio, cantidad: 0 };
@@ -210,17 +214,31 @@
         }
     }
 
-    // AHORA ESTA FUNCIÓN ENVÍA EL PEDIDO DIRECTAMENTE
     window.confirmarPedidoFinal = async function() {
+        // 1. Verificar si ya hay orden activa
         if (verificarOrdenActiva()) {
-            document.getElementById("avisoHtml").classList.add("show");
+            mostrarAviso("Ya tienes un pedido en curso...");
             setTimeout(() => {
                 window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/seguimiento.html";
-            }, 3000);
+            }, 2000);
             return;
         }
 
-        if (Object.keys(carrito).length === 0) return;
+        // 2. Verificar si el carrito está vacío
+        if (Object.keys(carrito).length === 0) {
+            mostrarAviso("El carrito está vacío");
+            return;
+        }
+
+        // 3. VALIDACIÓN DE DOMICILIO OBLIGATORIA
+        const domicilioData = JSON.parse(localStorage.getItem('domicilio'));
+        if (!domicilioData || !domicilioData.calle) {
+            mostrarAviso("¡Error! Debe registrar su domicilio primero.");
+            setTimeout(() => {
+                window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/direccion.html";
+            }, 2500);
+            return;
+        }
 
         const btn = document.getElementById("btnPagarFlotante");
         btn.disabled = true; 
@@ -228,7 +246,7 @@
 
         const idPedido = Math.floor(Math.random() * 0xFFFFFF).toString(16).toUpperCase().padStart(6, '0');
         const usuarioEmail = localStorage.getItem("usuarioLogueado") || "Sin Email";
-        const direccion = document.getElementById('currentAddress').innerText;
+        const direccionFull = `${domicilioData.calle} #${domicilioData.numero}, ${domicilioData.ciudad}`;
         const totalPagar = document.getElementById("totalFinal").innerText;
 
         let productosArray = [];
@@ -245,7 +263,7 @@
             productos: productosArray,
             total: totalPagar,
             hora: llegada.getHours() + ":" + (llegada.getMinutes() < 10 ? '0' : '') + llegada.getMinutes(),
-            direccion: direccion,
+            direccion: direccionFull,
             fecha: ahora.toLocaleDateString(),
             estado: "Pendiente"
         };
@@ -272,8 +290,17 @@
             return;
         }
         document.getElementById("displayEmail").innerText = localStorage.getItem("usuarioLogueado");
+        
         const d = JSON.parse(localStorage.getItem('domicilio'));
-        if (d) document.getElementById('currentAddress').innerText = `${d.calle} #${d.numero}, ${d.ciudad}`;
+        const display = document.getElementById('currentAddress');
+        if (d && d.calle) {
+            display.innerText = `${d.calle} #${d.numero}, ${d.ciudad}`;
+            display.style.color = "black";
+        } else {
+            display.innerText = "¡SIN DOMICILIO REGISTRADO!";
+            display.style.color = "red";
+        }
+        
         actualizarInterfaz();
     };
 </script>
