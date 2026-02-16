@@ -3,244 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carrito - DeMasita</title>
-    <link href="https://fonts.googleapis.com/css2?family=Marck+Script&family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet">
+    <title>Mi Pedido - DeMasita</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
     <style>
-        body { font-family: "Ubuntu", sans-serif; background-color: #fefcf5; padding-bottom: 120px; }
-        
-        .navbar { 
-            background-color: white; 
-            border-bottom: 2px solid #ffdab3; 
-            position: sticky; 
-            top: 0; 
-            z-index: 1000; 
-            padding: 0.5rem 1rem; 
-        }
-        .navbar .container { display: flex; flex-wrap: nowrap; justify-content: space-between; align-items: center; }
-        .navbar-brand { font-family: 'Marck Script', cursive; font-size: 1.5rem; color: #6f1a07 !important; }
-
-        .container { max-width: 600px; }
-        
-        .section-title { 
-            font-weight: 700; 
-            color: #6f1a07; 
-            margin-top: 25px; 
-            margin-bottom: 15px; 
-            font-size: 1.1rem; 
-            display: flex; 
-            align-items: center; 
-        }
-        .section-title i { margin-right: 10px; color: #f44336; }
-
-        /* --- CORRECCIÓN DE TARJETAS EN CARRITO --- */
-        .cart-item { 
-            background: white; 
-            border-radius: 15px; 
-            padding: 12px; 
-            margin-bottom: 10px; 
-            display: flex; 
-            align-items: center; 
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            border: 1px solid #eee;
-            width: 100%; /* Ocupa todo el ancho */
-        }
-
-        .img-cart { 
-            width: 70px; 
-            height: 70px; 
-            object-fit: cover; 
-            border-radius: 10px; 
-            margin-right: 12px; 
-            flex-shrink: 0; /* Evita que la imagen se deforme */
-        }
-
-        .item-info { 
-            flex-grow: 1; 
-            min-width: 0; /* Permite que el texto se ajuste sin salirse */
-        }
-
-        .item-name { 
-            font-weight: 700; 
-            color: #333; 
-            font-size: 0.95rem; 
-            margin-bottom: 2px; 
-            line-height: 1.2;
-            word-wrap: break-word; /* Salto de línea para nombres largos */
-            overflow-wrap: break-word;
-            display: block;
-        }
-
-        .item-price { color: #f44336; font-weight: 500; font-size: 0.9rem; }
-
-        .qty-controls { 
-            display: flex; 
-            align-items: center; 
-            background: #f8f9fa; 
-            border-radius: 20px; 
-            padding: 2px 8px; 
-            border: 1px solid #eee;
-            flex-shrink: 0; /* Los controles no se encogen */
-        }
-        .qty-btn { 
-            background: none; 
-            border: none; 
-            color: #6f1a07; 
-            font-weight: bold; 
-            padding: 0 5px; 
-            font-size: 1.1rem;
-        }
-        .qty-val { font-weight: 700; margin: 0 8px; font-size: 0.9rem; min-width: 15px; text-align: center; }
-
-        /* Estilos de Dirección y Pago */
-        .card-custom { 
-            background: white; 
-            border-radius: 15px; 
-            padding: 15px; 
-            border: 1px solid #eee; 
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
-        .btn-pay { 
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); 
-            width: 90%; max-width: 500px; background: #6f1a07; color: white; 
-            border: none; border-radius: 15px; padding: 15px; font-weight: 700; 
-            box-shadow: 0 4px 15px rgba(111,26,7,0.3); z-index: 1000;
-        }
+        body { background-color: #fefcf5; font-family: 'Ubuntu', sans-serif; padding: 20px; }
+        .cart-card { background: white; border-radius: 15px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .item-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #eee; }
+        .item-name { font-weight: bold; color: #6f1a07; flex: 1; }
+        .btn-confirm { background: #28a745; color: white; width: 100%; padding: 15px; border-radius: 30px; border: none; font-weight: bold; margin-top: 20px; }
     </style>
 </head>
 <body>
 
-<nav class="navbar navbar-light">
-    <div class="container">
-        <a class="navbar-brand" href="menu.html"><i class="fas fa-chevron-left mr-2" style="font-size: 1rem;"></i> Carrito</a>
-        <span id="displayEmail" style="font-size: 0.7rem; color: #999;"></span>
-    </div>
-</nav>
-
 <div class="container">
-    <div class="section-title"><i class="fas fa-shopping-basket"></i> Tus Productos</div>
-    <div id="cartList">
-        </div>
-
-    <div class="section-title"><i class="fas fa-map-marker-alt"></i> Entrega en:</div>
-    <div class="card-custom mb-3" onclick="window.location.href='direccion.html'" style="cursor:pointer;">
-        <div class="d-flex justify-content-between align-items-center">
-            <div>
-                <p id="currentAddress" class="mb-0 font-weight-bold" style="font-size: 0.9rem;">Cargando dirección...</p>
-                <small class="text-muted">Toca para cambiar</small>
-            </div>
-            <i class="fas fa-chevron-right text-muted"></i>
-        </div>
-    </div>
-
-    <div class="section-title"><i class="fas fa-credit-card"></i> Resumen</div>
-    <div class="card-custom mb-5">
-        <div class="d-flex justify-content-between mb-2">
-            <span>Subtotal</span>
-            <span id="subtotal">$0.00</span>
-        </div>
-        <div class="d-flex justify-content-between mb-2">
-            <span>Envío</span>
-            <span class="text-success">Gratis</span>
-        </div>
+    <h4 class="mb-4"><a href="menu.html" class="text-dark"><i class="fas fa-arrow-left"></i></a> Mi Pedido</h4>
+    
+    <div class="cart-card">
+        <div id="listaPedido"></div>
         <hr>
-        <div class="d-flex justify-content-between font-weight-bold" style="font-size: 1.2rem; color: #6f1a07;">
-            <span>Total</span>
-            <span id="total">$0.00</span>
+        <div class="d-flex justify-content-between h5">
+            <span>Total:</span>
+            <span id="total">$0</span>
         </div>
     </div>
-</div>
 
-<button class="btn-pay" onclick="confirmarPedido()" id="btnConfirmar">
-    Confirmar y Pedir
-</button>
+    <button class="btn-confirm" onclick="finalizarPedido()">
+        CONFIRMAR PEDIDO <i class="fas fa-check-circle ml-2"></i>
+    </button>
+</div>
 
 <script>
     let carrito = JSON.parse(localStorage.getItem("carrito_obj")) || {};
 
-    function cargarCarrito() {
-        const container = document.getElementById("cartList");
-        const subtotalEl = document.getElementById("subtotal");
-        const totalEl = document.getElementById("total");
-        container.innerHTML = "";
+    function cargarLista() {
+        const contenedor = document.getElementById("listaPedido");
+        let html = ""; let total = 0;
         
-        let total = 0;
-        let itemsCount = 0;
-
-        for (const [nombre, datos] of Object.entries(carrito)) {
-            itemsCount++;
-            const sub = datos.precio * datos.cantidad;
-            total += sub;
-
-            // Imagen por defecto si no tienes una guardada en el objeto
-            const imgPlaceholder = "https://via.placeholder.com/100?text=Comida";
-
-            container.innerHTML += `
-                <div class="cart-item">
-                    <img src="${imgPlaceholder}" class="img-cart">
-                    <div class="item-info">
-                        <span class="item-name">${nombre}</span>
-                        <span class="item-price">$${datos.precio}</span>
-                    </div>
-                    <div class="qty-controls">
-                        <button class="qty-btn" onclick="actualizarCantidad('${nombre}', -1)">-</button>
-                        <span class="qty-val">${datos.cantidad}</span>
-                        <button class="qty-btn" onclick="actualizarCantidad('${nombre}', 1)">+</button>
-                    </div>
-                </div>
-            `;
-        }
-
-        if (itemsCount === 0) {
-            container.innerHTML = `<div class="text-center p-5 text-muted">Tu carrito está vacío 🌮</div>`;
-            document.getElementById("btnConfirmar").disabled = true;
-            document.getElementById("btnConfirmar").style.opacity = "0.5";
-        }
-
-        subtotalEl.innerText = `$${total.toFixed(2)}`;
-        totalEl.innerText = `$${total.toFixed(2)}`;
+        Object.entries(carrito).forEach(([nombre, datos]) => {
+            total += datos.precio * datos.cantidad;
+            html += `
+                <div class="item-row">
+                    <div class="item-name">${nombre} (x${datos.cantidad})</div>
+                    <div class="text-danger font-weight-bold">$${datos.precio * datos.cantidad}</div>
+                </div>`;
+        });
+        contenedor.innerHTML = html || "<p class='text-muted'>No hay productos</p>";
+        document.getElementById("total").innerText = "$" + total;
     }
 
-    function actualizarCantidad(nombre, cambio) {
-        carrito[nombre].cantidad += cambio;
-        if (carrito[nombre].cantidad <= 0) delete carrito[nombre];
-        localStorage.setItem("carrito_obj", JSON.stringify(carrito));
-        cargarCarrito();
-    }
-
-    function confirmarPedido() {
-        const btn = document.getElementById("btnConfirmar");
-        btn.disabled = true;
-        btn.innerText = "Procesando...";
-
-        // Simulación de envío de pedido
-        setTimeout(() => {
-            alert("¡Pedido realizado con éxito!");
-            localStorage.removeItem("carrito_obj");
-            window.location.href = "seguimiento.html";
-        }, 1500);
-    }
-
-    window.onload = function() {
-        const user = localStorage.getItem("usuarioLogueado");
-        if (!user) {
-            window.location.href = "login2.html";
+    function finalizarPedido() {
+        if (Object.keys(carrito).length === 0) {
+            alert("El carrito está vacío");
             return;
         }
-        document.getElementById("displayEmail").innerText = user;
+
+        // Eliminamos la dependencia de Firebase/Servidores externos que fallan
+        const idPedido = "PED-" + Math.floor(Math.random() * 100000);
+        const pedidoData = {
+            id: idPedido,
+            productos: carrito,
+            fecha: new Date().toLocaleString(),
+            estado: "Pendiente"
+        };
+
+        // Guardamos en el historial del navegador
+        localStorage.setItem("ultimoPedido", JSON.stringify(pedidoData));
         
-        // Cargar dirección (ejemplo)
-        const d = JSON.parse(localStorage.getItem('domicilio'));
-        if (d) {
-            document.getElementById('currentAddress').innerText = `${d.calle} #${d.numero}`;
-        } else {
-            document.getElementById('currentAddress').innerText = "Sin dirección seleccionada";
-        }
+        // IMPORTANTE: Limpiar carrito para que no se duplique
+        localStorage.removeItem("carrito_obj");
 
-        cargarCarrito();
-    };
+        alert("¡Pedido confirmado! Redirigiendo a seguimiento...");
+        window.location.href = "seguimiento.html";
+    }
+
+    window.onload = cargarLista;
 </script>
-
 </body>
 </html>
