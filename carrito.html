@@ -13,10 +13,17 @@
         .navbar .container { display: flex; flex-wrap: nowrap; justify-content: space-between; align-items: center; }
         .navbar-brand { font-family: 'Marck Script', cursive; font-size: 1.5rem; color: #6f1a07 !important; }
         .nav-user-link { color: #d35400 !important; font-weight: 700; cursor: pointer; display: flex; align-items: center; padding: 4px 8px; background: #fff5eb; border-radius: 20px; text-decoration: none !important; font-size: 0.75rem; }
-        #resumenCuerpo { padding: 10px; overflow-x: auto; }
-        .table-resumen { width: 100%; font-size: 0.85rem; }
+        
+        /* --- RESUMEN COMPACTO --- */
+        #resumenCuerpo { padding: 5px 15px; overflow-x: hidden; }
+        .table-resumen { width: 100%; font-size: 0.8rem; margin-bottom: 5px; }
+        .table-resumen th, .table-resumen td { padding: 4px 2px !important; line-height: 1.1; vertical-align: middle; }
+        .resumen-direccion { background-color: #fcf3cf; padding: 8px; border-radius: 10px; border-left: 5px solid #f39c12; margin-bottom: 8px; font-size: 0.75rem; }
+        .modal-body h4 { font-size: 1.1rem; margin-top: 5px; font-weight: 700; }
+        .modal-header { background: #6f1a07; color: white; border-radius: 20px 20px 0 0; padding: 10px 20px; }
+        /* ------------------------ */
+
         .modal-content { border-radius: 20px; border: none; }
-        .modal-header { background: #6f1a07; color: white; border-radius: 20px 20px 0 0; }
         .user-avatar { width: 70px; height: 70px; background: #ffdab3; color: #6f1a07; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 15px; }
         .cart-icon { font-size: 1.3rem; color: #6f1a07; position: relative; cursor: pointer; }
         .cart-count { background: #f44336; color: white; border-radius: 50%; padding: 2px 6px; font-size: 0.7rem; position: absolute; top: -10px; right: -10px; }
@@ -30,9 +37,7 @@
         .btn-change-addr { font-size: 0.8rem; color: #f44336; text-decoration: underline; cursor: pointer; border: none; background: none; padding: 0; }
         .floating-cart { position: fixed; bottom: 0; left: 0; width: 100%; background: #6f1a07; color: white; padding: 20px; border-radius: 20px 20px 0 0; cursor: pointer; box-shadow: 0 -4px 15px rgba(0,0,0,0.2); z-index: 1001; transition: background 0.3s; }
         .floating-cart.blocked { background: #6c757d; }
-        .resumen-direccion { background-color: #fcf3cf; padding: 12px; border-radius: 10px; border-left: 5px solid #f39c12; margin-bottom: 15px; }
 
-        /* NUEVO: Estilo para el aviso HTML personalizado */
         .aviso-bloqueo {
             position: fixed;
             bottom: 110px;
@@ -106,14 +111,14 @@
 <div class="modal fade" id="resumenModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-            <div class="modal-header bg-success text-white border-0">
+            <div class="modal-header border-0">
                 <h5 class="modal-title">Confirmar Pedido</h5>
                 <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body" id="resumenCuerpo"></div>
-            <div class="modal-footer border-0">
-                <button type="button" class="btn btn-secondary rounded-pill" data-dismiss="modal">Cancelar</button>
-                <button type="button" id="btnConfirmarFinal" class="btn btn-success rounded-pill px-4" onclick="confirmarPedidoFinal()">Confirmar y Pagar</button>
+            <div class="modal-footer border-0 p-2">
+                <button type="button" class="btn btn-sm btn-secondary rounded-pill" data-dismiss="modal">Cancelar</button>
+                <button type="button" id="btnConfirmarFinal" class="btn btn-sm btn-success rounded-pill px-4" onclick="confirmarPedidoFinal()">Confirmar y Pagar</button>
             </div>
         </div>
     </div>
@@ -123,7 +128,7 @@
     <i class="fas fa-clock"></i>
     <div>
         <strong>Pedido en curso</strong>
-        <span>Ya tienes una orden activa. Debes esperar a que finalice para hacer otra.</span>
+        <span>Ya tienes una orden activa. Revisa tu pedido actual antes de iniciar otro.</span>
     </div>
 </div>
 
@@ -161,8 +166,7 @@
     const auth = getAuth(app);
 
     let carrito = JSON.parse(localStorage.getItem("carrito_obj")) || {};
-    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxeE8NaqRpHD1eztqcSCWT7aCKzrhZSjBoGyZbdrhif3uAMRt1mfJ9E9stKIv7Bfl2p/exec";
-
+    
     signInAnonymously(auth).catch((error) => console.error("Error Auth:", error));
 
     window.cambiarCantidad = function(nombre, precio, cambio) {
@@ -217,13 +221,13 @@
     window.irAFinalizar = function() {
         const aviso = document.getElementById("avisoHtml");
 
-        // SI HAY ORDEN ACTIVA: Mostramos el aviso HTML y redirigimos
         if (verificarOrdenActiva()) {
             aviso.classList.add("show");
+            // AUMENTADO A 6 SEGUNDOS PARA MEJOR LECTURA
             setTimeout(() => {
                 aviso.classList.remove("show");
                 window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/seguimiento.html";
-            }, 3000);
+            }, 6000);
             return;
         }
 
@@ -232,16 +236,15 @@
         const direccionActual = document.getElementById('currentAddress').innerText;
         let contenidoResumen = `
             <div class="resumen-direccion">
-                <p class="mb-1"><strong><i class="fas fa-map-marker-alt"></i> Dirección de Envío:</strong></p>
-                <p class="mb-0 small">${direccionActual}</p>
+                <strong>Dirección:</strong> ${direccionActual}
             </div>
             <table class="table table-borderless table-resumen">
-                <thead><tr><th>Producto</th><th>Cant.</th><th>Subtotal</th></tr></thead>
+                <thead><tr class="border-bottom"><th>Producto</th><th class="text-center">Cant.</th><th class="text-right">Subtotal</th></tr></thead>
                 <tbody>`;
         for (const [nombre, item] of Object.entries(carrito)) {
-            contenidoResumen += `<tr><td>${nombre}</td><td>${item.cantidad}</td><td>$${item.cantidad * item.precio}</td></tr>`;
+            contenidoResumen += `<tr><td>${nombre}</td><td class="text-center">${item.cantidad}</td><td class="text-right">$${item.cantidad * item.precio}</td></tr>`;
         }
-        contenidoResumen += `</tbody></table><h4 class="text-right mt-3">Total: $${document.getElementById("totalFloat").innerText}</h4>`;
+        contenidoResumen += `</tbody></table><h4 class="text-right">Total: $${document.getElementById("totalFloat").innerText}</h4>`;
         document.getElementById('resumenCuerpo').innerHTML = contenidoResumen;
         $('#resumenModal').modal('show');
     };
@@ -258,12 +261,9 @@
         const totalPagar = document.getElementById("totalFloat").innerText;
 
         let productosArray = [];
-        let productosTexto = "";
         for (const [nombre, item] of Object.entries(carrito)) {
             productosArray.push({ nombre, cantidad: item.cantidad, precio: item.precio });
-            productosTexto += `${nombre} (x${item.cantidad}), `;
         }
-        productosTexto = productosTexto.slice(0, -2);
 
         const ahora = new Date();
         const llegada = new Date(ahora.getTime() + 45 * 60000);
@@ -288,7 +288,6 @@
             window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/seguimiento.html";
 
         } catch (error) {
-            console.error("Error al guardar pedido:", error);
             btn.disabled = false; btn.innerText = "Confirmar y Pagar";
         }
     };
