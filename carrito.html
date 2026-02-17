@@ -150,9 +150,9 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
-    // TU URL DE GOOGLE SHEETS
     const GOOGLE_URL = "https://script.google.com/macros/s/AKfycbxI16EHswwjj_I4pDsYC0DM4hTrfUpTh_FomSBt94pmIGsQMJSjQCHtdMoirT1cCfnM/exec";
 
+    // CORRECCIÓN: Usar la misma llave que en menu.html
     let carrito = JSON.parse(localStorage.getItem("carrito_obj")) || {};
 
     window.cambiarCantidad = function(nombre, precio, cambio) {
@@ -167,8 +167,10 @@
         let totalItems = 0; let precioTotal = 0;
         const lista = document.getElementById('lista-carrito');
         lista.innerHTML = "";
+        
         for (const [nombre, item] of Object.entries(carrito)) {
-            totalItems += item.cantidad; precioTotal += item.cantidad * item.precio;
+            totalItems += item.cantidad; 
+            precioTotal += item.cantidad * item.precio;
             lista.innerHTML += `
                 <div class="food-item">
                     <div><p>${nombre}</p><small class="text-muted">$${item.precio} c/u</small></div>
@@ -181,6 +183,7 @@
         }
         document.getElementById("cartCount").innerText = totalItems;
         document.getElementById("itemsTotal").innerText = totalItems;
+        document.getElementById("totalResumen").innerText = precioTotal;
         document.getElementById("totalFinal").innerText = precioTotal;
     }
 
@@ -190,52 +193,49 @@
         if (Object.keys(carrito).length === 0) { alert("Carrito vacío"); return; }
 
         const btn = document.getElementById("btnPagarFlotante");
+        const totalAmount = document.getElementById("totalFinal").innerText;
         btn.disabled = true; btn.innerText = "Procesando...";
 
         const idPedido = Math.floor(Math.random() * 0xFFFFFF).toString(16).toUpperCase().padStart(6, '0');
         const usuarioEmail = localStorage.getItem("usuarioLogueado") || "Sin Email";
-        
-        // Formatear productos para Google Sheets como pide tu App Script (campo 'pedido')
         const resumenPedido = Object.entries(carrito).map(([nombre, item]) => `${item.cantidad}x ${nombre}`).join(", ");
 
         const dataPedido = {
             id: idPedido,
             usuario: usuarioEmail,
             productos: Object.values(carrito),
-            total: document.getElementById("totalFinal").innerText,
+            total: totalAmount,
             direccion: `${domicilioData.calle} #${domicilioData.numero}`,
             fecha: new Date().toLocaleDateString(),
             estado: "Pendiente"
         };
-       const dataPedidoss = {
-           idPedido,
-            usuarioEmail,
-           resumenPedido ,           
-            total: document.getElementById("totalFinal").innerText,
-            direccion: `${domicilioData.calle} #${domicilioData.numero}`
-        };
 
         try {
-            // 1. Guardar en Firebase
             await update(ref(db, 'pedidos/' + idPedido), dataPedido);
 
-            // 2. Enviar a Google Sheets adaptado a tu App Script ('nombre' y 'pedido')
             fetch(GOOGLE_URL, {
                 method: 'POST',
                 mode: 'no-cors',
                 body: JSON.stringify({ 
-                    nombre: dataPedidoss , 
+                    nombre: { idPedido, usuarioEmail, resumenPedido, total: totalAmount, direccion: dataPedido.direccion }, 
                     pedido: idPedido,
-                    pedidoID: idPedido // Enviamos el ID para que luego el panel admin pueda actualizarlo
+                    pedidoID: idPedido
                 })
             });
 
             localStorage.setItem("ultimoPedido", JSON.stringify(dataPedido));
             localStorage.removeItem("carrito_obj");
-            window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/seguimiento.html";
+            
+            // REDIRECCIÓN DINÁMICA A PAGO CON EL MONTO TOTAL
+            window.location.href = `https://augedu6-dot.github.io/lukasecurity.github.io/pago.html?total=${totalAmount}`;
         } catch (error) {
             btn.disabled = false; btn.innerText = "Reintentar";
         }
+    };
+
+    window.cerrarSesion = function() {
+        localStorage.removeItem("usuarioLogueado");
+        window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/login2.html";
     };
 
     window.onload = () => {
