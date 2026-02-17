@@ -281,9 +281,11 @@
 
             // 3. Acciones según el pago
             if (metodoSeleccionado === "Transferencia") {
-                const numWsp = "9933044020";
+                const numWsp = "529933044020";
                 const msg = `¡Hola! Soy ${infoPedido.usuario}. Confirmo mi pedido #${idPedido} de $${totalNum}. En un momento envío el comprobante.`;
                 window.location.href = `https://wa.me/${numWsp}?text=${encodeURIComponent(msg)}`;
+             // OPCIÓN CORRECTA: Abrir en pestaña nueva para no perder tu página
+              window.open(url, '_blank');
             } 
             else if (metodoSeleccionado === "Tarjeta Online") {
                 window.location.href = "https://buy.stripe.com/9B67sL7Ej4Mf1ad3rFdfG08";
@@ -339,7 +341,6 @@
 </script>
 </body>
 </html>
-
 
 
 
