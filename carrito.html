@@ -276,16 +276,40 @@
     };
 
     // Al cargar la página
-    window.addEventListener('load', () => {
-        if(domicilioData) {
-            document.getElementById('currentAddress').innerText = `${domicilioData.calle} #${domicilioData.numero}`;
-            document.getElementById('currentAddress').style.color = "#28a745"; // Verde si hay dirección
-        }
-        actualizarInterfaz();
-    });
+  window.addEventListener('load', () => {
+    // 1. Mostrar la dirección si existe (Tu código actual)
+    if(domicilioData) {
+        document.getElementById('currentAddress').innerText = `${domicilioData.calle} #${domicilioData.numero}`;
+        document.getElementById('currentAddress').style.color = "#28a745"; 
+    }
+
+    // 2. NUEVA VALIDACIÓN: Bloquear si ya hay un pedido activo
+    const pedidoActivo = localStorage.getItem("ultimoPedido");
+    if (pedidoActivo) {
+        const btn = document.getElementById("btnPagarFlotante");
+        const aviso = document.getElementById("avisoHtml");
+
+        // Bloqueo visual del botón
+        btn.disabled = true;
+        btn.classList.add("blocked"); 
+        btn.innerHTML = `<span><i class="fas fa-sync fa-spin"></i> Pedido en curso...</span>`;
+        
+        // Mostrar aviso superior
+        aviso.innerText = "⚠️ Ya tienes un pedido activo. Por favor, espera a que finalice.";
+        aviso.classList.add("show");
+        
+        // Opcional: Redirigir automáticamente al seguimiento tras 3 segundos
+        setTimeout(() => {
+            window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/seguimiento.html";
+        }, 3000);
+    }
+
+    actualizarInterfaz();
+});
 </script>
 </body>
 </html>
+
 
 
 
