@@ -223,23 +223,21 @@
                 })
             });
 
-            localStorage.setItem("ultimoPedido", JSON.stringify(dataPedido));
-            localStorage.removeItem("carrito_obj");
-        // --- ESTA ES LA MODIFICACIÓN ---
+         // 3. Preparamos la redirección a Stripe
+        // IMPORTANTE: Reemplaza 'TU_LINK_AQUI' por tu enlace real de Stripe
+        const STRIPE_LINK = "https://buy.stripe.com/dRm14nbUz5Qjf13d2fdfG05";
         
-        // 1. URL de tu producto de Stripe (el que configuraste con cantidad ajustable)
-        const STRIPE_LINK = "https://buy.stripe.com/dRm14nbUz5Qjf13d2fdfG05"; 
-        
-        // 2. Obtener el total numérico (ej. 500)
-        const totalNum = parseFloat(totalAmount); 
-        
-        // 3. Calcular cantidad: Total / Precio Unitario en Stripe (ej. 500 / 10 = 50)
-        const cantidadAEnviar = totalNum / 10; // <--- Cambia el "10" si tu producto cuesta distinto
+        // CÁLCULO AUTOMÁTICO:
+        // Si el total es 500 y tu producto en Stripe vale 10, enviamos cantidad 50.
+        const precioUnitarioStripe = 10; 
+        const cantidadCalculada = Math.ceil(totalNum / precioUnitarioStripe);
 
-        // 4. Redirigir a Stripe
-        window.location.href = `${STRIPE_LINK}?quantity=${cantidadAEnviar}`;
-        
-        // -------------------------------
+        // Limpiamos carrito antes de irnos
+        localStorage.setItem("ultimoPedido", JSON.stringify(dataPedido));
+        localStorage.removeItem("carrito_obj");
+
+        // Redirección final: El usuario llegará a Stripe y verá el total correcto de inmediato
+        window.location.href = `${STRIPE_LINK}?quantity=${cantidadCalculada}`;
 
         } catch (error) {
             btn.disabled = false; btn.innerText = "Reintentar";
@@ -259,4 +257,5 @@
 </script>
 </body>
 </html>
+
 
