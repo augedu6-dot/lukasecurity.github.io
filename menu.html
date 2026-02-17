@@ -365,44 +365,48 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 
 <script>
-    // 1. Inicialización ultra-segura
+    // 1. Inicialización ultra-segura del carrito
     let carrito = {};
     try {
         const guardado = localStorage.getItem("carrito_obj");
-        // Solo intentamos parsear si hay algo y si no es "undefined"
-        if (guardado && guardado !== "undefined") {
+        if (guardado) {
             carrito = JSON.parse(guardado);
         }
     } catch (e) {
-        console.error("Error crítico en datos, reseteando carrito");
+        console.error("Error al cargar carrito:", e);
         carrito = {};
-        localStorage.setItem("carrito_obj", JSON.stringify({}));
     }
 
-    // 2. Diccionario de IDs (Asegúrate de que coincidan con tu HTML)
-    const itemIds = {
-        'qweq': 'qweq', 'ds': 'ds', '332': '332', 'sdf': 'sdf',
-        'dfdss': 'dfdss', 'fsvxcv': 'fsvxcv', 'xcvr23': 'xcvr23',
-        'vds': 'vds', 'fef': 'fef', '23s': '23s', 'dfs': 'dfs',
-        'gdf': 'gdf', 'sdsdw2': 'sdsdw2', 'tyu': 'tyu'
-    };
-
+    // 2. Diccionario de IDs (Verifica que coincidan con tu HTML)
+   const itemIds = {
+    'qweq': 'qweq',
+    'ds': 'ds',
+    '332aaaaaaaaaaaaaaaaaaaaaaaaaaaa': '332aaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+    'sdf': 'sdf',
+    'dfdss': 'dfdss',
+    'fsvxcv': 'fsvxcv',
+    'xcvr23': 'xcvr23',
+    'vds': 'vds',
+    'fef': 'fef',
+    '23s': '23s',
+    'dfs': 'dfs',
+    'gdf': 'gdf',
+    'sdsdw2': 'sdsdw2',
+    'tyu': 'tyu',
+};
     function cambiarCantidad(nombre, precio, cambio) {
-        // Validación de pedido activo
+        // Bloqueo si hay un pedido activo para evitar errores de sincronización
         if (localStorage.getItem("ultimoPedido")) {
-            alert("⚠️ Tienes un pedido activo. No puedes modificar el carrito.");
+            alert("⚠️ Tienes un pedido en curso. No puedes modificar el carrito ahora.");
             return;
         }
 
         if (!carrito[nombre]) {
-            carrito[nombre] = { nombre: String(nombre), precio: Number(precio), cantidad: 0 };
+            carrito[nombre] = { nombre: nombre, precio: precio, cantidad: 0 };
         }
         
         carrito[nombre].cantidad += cambio;
-        
-        if (carrito[nombre].cantidad <= 0) {
-            delete carrito[nombre];
-        }
+        if (carrito[nombre].cantidad <= 0) delete carrito[nombre];
         
         localStorage.setItem("carrito_obj", JSON.stringify(carrito));
         actualizarInterfaz();
@@ -412,51 +416,53 @@
         let totalItems = 0;
         let precioTotal = 0;
 
-        // Iteramos sobre el diccionario de IDs con protección total
-        for (const nombre in itemIds) {
-            const id = itemIds[nombre];
-            const container = document.getElementById(`controls-${id}`);
-            
-            // Si el contenedor no existe en esta página, lo ignoramos y seguimos
-            if (!container) continue;
+        // Usamos un bucle seguro que no se detiene ante errores
+        Object.keys(itemIds).forEach(nombre => {
+            try {
+                const id = itemIds[nombre];
+                const container = document.getElementById(`controls-${id}`);
+                
+                if (!container) return; // Si el ID no existe en el HTML, pasamos al siguiente
 
-            const item = carrito[nombre];
-            
-            if (item && item.cantidad > 0) {
-                totalItems += item.cantidad;
-                precioTotal += (item.cantidad * item.precio);
-                
-                container.innerHTML = `
-                    <div class="quantity-controls">
-                        <button class="btn-qty" onclick="cambiarCantidad('${nombre}', ${item.precio}, -1)">-</button>
-                        <span class="qty-number">${item.cantidad}</span>
-                        <button class="btn-qty" onclick="cambiarCantidad('${nombre}', ${item.precio}, 1)">+</button>
-                    </div>`;
-            } else {
-                // Buscamos el precio en el HTML de forma segura
-                const parent = container.closest('.food-info');
-                const priceEl = parent ? parent.querySelector('.food-price') : null;
-                const precioNum = priceEl ? parseFloat(priceEl.innerText.replace('$', '')) : 0;
-                
-                container.innerHTML = `<button class="btn-add-initial" onclick="cambiarCantidad('${nombre}', ${precioNum}, 1)">Añadir</button>`;
+                const item = carrito[nombre];
+                if (item && item.cantidad > 0) {
+                    totalItems += item.cantidad;
+                    precioTotal += item.cantidad * item.precio;
+                    container.innerHTML = `
+                        <div class="quantity-controls">
+                            <button class="btn-qty" onclick="cambiarCantidad('${nombre}', ${item.precio}, -1)">-</button>
+                            <span class="qty-number">${item.cantidad}</span>
+                            <button class="btn-qty" onclick="cambiarCantidad('${nombre}', ${item.precio}, 1)">+</button>
+                        </div>`;
+                } else {
+                    // Busca el precio dinámicamente desde el elemento food-price cercano
+                    const card = container.closest('.food-info');
+                    const precioTxt = card ? card.querySelector('.food-price').innerText : "$0";
+                    const precioNum = parseFloat(precioTxt.replace('$', '')) || 0;
+                    
+                    container.innerHTML = `<button class="btn-add-initial" onclick="cambiarCantidad('${nombre}', ${precioNum}, 1)">Añadir</button>`;
+                }
+            } catch (err) {
+                console.warn("Error procesando item:", nombre, err);
             }
-        }
+        });
 
-        // Actualización de elementos globales con chequeo de existencia
-        const cartCount = document.getElementById("cartCount");
-        const totalFloat = document.getElementById("totalFloat");
+        // Actualización segura de los contadores flotantes
+        const elCount = document.getElementById("cartCount");
+        const elTotal = document.getElementById("totalFloat");
         
-        if (cartCount) cartCount.innerText = totalItems;
-        if (totalFloat) totalFloat.innerText = precioTotal.toFixed(0);
+        if (elCount) elCount.innerText = totalItems;
+        if (elTotal) elTotal.innerText = precioTotal;
     }
 
     window.onload = function() {
         const usuario = localStorage.getItem("usuarioLogueado");
         if (!usuario) {
-            window.location.href = "login2.html";
+            window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/login2.html";
             return;
         }
 
+        // Evita errores si los elementos de usuario no están en el DOM
         const elEmail = document.getElementById("displayEmail");
         const elNav = document.getElementById("navUser");
         if (elEmail) elEmail.innerText = usuario;
@@ -469,13 +475,12 @@
         if (Object.keys(carrito).length === 0) {
             alert("Tu carrito está vacío");
         } else {
-            window.location.href = "carrito.html";
+            window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/carrito.html";
         }
     }
 </script>
 </body>
 </html>
-
 
 
 
