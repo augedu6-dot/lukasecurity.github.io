@@ -281,18 +281,7 @@
 
             // 3. Acciones según el pago
             if (metodoSeleccionado === "Transferencia") {
-                const numWsp = "529933044020";
-                const msg = `¡Hola! Soy ${infoPedido.usuario}. Confirmo mi pedido ${idPedido} de $${totalNum}. En un momento envío el comprobante.`;
-                function reemplazarEspaciosPorGuiones(msg) {
-                    // Usamos una expresión regular / /g para buscar TODOS los espacios
-                    // y .replace() para cambiarlos por un guion (-)
-                    return texto.replace(/ /g, "-");
-                }
-                let productoConGuiones = reemplazarEspaciosPorGuiones(msg);
-                const url = `https://api.whatsapp.com/send?phone=${numWsp}&text=${encodeURIComponent(productoConGuiones)}`;   
-              
-                // OPCIÓN CORRECTA: Abrir en pestaña nueva para no perder tu página
-              window.open(url, '_blank');
+               finalizarPedido();
             } 
             else if (metodoSeleccionado === "Tarjeta Online") {
                 window.location.href = "https://buy.stripe.com/9B67sL7Ej4Mf1ad3rFdfG08";
@@ -314,6 +303,23 @@
         }
     };
 
+
+    function finalizarPedido() {
+    // 1. Número de teléfono (con código de país, sin el +)
+    let numero = "529933044020"; 
+    
+    // 2. Construir el mensaje
+    let mensaje = "Hola! Quiero hacer el siguiente pedido:\n";
+    // ... aquí añadirías los productos de tu carrito ...
+    mensaje += "Total: $100";
+
+    // 3. LA SOLUCIÓN SEGURA PARA MÓVIL:
+    // Al usar HTTPS, el navegador lo entiende y WhatsApp abre la app automáticamente.
+    let url = `https://api.whatsapp.com/send?phone=${numero}&text=${encodeURIComponent(mensaje)}`;
+    
+    // 4. Abrir la URL
+    window.location.href = url;
+}
     // Al cargar la página
   window.addEventListener('load', () => {
     // 1. Mostrar la dirección si existe (Tu código actual)
@@ -348,6 +354,7 @@
 </script>
 </body>
 </html>
+
 
 
 
