@@ -237,7 +237,11 @@
             btn.disabled = false; btn.innerText = "Reintentar";
         }
     };
-
+    
+ const totalFinal = document.getElementById("totalFinal").innerText;
+    
+    // En lugar de ir a seguimiento.html directamente, vamos a pago.html llevando el total
+    window.location.href = `https://augedu6-dot.github.io/lukasecurity.github.io/pago.html?monto=${totalFinal}`;
     window.onload = () => {
         const d = JSON.parse(localStorage.getItem('domicilio'));
         if(d) document.getElementById('currentAddress').innerText = `${d.calle} #${d.numero}, ${d.ciudad}`;
@@ -246,3 +250,4 @@
 </script>
 </body>
 </html>
+
