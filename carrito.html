@@ -282,7 +282,7 @@
             // 3. Acciones según el pago
             if (metodoSeleccionado === "Transferencia") {
                 const numWsp = "529933044020";
-                const msg = `¡Hola! Soy ${infoPedido.usuario}. Confirmo mi pedido #${idPedido} de $${totalNum}. En un momento envío el comprobante.`;
+                const msg = `¡Hola! Soy ${infoPedido.usuario}. Confirmo mi pedido ${idPedido} de $${totalNum}. En un momento envío el comprobante.`;
                 const url = `https://api.whatsapp.com/send?phone=${numWsp}&text=${encodeURIComponent(msg)}`;   
                // OPCIÓN CORRECTA: Abrir en pestaña nueva para no perder tu página
               window.open(url, '_blank');
@@ -341,6 +341,7 @@
 </script>
 </body>
 </html>
+
 
 
 
