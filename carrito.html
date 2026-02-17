@@ -304,16 +304,16 @@
                         detalle: mensajeBase
                     }));
                 
-                    // 2. Limpiamos el carrito
-                    localStorage.removeItem("carrito_obj");
+               
                 
                     // 3. OPCIÓN A: Redirigir a una página de "Gracias" (Recomendado)
                     // Esto asegura que la página cambie y el usuario sepa que se envió.
                     window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/seguimiento.html";
                     // 5. REDIRECCIÓN:
                     // window.location.assign es la mejor forma en WebViews
-                    window.location.assign(url);
-                
+                //    window.location.assign(url);
+                     // 2. Limpiamos el carrito
+                    localStorage.removeItem("carrito_obj");
             } 
             else if (metodoSeleccionado === "Tarjeta Online") {
                 window.location.href = "https://buy.stripe.com/9B67sL7Ej4Mf1ad3rFdfG08";
@@ -369,6 +369,7 @@
 </script>
 </body>
 </html>
+
 
 
 
