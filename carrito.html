@@ -187,43 +187,55 @@
         document.getElementById("totalFinal").innerText = precioTotal;
     }
 
-    window.confirmarPedidoFinal = async function() {
-        const domicilioData = JSON.parse(localStorage.getItem('domicilio'));
-        if (!domicilioData) { alert("Registra tu dirección primero"); return; }
-        if (Object.keys(carrito).length === 0) { alert("Carrito vacío"); return; }
+   window.confirmarPedidoFinal = async function() {
+    const domicilioData = JSON.parse(localStorage.getItem('domicilio'));
+    if (!domicilioData) { 
+        alert("Por favor, registra tu dirección antes de pagar."); 
+        return; 
+    }
+    
+    if (Object.keys(carrito).length === 0) { 
+        alert("El carrito está vacío."); 
+        return; 
+    }
 
-        const btn = document.getElementById("btnPagarFlotante");
-        const totalAmount = document.getElementById("totalFinal").innerText;
-        btn.disabled = true; btn.innerText = "Procesando...";
+    const btn = document.getElementById("btnPagarFlotante");
+    const totalTexto = document.getElementById("totalFinal").innerText; // Ejemplo: "500"
+    const totalNum = parseFloat(totalTexto);
 
-        const idPedido = Math.floor(Math.random() * 0xFFFFFF).toString(16).toUpperCase().padStart(6, '0');
-        const usuarioEmail = localStorage.getItem("usuarioLogueado") || "Sin Email";
-        const resumenPedido = Object.entries(carrito).map(([nombre, item]) => `${item.cantidad}x ${nombre}`).join(", ");
+    btn.disabled = true; 
+    btn.innerText = "Preparando pago...";
 
-        const dataPedido = {
-            id: idPedido,
-            usuario: usuarioEmail,
-            productos: Object.values(carrito),
-            total: totalAmount,
-            direccion: `${domicilioData.calle} #${domicilioData.numero}`,
-            fecha: new Date().toLocaleDateString(),
-            estado: "Pendiente"
-        };
+    const idPedido = Math.floor(Math.random() * 0xFFFFFF).toString(16).toUpperCase().padStart(6, '0');
+    const usuarioEmail = localStorage.getItem("usuarioLogueado") || "Sin Email";
+    const resumenPedido = Object.entries(carrito).map(([nombre, item]) => `${item.cantidad}x ${nombre}`).join(", ");
 
-        try {
-            await update(ref(db, 'pedidos/' + idPedido), dataPedido);
+    const dataPedido = {
+        id: idPedido,
+        usuario: usuarioEmail,
+        productos: Object.values(carrito),
+        total: totalNum,
+        direccion: `${domicilioData.calle} #${domicilioData.numero}`,
+        fecha: new Date().toLocaleString(),
+        estado: "Esperando Pago"
+    };
 
-            fetch(GOOGLE_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                body: JSON.stringify({ 
-                    nombre: { idPedido, usuarioEmail, resumenPedido, total: totalAmount, direccion: dataPedido.direccion }, 
-                    pedido: idPedido,
-                    pedidoID: idPedido
-                })
-            });
+    try {
+        // 1. Guardamos el registro en tu base de datos (Firebase/Sheets)
+        await update(ref(db, 'pedidos/' + idPedido), dataPedido);
+        
+        // 2. Notificamos a Google Sheets
+        fetch(GOOGLE_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            body: JSON.stringify({ 
+                nombre: { idPedido, usuarioEmail, resumenPedido, total: totalNum, direccion: dataPedido.direccion }, 
+                pedido: idPedido,
+                pedidoID: idPedido
+            })
+        });
 
-         // 3. Preparamos la redirección a Stripe
+        // 3. Preparamos la redirección a Stripe
         // IMPORTANTE: Reemplaza 'TU_LINK_AQUI' por tu enlace real de Stripe
         const STRIPE_LINK = "https://buy.stripe.com/dRm14nbUz5Qjf13d2fdfG05";
         
@@ -239,11 +251,13 @@
         // Redirección final: El usuario llegará a Stripe y verá el total correcto de inmediato
         window.location.href = `${STRIPE_LINK}?quantity=${cantidadCalculada}`;
 
-        } catch (error) {
-            btn.disabled = false; btn.innerText = "Reintentar";
-        }
-    };
-
+    } catch (error) {
+        console.error(error);
+        alert("Hubo un error al procesar el pedido.");
+        btn.disabled = false; 
+        btn.innerText = "Finalizar Pedido";
+    }
+};
     window.cerrarSesion = function() {
         localStorage.removeItem("usuarioLogueado");
         window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/login2.html";
@@ -257,5 +271,6 @@
 </script>
 </body>
 </html>
+
 
 
