@@ -188,38 +188,16 @@
     }
 
 window.confirmarPedidoFinal = async function() {
-   // --- DENTRO DE LA FUNCIÓN confirmarPedidoFinal ---
-
-if (!domicilioData) { 
-    // Muestra el div #avisoHtml definido en tu CSS
-    const aviso = document.getElementById("avisoHtml");
-    aviso.innerText = "⚠️ Por favor, registra tu dirección antes de continuar.";
-    aviso.classList.add("show");
+    const domicilioData = JSON.parse(localStorage.getItem('domicilio'));
+    if (!domicilioData) { 
+        alert("Por favor, registra tu dirección antes de pagar."); 
+        return; 
+    }
     
-    // Lo oculta automáticamente después de 3 segundos
-    setTimeout(() => {
-        aviso.classList.remove("show");
-    }, 4000);
-    return; 
-}
-    
- // Verifica si el carrito está vacío
-if (Object.keys(carrito).length === 0) { 
-    const aviso = document.getElementById("avisoHtml");
-    
-    // Configuramos el mensaje visual
-    aviso.innerText = "🛒 ¡Tu carrito está vacío! Agrega algo rico para continuar.";
-    
-    // Mostramos el aviso usando la clase CSS 'show' que ya tienes definida
-    aviso.classList.add("show");
-    
-    // Lo ocultamos automáticamente tras 3 segundos
-    setTimeout(() => {
-        aviso.classList.remove("show");
-    }, 4000);
-    
-    return; 
-}
+    if (Object.keys(carrito).length === 0) { 
+        alert("El carrito está vacío."); 
+        return; 
+    }
 
     const btn = document.getElementById("btnPagarFlotante");
     // 1. Obtenemos el texto del total y lo convertimos a número
@@ -258,11 +236,19 @@ if (Object.keys(carrito).length === 0) {
             })
         });
 
-            // Guardamos el pedido localmente para la página de seguimiento
+        // --- LÓGICA DE REDIRECCIÓN A STRIPE ---
+        
+        const STRIPE_LINK = "https://buy.stripe.com/cNi8wPe2H0vZ3il9Q3dfG07"; 
+        
+        // CORRECCIÓN: Usamos 'totalNum' que es la variable definida arriba
+        // Calculamos la cantidad (Total / 10 porque tu producto en Stripe vale $10)
+        const cantidadFinal = Math.round(totalNum / 10);
+
+        // Guardamos el pedido localmente para la página de seguimiento
         localStorage.setItem("ultimoPedido", JSON.stringify(dataPedido));
         
         // 4. Redirección final con el parámetro de cantidad correcto
-        window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/seguimiento.html";
+        window.location.href = `${STRIPE_LINK}?quantity=${cantidadFinal}`;
 
     } catch (error) {
         console.error("Error al procesar:", error);
@@ -285,7 +271,6 @@ if (Object.keys(carrito).length === 0) {
 </script>
 </body>
 </html>
-
 
 
 
