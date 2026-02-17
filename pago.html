@@ -3,43 +3,170 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Procesando Pago - DeMasita</title>
+    <title>Método de Pago - DeMasita</title>
+    <link href="https://fonts.googleapis.com/css2?family=Marck+Script&family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
     <style>
-        body { font-family: sans-serif; text-align: center; padding: 50px; background: #fefcf5; }
-        .loader { border: 16px solid #f3f3f3; border-top: 16px solid #6f1a07; border-radius: 50%; width: 60px; height: 60px; animation: spin 2s linear infinite; margin: 20px auto; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        body { font-family: "Ubuntu", sans-serif; background-color: #fefcf5; padding-bottom: 100px; }
+        
+        .navbar { background-color: white; border-bottom: 2px solid #ffdab3; padding: 0.5rem 0.8rem; }
+        .navbar-brand { font-family: 'Marck Script', cursive; font-size: 1.6rem; color: #6f1a07 !important; }
+
+        .section-title { color: #6f1a07; font-weight: 700; margin: 20px 0 15px; font-size: 1.1rem; }
+
+        /* OPCIONES DE PAGO */
+        .payment-option {
+            background: white;
+            border: 2px solid #f9f0e6;
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .payment-option.selected {
+            border-color: #d35400;
+            background-color: #fff5eb;
+        }
+        .payment-option i {
+            font-size: 1.5rem;
+            margin-right: 15px;
+            width: 30px;
+            text-align: center;
+            color: #d35400;
+        }
+        .payment-details { flex: 1; }
+        .payment-details p { margin: 0; font-weight: 700; color: #333; font-size: 0.95rem; }
+        .payment-details small { color: #777; font-size: 0.8rem; }
+
+        .btn-confirmar {
+            position: fixed; bottom: 25px; left: 5%; width: 90%; 
+            background: #6f1a07; color: white; padding: 16px; border-radius: 18px;
+            font-weight: 700; text-align: center; border: none; z-index: 1000;
+            box-shadow: 0 8px 20px rgba(111, 26, 7, 0.3);
+        }
+
+        #avisoHtml { 
+            position: fixed; top: -100px; left: 50%; transform: translateX(-50%);
+            background: #f44336; color: white; padding: 15px; border-radius: 0 0 15px 15px;
+            z-index: 2000; transition: top 0.5s ease; width: 90%; text-align: center; font-weight: bold;
+        }
+        #avisoHtml.show { top: 0; }
     </style>
 </head>
 <body>
 
-    <h2 id="mensaje">Redirigiendo al pago seguro...</h2>
-    <div class="loader"></div>
-    <p>Monto a pagar: $<span id="montoDisplay">0</span></p>
+<div id="avisoHtml">Aviso</div>
 
-    <script>
-        // 1. Obtener el monto de la URL que enviamos desde carrito.html
-        const urlParams = new URLSearchParams(window.location.search);
-        const monto = urlParams.get('monto');
+<nav class="navbar">
+    <div class="container text-center">
+        <span class="navbar-brand">DeMasita - Pago</span>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="section-title"><i class="fas fa-wallet mr-2"></i> Selecciona cómo quieres pagar:</div>
+
+    <div class="payment-option" onclick="seleccionarPago(this, 'Efectivo')">
+        <i class="fas fa-money-bill-wave"></i>
+        <div class="payment-details">
+            <p>Efectivo contra entrega</p>
+            <small>Pagas al recibir tu pedido</small>
+        </div>
+        <div class="custom-control custom-radio">
+            <input type="radio" name="pago" class="custom-control-input">
+            <label class="custom-control-label"></label>
+        </div>
+    </div>
+
+    <div class="payment-option" onclick="seleccionarPago(this, 'Terminal')">
+        <i class="fas fa-mobile-alt"></i>
+        <div class="payment-details">
+            <p>Tarjeta con Terminal</p>
+            <small>Llevamos la terminal a tu domicilio</small>
+        </div>
+        <div class="custom-control custom-radio">
+            <input type="radio" name="pago" class="custom-control-input">
+            <label class="custom-control-label"></label>
+        </div>
+    </div>
+
+    <div class="payment-option" onclick="seleccionarPago(this, 'Tarjeta Online')">
+        <i class="fas fa-credit-card"></i>
+        <div class="payment-details">
+            <p>Tarjeta de Crédito / Débito</p>
+            <small>Pago seguro en línea</small>
+        </div>
+        <div class="custom-control custom-radio">
+            <input type="radio" name="pago" class="custom-control-input">
+            <label class="custom-control-label"></label>
+        </div>
+    </div>
+
+    <div class="payment-option" onclick="seleccionarPago(this, 'Transferencia')">
+        <i class="fab fa-whatsapp" style="color: #25D366;"></i>
+        <div class="payment-details">
+            <p>Transferencia (WhatsApp)</p>
+            <small>Envíanos tu comprobante por chat</small>
+        </div>
+        <div class="custom-control custom-radio">
+            <input type="radio" name="pago" class="custom-control-input">
+            <label class="custom-control-label"></label>
+        </div>
+    </div>
+</div>
+
+<button class="btn-confirmar" onclick="procesarPagoFinal()">
+    Confirmar y Pedir
+</button>
+
+<script>
+    let metodoSeleccionado = "";
+
+    function seleccionarPago(elemento, metodo) {
+        // Quitar selección previa
+        document.querySelectorAll('.payment-option').forEach(opt => opt.classList.remove('selected'));
+        document.querySelectorAll('.custom-control-input').forEach(rad => rad.checked = false);
         
-        // 2. Tu link de pago de Stripe (Copia el link directo, NO el código embed)
-        // Ejemplo: https://buy.stripe.com/6oEbLp2M1...
-        const STRIPE_LINK = "https://buy.stripe.com/eVqbJ17EjfqTaKNaU7dfG00";
+        // Aplicar nueva selección
+        elemento.classList.add('selected');
+        elemento.querySelector('input').checked = true;
+        metodoSeleccionado = metodo;
+    }
 
-        if (monto && monto > 0) {
-            document.getElementById('montoDisplay').innerText = monto;
-            
-            /* IMPORTANTE: Para que esto funcione, en Stripe tu producto debe valer $1 
-               y tener activada la opción "Permitir a los clientes ajustar la cantidad".
-               Así, si el total es 50, mandamos quantity=50 y el total será $50.
-            */
-            setTimeout(() => {
-                window.location.href = `${STRIPE_LINK}?quantity=${monto}`;
-            }, 1500); 
+    function mostrarAviso(msg) {
+        const aviso = document.getElementById("avisoHtml");
+        aviso.innerText = msg;
+        aviso.classList.add("show");
+        setTimeout(() => aviso.classList.remove("show"), 3000);
+    }
 
-        } else {
-            document.getElementById('mensaje').innerText = "Error: No hay productos en el carrito.";
-            setTimeout(() => { window.location.href = 'https://augedu6-dot.github.io/lukasecurity.github.io/carrito.html'; }, 3000);
+    function procesarPagoFinal() {
+        if (!metodoSeleccionado) {
+            mostrarAviso("⚠️ Por favor, elige un método de pago.");
+            return;
         }
-    </script>
+
+        const pedido = JSON.parse(localStorage.getItem("ultimoPedido")) || {};
+        const numeroWhatsApp = "9933044020"; // Cambia esto por tu número real
+
+        if (metodoSeleccionado === "Transferencia") {
+            const texto = `¡Hola! Quiero confirmar mi pedido #${pedido.id}. El pago será por transferencia. Envío comprobante en un momento.`;
+            window.location.href = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(texto)}`;
+        } else if (metodoSeleccionado === "Tarjeta Online") {
+            // Aquí rediriges a tu link de Stripe que tenías antes
+            window.location.href = "https://buy.stripe.com/cNi8wPe2H0vZ3il9Q3dfG07";
+        } else {
+            // Para efectivo o terminal
+            mostrarAviso("✅ ¡Pedido confirmado! Preparando tu comida...");
+            setTimeout(() => {
+                window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/seguimiento.html";
+            }, 2000);
+        }
+    }
+</script>
 </body>
 </html>
