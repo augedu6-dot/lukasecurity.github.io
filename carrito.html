@@ -298,7 +298,18 @@
                     // 4. CREAMOS LA URL PARA ANDROID:
                     // wa.me es el método oficial y más compatible
                     const url = `https://wa.me/${telefono}?text=${encodeURIComponent(mensajeBase)}`;
+             // 1. Guardamos el pedido en localStorage antes de salir
+                    localStorage.setItem("ultimoPedido", JSON.stringify({
+                        fecha: new Date().getTime(),
+                        detalle: mensajeBase
+                    }));
                 
+                    // 2. Limpiamos el carrito
+                    localStorage.removeItem("carrito_obj");
+                
+                    // 3. OPCIÓN A: Redirigir a una página de "Gracias" (Recomendado)
+                    // Esto asegura que la página cambie y el usuario sepa que se envió.
+                    window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/seguimiento.html";
                     // 5. REDIRECCIÓN:
                     // window.location.assign es la mejor forma en WebViews
                     window.location.assign(url);
@@ -358,6 +369,7 @@
 </script>
 </body>
 </html>
+
 
 
 
