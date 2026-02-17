@@ -10,73 +10,38 @@
     <style>
         body { font-family: "Ubuntu", sans-serif; background-color: #fefcf5; padding-bottom: 120px; }
         
-        /* NAVBAR AJUSTADO A UNA SOLA LINEA */
-        .navbar { 
-            background-color: white; 
-            border-bottom: 2px solid #ffdab3; 
-            position: sticky; 
-            top: 0; 
-            z-index: 1000; 
-            padding: 0.5rem 0.8rem;
-        }
-        .navbar .container { 
-            display: flex; 
-            flex-direction: row !important; 
-            flex-wrap: nowrap !important; 
-            justify-content: space-between; 
-            align-items: center; 
-        }
-        .navbar-brand { 
-            font-family: 'Marck Script', cursive; 
-            font-size: 1.6rem; 
-            color: #6f1a07 !important; 
-            text-decoration: none;
-            white-space: nowrap;
-        }
-
-        .nav-icons { display: flex; align-items: center; flex-shrink: 0; }
-        .nav-icon-link { 
-            color: #d35400 !important; 
-            background: #fff5eb; 
-            width: 38px; 
-            height: 38px; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            border-radius: 10px; 
-            margin-left: 8px; 
-            cursor: pointer; 
-            position: relative; 
-        }
-        #cartCount { position: absolute; top: -5px; right: -5px; background: #f44336; color: white; font-size: 0.7rem; padding: 2px 5px; border-radius: 10px; }
+        .navbar { background-color: white; border-bottom: 2px solid #ffdab3; padding: 0.5rem 0.8rem; }
+        .navbar-brand { font-family: 'Marck Script', cursive; font-size: 1.6rem; color: #6f1a07 !important; }
 
         .section-title { color: #6f1a07; font-weight: 700; margin: 15px 0 8px; font-size: 1.05rem; display: flex; align-items: center; }
         .section-title i { margin-right: 10px; color: #f44336; }
 
-        /* PRODUCTOS COMPACTOS */
-        .food-item { 
-            background: white; padding: 8px 12px; margin-bottom: 5px; border-radius: 12px; 
-            display: flex; justify-content: space-between; align-items: center;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.02); border: 1px solid #f9f0e6;
-        }
-        .food-item div:first-child { flex: 1; min-width: 0; padding-right: 10px; }
-        .food-item p { font-size: 0.92rem; line-height: 1.2; white-space: normal; word-wrap: break-word; margin-bottom: 0; font-weight: 700; color: #333; }
-
+        .food-item { background: white; padding: 8px 12px; margin-bottom: 5px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #f9f0e6; }
         .quantity-controls { display: flex; align-items: center; background: #f1f3f5; border-radius: 10px; padding: 3px; }
         .btn-qty { width: 28px; height: 28px; border-radius: 8px; border: none; background: white; color: #6f1a07; font-weight: bold; }
         .qty-number { min-width: 20px; text-align: center; font-weight: 700; color: #6f1a07; margin: 0 5px; font-size: 0.9rem; }
 
-        .card-custom { background: white; padding: 12px; border-radius: 15px; border: 1px solid #f9f0e6; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
-        
+        .card-custom { background: white; padding: 12px; border-radius: 15px; border: 1px solid #f9f0e6; }
+
+        /* OPCIONES DE PAGO */
+        .payment-option {
+            background: white; border: 2px solid #f9f0e6; border-radius: 12px;
+            padding: 12px; margin-bottom: 8px; display: flex; align-items: center;
+            cursor: pointer; transition: all 0.2s;
+        }
+        .payment-option.selected { border-color: #d35400; background-color: #fff5eb; }
+        .payment-option i { font-size: 1.3rem; margin-right: 12px; color: #d35400; width: 25px; text-align: center; }
+        .payment-details p { margin: 0; font-weight: 700; color: #333; font-size: 0.9rem; }
+        .payment-details small { color: #777; font-size: 0.75rem; }
+        .custom-radio { margin-left: auto; }
+
         .btn-finalizar {
             position: fixed; bottom: 25px; left: 5%; width: 90%; 
             background: #6f1a07; color: white; padding: 16px; border-radius: 18px;
             font-weight: 700; text-align: center; border: none; z-index: 1000;
             box-shadow: 0 8px 20px rgba(111, 26, 7, 0.3); font-size: 1.1rem;
         }
-        .btn-finalizar.blocked { background: #999; box-shadow: none; cursor: not-allowed; }
 
-        /* AVISOS */
         #avisoHtml { 
             position: fixed; top: -100px; left: 50%; transform: translateX(-50%);
             background: #f44336; color: white; padding: 15px; border-radius: 0 0 15px 15px;
@@ -90,52 +55,63 @@
 <div id="avisoHtml">Aviso</div>
 
 <nav class="navbar">
-    <div class="container">
-        <a class="navbar-brand" href="https://augedu6-dot.github.io/lukasecurity.github.io/menu.html">DeMasita</a>
-        <div class="nav-icons">
-            <div class="nav-icon-link" onclick="window.location.href='https://augedu6-dot.github.io/lukasecurity.github.io/seguimiento.html'">
-                <i class="fas fa-truck"></i>
-                <span id="cartCount">0</span>
-            </div>
-            <div class="nav-icon-link" data-toggle="modal" data-target="#userModal"><i class="fas fa-user"></i></div>
-        </div>
+    <div class="container text-center">
+        <a class="navbar-brand" href="menu.html">DeMasita</a>
     </div>
 </nav>
 
 <div class="container">
-    <div class="section-title"><i class="fas fa-shopping-basket"></i> Tus Productos (<span id="itemsTotal">0</span>)</div>
+    <div class="section-title"><i class="fas fa-shopping-basket"></i> Tus Productos</div>
     <div id="lista-carrito"></div>
 
     <div class="section-title"><i class="fas fa-map-marker-alt"></i> Entrega en:</div>
-    <div class="card-custom mb-3" onclick="window.location.href='https://augedu6-dot.github.io/lukasecurity.github.io/direccion.html'" style="cursor:pointer;">
+    <div class="card-custom mb-3" onclick="window.location.href='direccion.html'" style="cursor:pointer;">
         <div class="d-flex justify-content-between align-items-center">
             <div style="min-width: 0;">
-                <p id="currentAddress" class="mb-0 font-weight-bold" style="font-size: 0.85rem; white-space: normal;"></p>
-                <small class="text-muted">Toca para cambiar o agregar</small>
+                <p id="currentAddress" class="mb-0 font-weight-bold" style="font-size: 0.85rem; color: #f44336;">⚠️ Registra tu dirección</p>
+                <small class="text-muted">Toca para cambiar</small>
             </div>
             <i class="fas fa-chevron-right text-muted ml-2"></i>
         </div>
     </div>
 
-    <div class="section-title"><i class="fas fa-credit-card"></i> Resumen</div>
+    <div class="section-title"><i class="fas fa-money-check-alt"></i> Método de Pago</div>
+    
+    <div class="payment-option" onclick="seleccionarMetodo(this, 'Efectivo')">
+        <i class="fas fa-money-bill-wave"></i>
+        <div class="payment-details"><p>Efectivo</p><small>Al recibir</small></div>
+        <div class="custom-control custom-radio"><input type="radio" name="metodo" class="custom-control-input"><label class="custom-control-label"></label></div>
+    </div>
+
+    <div class="payment-option" onclick="seleccionarMetodo(this, 'Terminal')">
+        <i class="fas fa-mobile-alt"></i>
+        <div class="payment-details"><p>Terminal</p><small>En domicilio</small></div>
+        <div class="custom-control custom-radio"><input type="radio" name="metodo" class="custom-control-input"><label class="custom-control-label"></label></div>
+    </div>
+
+    <div class="payment-option" onclick="seleccionarMetodo(this, 'Tarjeta Online')">
+        <i class="fas fa-credit-card"></i>
+        <div class="payment-details"><p>Tarjeta de Crédito/Débito</p><small>Pago seguro</small></div>
+        <div class="custom-control custom-radio"><input type="radio" name="metodo" class="custom-control-input"><label class="custom-control-label"></label></div>
+    </div>
+
+    <div class="payment-option" onclick="seleccionarMetodo(this, 'Transferencia')">
+        <i class="fab fa-whatsapp" style="color: #25D366;"></i>
+        <div class="payment-details"><p>Transferencia (WhatsApp)</p><small>Envía comprobante</small></div>
+        <div class="custom-control custom-radio"><input type="radio" name="metodo" class="custom-control-input"><label class="custom-control-label"></label></div>
+    </div>
+
+    <div class="section-title"><i class="fas fa-receipt"></i> Total</div>
     <div class="card-custom mb-5">
-        <div class="d-flex justify-content-between mb-1" style="font-size: 0.9rem;"><span>Subtotal</span><span>$<span id="totalResumen">0</span></span></div>
-        <div class="d-flex justify-content-between mb-1" style="font-size: 0.9rem;"><span>Envío</span><span class="text-success">Gratis</span></div>
-        <hr style="margin: 8px 0;">
-        <div class="d-flex justify-content-between font-weight-bold" style="font-size: 1.1rem; color: #6f1a07;">
+        <div class="d-flex justify-content-between font-weight-bold" style="font-size: 1.2rem; color: #6f1a07;">
             <span>Total</span><span>$<span id="totalFinal">0</span></span>
         </div>
     </div>
 </div>
 
 <button id="btnPagarFlotante" class="btn-finalizar" onclick="confirmarPedidoFinal()">
-    <span id="textoBotonFlotante">Finalizar Pedido</span>
+    Finalizar Pedido
 </button>
-
-<div class="modal fade" id="userModal" tabindex="-1" role="dialog"><div class="modal-dialog modal-dialog-centered"><div class="modal-content text-center p-4"><h5 id="displayEmail" style="word-break: break-all;">...</h5><button class="btn btn-danger rounded-pill mt-3" onclick="cerrarSesion()">Cerrar Sesión</button></div></div></div>
-
-<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -150,10 +126,25 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
-    const GOOGLE_URL = "https://script.google.com/macros/s/AKfycbxI16EHswwjj_I4pDsYC0DM4hTrfUpTh_FomSBt94pmIGsQMJSjQCHtdMoirT1cCfnM/exec";
 
-    // CORRECCIÓN: Usar la misma llave que en menu.html
     let carrito = JSON.parse(localStorage.getItem("carrito_obj")) || {};
+    let domicilioData = JSON.parse(localStorage.getItem('domicilio')) || null;
+    let metodoSeleccionado = "";
+
+    function mostrarAviso(msg) {
+        const aviso = document.getElementById("avisoHtml");
+        aviso.innerText = msg;
+        aviso.classList.add("show");
+        setTimeout(() => aviso.classList.remove("show"), 3500);
+    }
+
+    window.seleccionarMetodo = function(elemento, metodo) {
+        document.querySelectorAll('.payment-option').forEach(opt => opt.classList.remove('selected'));
+        document.querySelectorAll('.custom-control-input').forEach(rad => rad.checked = false);
+        elemento.classList.add('selected');
+        elemento.querySelector('input').checked = true;
+        metodoSeleccionado = metodo;
+    }
 
     window.cambiarCantidad = function(nombre, precio, cambio) {
         if (!carrito[nombre]) carrito[nombre] = { precio, cantidad: 0 };
@@ -164,16 +155,15 @@
     };
 
     function actualizarInterfaz() {
-        let totalItems = 0; let precioTotal = 0;
+        let precioTotal = 0;
         const lista = document.getElementById('lista-carrito');
         lista.innerHTML = "";
         
         for (const [nombre, item] of Object.entries(carrito)) {
-            totalItems += item.cantidad; 
             precioTotal += item.cantidad * item.precio;
             lista.innerHTML += `
                 <div class="food-item">
-                    <div><p>${nombre}</p><small class="text-muted">$${item.precio} c/u</small></div>
+                    <div><p class="mb-0 font-weight-bold">${nombre}</p><small class="text-muted">$${item.precio} c/u</small></div>
                     <div class="quantity-controls">
                         <button class="btn-qty" onclick="cambiarCantidad('${nombre}', ${item.precio}, -1)">-</button>
                         <span class="qty-number">${item.cantidad}</span>
@@ -181,98 +171,60 @@
                     </div>
                 </div>`;
         }
-        document.getElementById("cartCount").innerText = totalItems;
-        document.getElementById("itemsTotal").innerText = totalItems;
-        document.getElementById("totalResumen").innerText = precioTotal;
         document.getElementById("totalFinal").innerText = precioTotal;
     }
 
-window.confirmarPedidoFinal = async function() {
-    const domicilioData = JSON.parse(localStorage.getItem('domicilio'));
-    if (!domicilioData) { 
-        alert("Por favor, registra tu dirección antes de pagar."); 
-        return; 
-    }
-    
-    if (Object.keys(carrito).length === 0) { 
-        alert("El carrito está vacío."); 
-        return; 
-    }
+    window.confirmarPedidoFinal = async function() {
+        if (Object.keys(carrito).length === 0) { mostrarAviso("🛒 Tu carrito está vacío."); return; }
+        if (!domicilioData) { mostrarAviso("⚠️ Registra tu domicilio primero."); return; }
+        if (!metodoSeleccionado) { mostrarAviso("💳 Selecciona un método de pago."); return; }
 
-    const btn = document.getElementById("btnPagarFlotante");
-    // 1. Obtenemos el texto del total y lo convertimos a número
-    const totalTexto = document.getElementById("totalFinal").innerText; 
-    const totalNum = parseFloat(totalTexto); 
+        const btn = document.getElementById("btnPagarFlotante");
+        btn.disabled = true; btn.innerText = "Procesando...";
 
-    btn.disabled = true; 
-    btn.innerText = "Preparando pago...";
-
-    const idPedido = Math.floor(Math.random() * 0xFFFFFF).toString(16).toUpperCase().padStart(6, '0');
-    const usuarioEmail = localStorage.getItem("usuarioLogueado") || "Sin Email";
-    const resumenPedido = Object.entries(carrito).map(([nombre, item]) => `${item.cantidad}x ${nombre}`).join(", ");
-
-    const dataPedido = {
-        id: idPedido,
-        usuario: usuarioEmail,
-        productos: Object.values(carrito),
-        total: totalNum,
-        direccion: `${domicilioData.calle} #${domicilioData.numero}`,
-        fecha: new Date().toLocaleString(),
-        estado: "Esperando Pago"
-    };
-
-    try {
-        // 2. Guardamos el registro en Firebase
-        await update(ref(db, 'pedidos/' + idPedido), dataPedido);
+        const totalNum = parseFloat(document.getElementById("totalFinal").innerText);
+        const idPedido = Math.floor(Math.random() * 0xFFFFFF).toString(16).toUpperCase().padStart(6, '0');
         
-        // 3. Notificamos a Google Sheets
-        fetch(GOOGLE_URL, {
-            method: 'POST',
-            mode: 'no-cors',
-            body: JSON.stringify({ 
-                nombre: { idPedido, usuarioEmail, resumenPedido, total: totalNum, direccion: dataPedido.direccion }, 
-                pedido: idPedido,
-                pedidoID: idPedido
-            })
-        });
+        const infoPedido = {
+            id: idPedido,
+            usuario: localStorage.getItem("usuarioLogueado") || "Invitado",
+            productos: Object.values(carrito),
+            total: totalNum,
+            direccion: `${domicilioData.calle} #${domicilioData.numero}, ${domicilioData.ciudad}`,
+            metodoPago: metodoSeleccionado,
+            fecha: new Date().toLocaleString(),
+            estado: "Recibido"
+        };
 
-        // --- LÓGICA DE REDIRECCIÓN A STRIPE ---
-        
-        const STRIPE_LINK = "https://buy.stripe.com/cNi8wPe2H0vZ3il9Q3dfG07"; 
-        
-        // CORRECCIÓN: Usamos 'totalNum' que es la variable definida arriba
-        // Calculamos la cantidad (Total / 10 porque tu producto en Stripe vale $10)
-        const cantidadFinal = Math.round(totalNum / 10);
-
-        // Guardamos el pedido localmente para la página de seguimiento
-        localStorage.setItem("ultimoPedido", JSON.stringify(dataPedido));
-        
-        // 4. Redirección final con el parámetro de cantidad correcto
-        window.location.href = `${STRIPE_LINK}?quantity=${cantidadFinal}`;
-
-    } catch (error) {
-        console.error("Error al procesar:", error);
-        alert("Hubo un error al conectar con la base de datos.");
-        btn.disabled = false; 
-        btn.innerText = "Reintentar";
-    }
-};
-    
-    window.cerrarSesion = function() {
-        localStorage.removeItem("usuarioLogueado");
-        window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/login2.html";
+        try {
+            // Guardar en Firebase
+            await update(ref(db, 'pedidos/' + idPedido), infoPedido);
+            localStorage.setItem("ultimoPedido", JSON.stringify(infoPedido));
+            
+            // Lógica según método de pago
+            if (metodoSeleccionado === "Transferencia") {
+                const numWsp = "9933044020"; // CAMBIA ESTO
+                const texto = `Hola, mi pedido #${idPedido} es por Transferencia. Aquí está mi comprobante:`;
+                window.location.href = `https://wa.me/${numWsp}?text=${encodeURIComponent(texto)}`;
+            } else if (metodoSeleccionado === "Tarjeta Online") {
+                window.location.href = "https://buy.stripe.com/tu_link_aqui"; // CAMBIA ESTO
+            } else {
+                mostrarAviso("✅ Pedido confirmado, gracias!");
+                setTimeout(() => window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/seguimiento.html", 2000);
+            }
+        } catch (error) {
+            mostrarAviso("❌ Error al procesar el pedido.");
+            btn.disabled = false; btn.innerText = "Finalizar Pedido";
+        }
     };
 
     window.onload = () => {
-        const d = JSON.parse(localStorage.getItem('domicilio'));
-        if(d) document.getElementById('currentAddress').innerText = `${d.calle} #${d.numero}, ${d.ciudad}`;
+        if(domicilioData) {
+            document.getElementById('currentAddress').innerText = `${domicilioData.calle} #${domicilioData.numero}`;
+            document.getElementById('currentAddress').style.color = "#333";
+        }
         actualizarInterfaz();
     };
 </script>
 </body>
 </html>
-
-
-
-
-
