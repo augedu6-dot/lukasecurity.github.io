@@ -54,6 +54,36 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
         #avisoHtml.show { top: 0; }
+        .food-item {
+    display: flex;
+    justify-content: space-between; /* Separa el texto de los botones */
+    align-items: center;           /* Alinea verticalmente */
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    gap: 15px;                      /* Espacio mínimo entre nombre y botones */
+}
+
+/* El div que contiene el nombre y el precio unitario */
+.food-item > div:first-child {
+    flex: 1;           /* Ocupa todo el espacio disponible */
+    min-width: 0;      /* Truco necesario para que el texto respete el contenedor */
+}
+
+/* El párrafo con el nombre del producto */
+.food-item p.font-weight-bold {
+    white-space: normal;       /* Permite el salto de línea (por defecto es normal, pero asegura) */
+    word-wrap: break-word;     /* Rompe palabras extremadamente largas */
+    overflow-wrap: break-word; /* Estándar moderno para romper palabras */
+    line-height: 1.2;          /* Ajusta el espacio entre líneas si salta */
+    margin-bottom: 2px;
+}
+
+/* Controles de cantidad (para que no se encojan) */
+.quantity-controls {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;            /* Evita que los botones se aplasten si el texto es largo */
+}
     </style>
 </head>
 <body>
@@ -309,6 +339,7 @@
 </script>
 </body>
 </html>
+
 
 
 
