@@ -141,25 +141,6 @@
 
         .modal-img-view { background: rgba(0,0,0,0.9); }
         .img-full { border-radius: 15px; width: 100%; }
-
-        /* Bloqueamos el rebote en el cuerpo principal */
-html, body {
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    overflow: hidden; /* Evita que el 'body' haga scroll y rebote */
-    overscroll-behavior: none; 
-}
-
-/* Este contenedor es el que ahora tendrá el scroll real */
-.scrollable-content {
-    width: 100%;
-    height: calc(100vh - 60px); /* Ajusta los 60px según la altura de tu navbar */
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch; /* Scroll suave en iPhone */
-    overscroll-behavior-y: contain; /* Corta el efecto elástico de jalar */
-}
     </style>
 </head>
 <body>
@@ -182,12 +163,17 @@ html, body {
         </div>
     </div>
 </nav>
-<div class="scrollable-content">
+<div id="alerta-pedido-activo" class="container mt-2" style="display: none;">
+    <div class="alert alert-warning border-0 shadow-sm" style="border-radius: 15px; background-color: #fff3cd; color: #856404;">
+        <i class="fas fa-exclamation-circle mr-2"></i>
+        <strong>Pedido en curso:</strong> No puedes modificar el carrito hasta que finalice tu entrega actual.
+    </div>
+</div>
 <div class="container menu-container">
 <div class="category-title">Comidas</div>
 
 <div class="food-item">
-    <img src="aSa" class="img-food" onclick="verImagen(this.src, 'qweq')">
+    <img src="https://images.unsplash.com/photo-1771230381241-5814b491125b?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"" class="img-food" onclick="verImagen(this.src, 'qweq')">
     <div class="food-info">
         <p class="food-name">qweq</p>
         <p class="food-price">$55</p>
@@ -413,23 +399,33 @@ html, body {
     'sdsdw2': 'sdsdw2',
     'tyu': 'tyu',
 };
-    function cambiarCantidad(nombre, precio, cambio) {
-        // Bloqueo si hay un pedido activo para evitar errores de sincronización
-        if (localStorage.getItem("ultimoPedido")) {
-            alert("⚠️ Tienes un pedido en curso. No puedes modificar el carrito ahora.");
-            return;
+   function cambiarCantidad(nombre, precio, cambio) {
+    // Verificamos si hay un pedido activo
+    if (localStorage.getItem("ultimoPedido")) {
+        // En lugar de alert, mostramos el aviso HTML con una pequeña animación
+        const aviso = document.getElementById("alerta-pedido-activo");
+        if (aviso) {
+            aviso.style.display = "block";
+            // Hace que la pantalla suba suavemente al aviso para que el usuario lo vea
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            // Opcional: El aviso parpadea para llamar la atención
+            aviso.classList.add("shake-animation"); 
         }
-
-        if (!carrito[nombre]) {
-            carrito[nombre] = { nombre: nombre, precio: precio, cantidad: 0 };
-        }
-        
-        carrito[nombre].cantidad += cambio;
-        if (carrito[nombre].cantidad <= 0) delete carrito[nombre];
-        
-        localStorage.setItem("carrito_obj", JSON.stringify(carrito));
-        actualizarInterfaz();
+        return; // Detiene la ejecución
     }
+
+    // Lógica normal del carrito
+    if (!carrito[nombre]) {
+        carrito[nombre] = { nombre: nombre, precio: precio, cantidad: 0 };
+    }
+    
+    carrito[nombre].cantidad += cambio;
+    if (carrito[nombre].cantidad <= 0) delete carrito[nombre];
+    
+    localStorage.setItem("carrito_obj", JSON.stringify(carrito));
+    actualizarInterfaz();
+}
 
     function actualizarInterfaz() {
         let totalItems = 0;
@@ -497,12 +493,32 @@ html, body {
             window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/carrito.html";
         }
     }
+
+function cerrarSesion() {
+    // 1. Borramos los datos específicos de la sesión
+    localStorage.removeItem("usuarioLogueado");
+    localStorage.removeItem("sesion_activa");
+    
+    // 2. Borramos el carrito para que no persista si entra otro usuario
+    localStorage.removeItem("carrito_obj");
+    
+    // 3. Borramos cualquier pedido en seguimiento
+  
+
+    // 4. Redirigimos al login
+    window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/login2.html";
+}
+function verImagen(src, titulo) {
+    // 1. Insertamos la ruta de la imagen en el modal
+    document.getElementById('fullImg').src = src;
+    // 2. Insertamos el título del producto
+    document.getElementById('fullTitle').innerText = titulo;
+    // 3. Mostramos el modal usando la función de Bootstrap
+    $('#imageModal').modal('show');
+}
 </script>
-    </div>
 </body>
 </html>
-
-
 
 
 
