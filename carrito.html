@@ -235,28 +235,30 @@
             })
         });
 
-        // 3. Preparamos la redirección a Stripe
-        // IMPORTANTE: Reemplaza 'TU_LINK_AQUI' por tu enlace real de Stripe
-        const STRIPE_LINK = "https://buy.stripe.com/dRm14nbUz5Qjf13d2fdfG05";
-        
-        // CÁLCULO AUTOMÁTICO:
-        // Si el total es 500 y tu producto en Stripe vale 10, enviamos cantidad 50.
-        const precioUnitarioStripe = 10; 
-        const cantidadCalculada = Math.ceil(totalNum / precioUnitarioStripe);
+  // --- LÓGICA DE REDIRECCIÓN A STRIPE ---
+            
+            // TU ENLACE DE PAGO (Asegúrate de que sea el de 'buy.stripe.com')
+            const STRIPE_LINK = "https://buy.stripe.com/dRm14nbUz5Qjf13d2fdfG05"; 
+            
+            // El total que ya tenemos en la variable totalAmount (ej: "500")
+            const totalNumerico = parseFloat(totalAmount);
+            
+            // Si tu producto en Stripe vale $10, dividimos entre 10 para sacar la cantidad
+            // Usamos Math.round para evitar decimales que Stripe no acepta
+            const cantidadFinal = Math.round(totalNumerico / 10);
 
-        // Limpiamos carrito antes de irnos
-        localStorage.setItem("ultimoPedido", JSON.stringify(dataPedido));
-        localStorage.removeItem("carrito_obj");
+            // Guardamos el ID del pedido para seguimiento, pero no borramos el carrito por seguridad
+            localStorage.setItem("ultimoPedido", JSON.stringify(dataPedido));
+            
+            // REDIRECCIÓN CON PARÁMETRO DE CANTIDAD
+            // Esto construye: https://buy.stripe.com/xxx?quantity=50
+            window.location.href = `${STRIPE_LINK}?quantity=${cantidadFinal}`;
 
-        // Redirección final: El usuario llegará a Stripe y verá el total correcto de inmediato
-        window.location.href = `${STRIPE_LINK}?quantity=${cantidadCalculada}`;
-
-    } catch (error) {
-        console.error(error);
-        alert("Hubo un error al procesar el pedido.");
-        btn.disabled = false; 
-        btn.innerText = "Finalizar Pedido";
-    }
+        } catch (error) {
+            console.error("Error al procesar:", error);
+            btn.disabled = false; 
+            btn.innerText = "Reintentar";
+        }
 };
     window.cerrarSesion = function() {
         localStorage.removeItem("usuarioLogueado");
@@ -271,6 +273,7 @@
 </script>
 </body>
 </html>
+
 
 
 
