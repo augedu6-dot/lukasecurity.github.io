@@ -364,81 +364,56 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 
 <script>
-    // --- LÓGICA SEGURA PARA LEER LOCALSTORAGE ---
+    // 1. Inicialización segura del carrito
     let carrito = {};
     try {
-        const carritoGuardado = localStorage.getItem("carrito_obj");
-        if (carritoGuardado) {
-            carrito = JSON.parse(carritoGuardado);
+        const guardado = localStorage.getItem("carrito_obj");
+        if (guardado) {
+            carrito = JSON.parse(guardado);
         }
     } catch (e) {
-        console.error("Error al leer el carrito, reiniciando:", e);
-        localStorage.removeItem("carrito_obj"); // Borra si está corrupto
+        console.error("Error al leer el carrito:", e);
         carrito = {};
     }
-    
-    // IMPORTANTE: Actualiza esta lista con los IDs generados por tu admin.html
+
+    // 2. Diccionario de productos (Asegúrate que estos IDs existan en tu HTML)
     const itemIds = {
-        'qweq': 'qweq',
-        'ds': 'ds',
-        '332': '332',
-        'sdf': 'sdf',
-        'dfdss': 'dfdss',
-        'fsvxcv': 'fsvxcv',
-        'xcvr23': 'xcvr23',
-        'vds': 'vds',
-        'fef': 'fef',
-        '23s': '23s',
-        'dfs': 'dfs',
-        'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa': 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-        'sdsdw2': 'sdsdw2',
-        'tyu': 'tyu',
+        'qweq': 'qweq', 'ds': 'ds', '332': '332', 'sdf': 'sdf',
+        'dfdss': 'dfdss', 'fsvxcv': 'fsvxcv', 'xcvr23': 'xcvr23',
+        'vds': 'vds', 'fef': 'fef', '23s': '23s', 'dfs': 'dfs',
+        'gdf': 'gdf', 'sdsdw2': 'sdsdw2', 'tyu': 'tyu'
     };
 
-    function verImagen(src, nombre) {
-        document.getElementById('fullImg').src = src;
-        document.getElementById('fullTitle').innerText = nombre;
-        $('#imageModal').modal('show');
-    }
-
     function cambiarCantidad(nombre, precio, cambio) {
+        // Validación de pedido activo para evitar que añadan más si ya compraron
+        if (localStorage.getItem("ultimoPedido")) {
+            alert("No puedes modificar el carrito mientras tienes un pedido en curso.");
+            return;
+        }
+
         if (!carrito[nombre]) {
-            carrito[nombre] = { 
-                nombre: nombre,
-                precio: precio, 
-                cantidad: 0 
-            };
+            carrito[nombre] = { nombre: nombre, precio: precio, cantidad: 0 };
         }
-        
         carrito[nombre].cantidad += cambio;
+        if (carrito[nombre].cantidad <= 0) delete carrito[nombre];
         
-        if (carrito[nombre].cantidad <= 0) {
-            delete carrito[nombre];
-        }
-        
-        try {
-            localStorage.setItem("carrito_obj", JSON.stringify(carrito));
-        } catch (e) {
-            console.error("Error al guardar en localStorage", e);
-        }
+        localStorage.setItem("carrito_obj", JSON.stringify(carrito));
         actualizarInterfaz();
     }
 
     function actualizarInterfaz() {
-        let totalItems = 0; let precioTotal = 0;
-        
-        const productosEnPagina = Object.keys(itemIds);
+        let totalItems = 0;
+        let precioTotal = 0;
 
-        productosEnPagina.forEach(nombre => {
+        // Actualizar botones de cada producto
+        Object.keys(itemIds).forEach(nombre => {
             const id = itemIds[nombre];
             const container = document.getElementById(`controls-${id}`);
-            
-            // --- VALIDACIÓN DE SEGURIDAD ---
-            if (!container) return; // Si no existe el contenedor en el HTML, saltar
+            if (!container) return; // Salta si el elemento no existe en el HTML
 
             const item = carrito[nombre];
             if (item && item.cantidad > 0) {
-                totalItems += item.cantidad; 
+                totalItems += item.cantidad;
                 precioTotal += item.cantidad * item.precio;
                 container.innerHTML = `
                     <div class="quantity-controls">
@@ -447,48 +422,50 @@
                         <button class="btn-qty" onclick="cambiarCantidad('${nombre}', ${item.precio}, 1)">+</button>
                     </div>`;
             } else {
-                // Buscamos el precio en el HTML si no está en el carrito para el botón inicial
-                const precioElemento = container.closest('.food-info').querySelector('.food-price').innerText;
-                const precioNumerico = parseFloat(precioElemento.replace('$', ''));
-                container.innerHTML = `<button class="btn-add-initial" onclick="cambiarCantidad('${nombre}', ${precioNumerico}, 1)">Añadir</button>`;
+                // Intentar obtener el precio del texto si no está en el carrito
+                const infoPadre = container.closest('.food-info');
+                const precioTexto = infoPadre ? infoPadre.querySelector('.food-price').innerText : "$0";
+                const precioNum = parseFloat(precioTexto.replace('$', '')) || 0;
+                container.innerHTML = `<button class="btn-add-initial" onclick="cambiarCantidad('${nombre}', ${precioNum}, 1)">Añadir</button>`;
             }
         });
+
+        // Actualización segura de contadores globales
+        const cartCount = document.getElementById("cartCount");
+        const totalFloat = document.getElementById("totalFloat");
         
-        // --- VALIDACIÓN DE ELEMENTOS DOM ---
-        const cartCountEl = document.getElementById("cartCount");
-        const totalFloatEl = document.getElementById("totalFloat");
-        
-        if (cartCountEl) cartCountEl.innerText = totalItems;
-        if (totalFloatEl) totalFloatEl.innerText = precioTotal;
+        if (cartCount) cartCount.innerText = totalItems;
+        if (totalFloat) totalFloat.innerText = precioTotal;
     }
 
     window.onload = function() {
+        // Verificación de sesión
         const usuario = localStorage.getItem("usuarioLogueado");
         if (!usuario) {
             window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/login2.html";
-        } else {
-            const displayEmailEl = document.getElementById("displayEmail");
-            const navUserEl = document.getElementById("navUser");
-            if (displayEmailEl) displayEmailEl.innerText = usuario;
-            if (navUserEl) navUserEl.innerText = usuario.split('@')[0];
+            return;
         }
+
+        // Mostrar datos de usuario con seguridad
+        const displayEmail = document.getElementById("displayEmail");
+        const navUser = document.getElementById("navUser");
+        if (displayEmail) displayEmail.innerText = usuario;
+        if (navUser) navUser.innerText = usuario.split('@')[0];
+
         actualizarInterfaz();
     };
 
-    function cerrarSesion() {
-        localStorage.removeItem("usuarioLogueado");
-        localStorage.removeItem("sesion_activa");
-        localStorage.removeItem("carrito_obj"); // Limpiar carrito al cerrar sesión
-        window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/login2.html";
-    }
-
     function irADireccion() {
-        if (Object.keys(carrito).length === 0) alert("Tu carrito está vacío");
-        else window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/carrito.html";
+        if (Object.keys(carrito).length === 0) {
+            alert("Tu carrito está vacío");
+        } else {
+            window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/carrito.html";
+        }
     }
 </script>
 </body>
 </html>
+
 
 
 
