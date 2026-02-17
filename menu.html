@@ -342,10 +342,22 @@
         $('#imageModal').modal('show');
     }
 
-    function cambiarCantidad(nombre, precio, cambio) {
-        if (!carrito[nombre]) carrito[nombre] = { precio: precio, cantidad: 0 };
+ function cambiarCantidad(nombre, precio, cambio) {
+        // CORRECCIÓN: Se añade la propiedad 'nombre' dentro del objeto
+        if (!carrito[nombre]) {
+            carrito[nombre] = { 
+                nombre: nombre, // <--- Esto es lo que faltaba
+                precio: precio, 
+                cantidad: 0 
+            };
+        }
+        
         carrito[nombre].cantidad += cambio;
-        if (carrito[nombre].cantidad <= 0) delete carrito[nombre];
+        
+        if (carrito[nombre].cantidad <= 0) {
+            delete carrito[nombre];
+        }
+        
         localStorage.setItem("carrito_obj", JSON.stringify(carrito));
         actualizarInterfaz();
     }
@@ -407,3 +419,4 @@
 </script>
 </body>
 </html>
+
