@@ -294,17 +294,16 @@
                 
                     // 3. Procesamos el texto
                     const textoFinal = limpiarTexto(mensajeBase);
-                
+
+                 // 1. Guardamos el pedido en localStorage antes de salir
+                     localStorage.setItem("ultimoPedido", JSON.stringify(infoPedido));
                     // 4. CREAMOS LA URL PARA ANDROID:
                     // wa.me es el método oficial y más compatible
                     const url = `https://wa.me/${telefono}?text=${encodeURIComponent(mensajeBase)}`;
-             // 1. Guardamos el pedido en localStorage antes de salir
-                    localStorage.setItem("ultimoPedido", JSON.stringify({
-                        fecha: new Date().getTime(),
-                        detalle: mensajeBase
-                    }));
-                
+            
                
+                // 2. Limpiamos el carrito
+                    localStorage.removeItem("carrito_obj");
                 
                     // 3. OPCIÓN A: Redirigir a una página de "Gracias" (Recomendado)
                     // Esto asegura que la página cambie y el usuario sepa que se envió.
@@ -312,8 +311,7 @@
                     // 5. REDIRECCIÓN:
                     // window.location.assign es la mejor forma en WebViews
                 //    window.location.assign(url);
-                     // 2. Limpiamos el carrito
-                    localStorage.removeItem("carrito_obj");
+                     
             } 
             else if (metodoSeleccionado === "Tarjeta Online") {
                 window.location.href = "https://buy.stripe.com/9B67sL7Ej4Mf1ad3rFdfG08";
@@ -369,6 +367,7 @@
 </script>
 </body>
 </html>
+
 
 
 
