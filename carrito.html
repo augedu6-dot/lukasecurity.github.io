@@ -282,27 +282,27 @@
             // 3. Acciones según el pago
             if (metodoSeleccionado === "Transferencia") {
                    function enviarPedidoAndroid() {
-            const telefono = "529933044020";
-            
-            // 1. Definimos la función para limpiar el texto (espacios por guiones)
-            function limpiarTexto(texto) {
-                return texto.replace(/ /g, "-");
-            }
-        
-            // 2. Definimos el mensaje (asegúrate de que estas variables existan)
-            const mensajeBase = `¡Hola! Soy ${infoPedido.usuario}. Confirmo mi pedido ${idPedido} de $${totalNum}. En un momento envío el comprobante.`;
-        
-            // 3. Procesamos el texto
-            const textoFinal = limpiarTexto(mensajeBase);
-        
-            // 4. CREAMOS LA URL PARA ANDROID:
-            // wa.me es el método oficial y más compatible
-            const url = `https://wa.me/${telefono}?text=${encodeURIComponent(textoFinal)}`;
-        
-            // 5. REDIRECCIÓN:
-            // window.location.assign es la mejor forma en WebViews
-            window.location.assign(url);
-        }
+                    const telefono = "529933044020";
+                    
+                    // 1. Definimos la función para limpiar el texto (espacios por guiones)
+                    function limpiarTexto(texto) {
+                        return texto.replace(/ /g, "-");
+                    }
+                
+                    // 2. Definimos el mensaje (asegúrate de que estas variables existan)
+                    const mensajeBase = `¡Hola! Soy ${infoPedido.usuario}. Confirmo mi pedido ${idPedido} de $${totalNum}. En un momento envío el comprobante.`;
+                
+                    // 3. Procesamos el texto
+                    const textoFinal = limpiarTexto(mensajeBase);
+                
+                    // 4. CREAMOS LA URL PARA ANDROID:
+                    // wa.me es el método oficial y más compatible
+                    const url = `https://wa.me/${telefono}?text=${encodeURIComponent(textoFinal)}`;
+                
+                    // 5. REDIRECCIÓN:
+                    // window.location.assign es la mejor forma en WebViews
+                    window.location.assign(url);
+                }
             } 
             else if (metodoSeleccionado === "Tarjeta Online") {
                 window.location.href = "https://buy.stripe.com/9B67sL7Ej4Mf1ad3rFdfG08";
@@ -358,6 +358,7 @@
 </script>
 </body>
 </html>
+
 
 
 
