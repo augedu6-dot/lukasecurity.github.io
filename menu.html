@@ -3,7 +3,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Menú - DeMasita</title>
     <link href="https://fonts.googleapis.com/css2?family=Marck+Script&family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
@@ -141,23 +141,6 @@
 
         .modal-img-view { background: rgba(0,0,0,0.9); }
         .img-full { border-radius: 15px; width: 100%; }
-        html, body {
-    /* Evita el rebote excesivo y el desbordamiento horizontal */
-    overflow-x: hidden;
-    overscroll-behavior-y: none; /* Desactiva el rebote nativo en navegadores modernos */
-    height: 100%;
-}
-
-body {
-    /* Permite el scroll pero lo hace más estable */
-    -webkit-overflow-scrolling: touch; 
-}
-
-.navbar {
-    /* Asegura que la barra no vibre al scrolear rápido */
-    transform: translateZ(0);
-    -webkit-transform: translateZ(0);
-}
     </style>
 </head>
 <body>
@@ -495,25 +478,9 @@ body {
             window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/carrito.html";
         }
     }
-
-function cerrarSesion() {
-    // 1. Borramos los datos específicos de la sesión
-    localStorage.removeItem("usuarioLogueado");
-    localStorage.removeItem("sesion_activa");
-    
-    // 2. Borramos el carrito para que no persista si entra otro usuario
-    localStorage.removeItem("carrito_obj");
-    
-    // 3. Borramos cualquier pedido en seguimiento
-  
-
-    // 4. Redirigimos al login
-    window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/login2.html";
-}
 </script>
 </body>
 </html>
-
 
 
 
