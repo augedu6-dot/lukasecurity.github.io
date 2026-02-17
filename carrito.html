@@ -90,12 +90,11 @@
 
 <div id="avisoHtml">Aviso</div>
 
-   <nav class="navbar navbar-expand-lg navbar-light shadow-sm mb-3">
-        <div class="container d-flex justify-content-between align-items-center">
-            <a class="navbar-brand" href="https://augedu6-dot.github.io/lukasecurity.github.io/menu.html">DeMasita</a>
-            <a class="btn btn-sm btn-outline-danger font-weight-bold" href="https://augedu6-dot.github.io/lukasecurity.github.io/menu.html">Menú</a>
-        </div>
-    </nav>
+<nav class="navbar">
+    <div class="container text-center">
+        <a class="navbar-brand" href="https://augedu6-dot.github.io/lukasecurity.github.io/menu.html">DeMasita</a>
+    </div>
+</nav>
 
 <div class="container mt-3">
     <div class="section-title"><i class="fas fa-shopping-basket"></i> Tu Pedido</div>
@@ -284,7 +283,7 @@
             if (metodoSeleccionado === "Transferencia") {
                 const numWsp = "529933044020";
                 const msg = `¡Hola! Soy ${infoPedido.usuario}. Confirmo mi pedido #${idPedido} de $${totalNum}. En un momento envío el comprobante.`;
-                window.location.href = `https://wa.me/${numWsp}?text=${encodeURIComponent(msg)}`;
+let url = `https://api.whatsapp.com/send?phone=${numWsp}&text=${encodeURIComponent(msg)}`;                
              // OPCIÓN CORRECTA: Abrir en pestaña nueva para no perder tu página
               window.open(url, '_blank');
             } 
@@ -342,7 +341,6 @@
 </script>
 </body>
 </html>
-
 
 
 
