@@ -225,9 +225,22 @@
 
             localStorage.setItem("ultimoPedido", JSON.stringify(dataPedido));
             localStorage.removeItem("carrito_obj");
-            
-            // REDIRECCIÓN DINÁMICA A PAGO CON EL MONTO TOTAL
-            window.location.href = `https://augedu6-dot.github.io/lukasecurity.github.io/pago.html?total=${totalAmount}`;
+        // --- ESTA ES LA MODIFICACIÓN ---
+        
+        // 1. URL de tu producto de Stripe (el que configuraste con cantidad ajustable)
+        const STRIPE_LINK = "https://buy.stripe.com/dRm14nbUz5Qjf13d2fdfG05"; 
+        
+        // 2. Obtener el total numérico (ej. 500)
+        const totalNum = parseFloat(totalAmount); 
+        
+        // 3. Calcular cantidad: Total / Precio Unitario en Stripe (ej. 500 / 10 = 50)
+        const cantidadAEnviar = totalNum / 10; // <--- Cambia el "10" si tu producto cuesta distinto
+
+        // 4. Redirigir a Stripe
+        window.location.href = `${STRIPE_LINK}?quantity=${cantidadAEnviar}`;
+        
+        // -------------------------------
+
         } catch (error) {
             btn.disabled = false; btn.innerText = "Reintentar";
         }
@@ -246,3 +259,4 @@
 </script>
 </body>
 </html>
+
