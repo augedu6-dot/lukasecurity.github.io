@@ -297,7 +297,7 @@
                 
                     // 4. CREAMOS LA URL PARA ANDROID:
                     // wa.me es el método oficial y más compatible
-                    const url = `https://wa.me/${telefono}?text=${encodeURIComponent(textoFinal)}`;
+                    const url = `https://wa.me/${telefono}?text=${encodeURIComponent(mensajeBase)}`;
                 
                     // 5. REDIRECCIÓN:
                     // window.location.assign es la mejor forma en WebViews
@@ -358,6 +358,7 @@
 </script>
 </body>
 </html>
+
 
 
 
