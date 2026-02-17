@@ -54,6 +54,27 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
         #avisoHtml.show { top: 0; }
+        .cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+    gap: 10px; /* Añade espacio entre el texto y el precio */
+}
+        .cart-item div:first-child {
+    flex: 1; /* Hace que el nombre ocupe todo el espacio disponible */
+    min-width: 0; /* Importante para que el texto respete el contenedor */
+    word-wrap: break-word; /* Rompe palabras largas */
+    overflow-wrap: break-word;
+}
+
+.cart-item strong {
+    display: block; /* Asegura que el nombre sea un bloque */
+    font-size: 0.95rem;
+    line-height: 1.2;
+    white-space: normal; /* Permite el salto de línea */
+}
     </style>
 </head>
 <body>
@@ -176,15 +197,20 @@
         } else {
             for (const [nombre, item] of items) {
                 precioTotal += item.cantidad * item.precio;
-                lista.innerHTML += `
-                    <div class="food-item">
-                        <div><p class="mb-0 font-weight-bold">${nombre}</p><small class="text-muted">$${item.precio} c/u</small></div>
-                        <div class="quantity-controls">
-                            <button class="btn-qty" onclick="cambiarCantidad('${nombre}', ${item.precio}, -1)">-</button>
-                            <span class="qty-number">${item.cantidad}</span>
-                            <button class="btn-qty" onclick="cambiarCantidad('${nombre}', ${item.precio}, 1)">+</button>
+                const itemDiv = document.createElement('div');
+                    itemDiv.className = 'cart-item';
+                    itemDiv.innerHTML = `
+                        <div>
+                            <strong>${item.nombre}</strong>
+                            <small class="text-muted">$${item.precio} x ${item.cantidad}</small>
                         </div>
-                    </div>`;
+                        <div class="text-right" style="min-width: 80px;">
+                            <span class="font-weight-bold">$${(item.precio * item.cantidad)}</span>
+                            <button class="btn btn-sm btn-outline-danger ml-2" onclick="eliminarDelCarrito('${item.nombre}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    `;
             }
         }
         document.getElementById("totalFinal").innerText = precioTotal;
@@ -309,6 +335,7 @@
 </script>
 </body>
 </html>
+
 
 
 
