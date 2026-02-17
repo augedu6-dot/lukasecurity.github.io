@@ -258,7 +258,19 @@ if (Object.keys(carrito).length === 0) {
             })
         });
 
-      
+            // Guardamos el pedido localmente para la página de seguimiento
+        localStorage.setItem("ultimoPedido", JSON.stringify(dataPedido));
+        
+        // 4. Redirección final con el parámetro de cantidad correcto
+        window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/seguimiento.html";
+
+    } catch (error) {
+        console.error("Error al procesar:", error);
+        alert("Hubo un error al conectar con la base de datos.");
+        btn.disabled = false; 
+        btn.innerText = "Reintentar";
+    }
+};
     
     window.cerrarSesion = function() {
         localStorage.removeItem("usuarioLogueado");
@@ -273,6 +285,7 @@ if (Object.keys(carrito).length === 0) {
 </script>
 </body>
 </html>
+
 
 
 
