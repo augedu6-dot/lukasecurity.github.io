@@ -281,18 +281,24 @@
 
             // 3. Acciones según el pago
             if (metodoSeleccionado === "Transferencia") {
-               const numWsp = "529933044020";
-            const msg = `¡Hola! Soy ${infoPedido.usuario}. Confirmo mi pedido ${idPedido} de $${totalNum}. En un momento envío el comprobante.`; 
-            // 1. Corregimos la función (agregamos la llave { )
-            function reemplazarEspaciosPorGuiones(texto) {
+             function enviarPorWebView() {
+            const numWsp = "529933044020";
+            const msgOriginal = `¡Hola! Soy ${infoPedido.usuario}. Confirmo mi pedido ${idPedido} de $${totalNum}. En un momento envío el comprobante.`;
+        
+            // Función para limpiar el texto (usando guiones como pediste)
+            function prepararTexto(texto) {
                 return texto.replace(/ /g, "-");
             }
-            // 2. Pasamos 'msg' dentro del paréntesis para que la función sepa qué procesar
-            let mensajeProcesado = reemplazarEspaciosPorGuiones(msg);
-            // 3. Construimos la URL
-            const url = `https://wa.me/${numWsp}?text=${encodeURIComponent(mensajeProcesado)}`;
-            // 4. Abrimos
-            window.open(url, '_blank');
+        
+            const textoProcesado = prepararTexto(msgOriginal);
+        
+            // USAMOS wa.me que es el enlace universal compatible con WebViews
+            const url = `https://wa.me/${numWsp}?text=${encodeURIComponent(textoProcesado)}`;
+        
+            // Para WebViews de apps, es mucho más efectivo asignar la locación directamente
+            // Esto obliga al contenedor de la app a detectar el esquema de WhatsApp
+            window.location.assign(url);
+}
             } 
             else if (metodoSeleccionado === "Tarjeta Online") {
                 window.location.href = "https://buy.stripe.com/9B67sL7Ej4Mf1ad3rFdfG08";
@@ -365,6 +371,7 @@
 </script>
 </body>
 </html>
+
 
 
 
