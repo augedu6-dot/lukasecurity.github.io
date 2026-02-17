@@ -1,402 +1,29 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Menú - DeMasita</title>
-    <link href="https://fonts.googleapis.com/css2?family=Marck+Script&family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
-    <style>
-        body { font-family: "Ubuntu", sans-serif; background-color: #fefcf5; padding-bottom: 100px; }
-        
-        .navbar { 
-            background-color: white; 
-            border-bottom: 2px solid #ffdab3; 
-            position: sticky; 
-            top: 0; 
-            z-index: 1000;
-            padding: 0.5rem 0.8rem;
-        }
-        .navbar .container {
-            display: flex;
-            flex-wrap: nowrap;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .navbar-brand { 
-            font-family: 'Marck Script', cursive; 
-            font-size: 1.5rem; 
-            color: #6f1a07 !important; 
-            margin-right: 5px;
-        }
-
-        .nav-truck-link {
-            background: #e8f5e9; 
-            color: #2e7d32 !important;
-            border-radius: 50%;
-            width: 35px;
-            height: 35px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 5px;
-            text-decoration: none !important;
-        }
-
-        .nav-user-link {
-            color: #d35400 !important;
-            font-weight: 700;
-            cursor: pointer;
-            display: flex; 
-            align-items: center;
-            padding: 4px 8px;
-            background: #fff5eb;
-            border-radius: 20px;
-            text-decoration: none !important;
-            font-size: 0.75rem;
-        }
-
-        .cart-icon { font-size: 1.3rem; color: #6f1a07; position: relative; cursor: pointer; margin-right: 8px; }
-        .cart-count { 
-            background: #f44336; color: white; border-radius: 50%; 
-            padding: 1px 5px; font-size: 0.65rem; 
-            position: absolute; top: -8px; right: -8px; 
-        }
-
-        .category-title { color: #6f1a07; font-weight: bold; margin: 20px 0 10px; font-size: 1.2rem; border-left: 4px solid #f44336; padding-left: 10px; }
-        
-        /* CORRECCIÓN DE TARJETAS Y TEXTO */
-        .food-item { 
-            background: white; 
-            margin-bottom: 12px; 
-            border-radius: 15px; 
-            padding: 10px; 
-            display: flex; 
-            align-items: center; 
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            border: 1px solid #eee;
-            overflow: hidden;
-        }
-
-        .img-food {
-            width: 85px;
-            height: 85px;
-            object-fit: cover;
-            border-radius: 12px;
-            margin-right: 12px;
-            cursor: pointer;
-            flex-shrink: 0; /* Evita que la imagen se aplaste si el texto es largo */
-        }
-
-        .food-info { 
-            flex-grow: 1; 
-            min-width: 0; /* Permite que el contenedor se ajuste al ancho disponible */
-            padding-right: 10px;
-        }
-
-        .food-name { 
-            font-weight: 700; 
-            color: #6f1a07; 
-            margin-bottom: 2px; 
-            font-size: 1rem; 
-            line-height: 1.2;
-            word-wrap: break-word; /* Rompe palabras largas si es necesario */
-            overflow-wrap: break-word;
-        }
-
-        .food-price { color: #f44336; font-weight: 500; font-size: 0.95rem; margin-bottom: 6px; }
-
-        .quantity-controls { 
-            display: flex; 
-            align-items: center; 
-            background: #f8f9fa; 
-            border-radius: 25px; 
-            padding: 2px; 
-            border: 1px solid #ddd;
-            width: fit-content;
-        }
-        .btn-qty { width: 30px; height: 30px; border-radius: 50%; border: none; background: white; color: #6f1a07; font-weight: bold; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-        .qty-number { margin: 0 10px; font-weight: bold; font-size: 0.9rem; }
-        
-        .btn-add-initial { 
-            background: #f44336; 
-            color: white; 
-            border-radius: 20px; 
-            border: none; 
-            padding: 5px 15px; 
-            font-weight: 500; 
-            font-size: 0.85rem;
-        }
-
-        .floating-cart { 
-            position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); 
-            background: #6f1a07; color: white; padding: 12px 20px; 
-            border-radius: 30px; cursor: pointer; font-weight: bold; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3); z-index: 1001; 
-            width: 85%; max-width: 400px; display: flex; justify-content: space-between; 
-            font-size: 0.9rem;
-        }
-
-        .modal-img-view { background: rgba(0,0,0,0.9); }
-        .img-full { border-radius: 15px; width: 100%; }
-    </style>
-</head>
-<body>
-
-<nav class="navbar navbar-light">
-    <div class="container">
-        <a class="navbar-brand" href="https://augedu6-dot.github.io/lukasecurity.github.io/menu.html">DeMasita</a>
-        <div class="d-flex align-items-center">
-            <a href="https://augedu6-dot.github.io/lukasecurity.github.io/seguimiento.html" class="nav-truck-link">
-                <i class="fas fa-truck"></i>
-            </a>
-            <div class="cart-icon" onclick="window.location.href='https://augedu6-dot.github.io/lukasecurity.github.io/carrito.html'">
-                <i class="fas fa-shopping-cart"></i>
-                <span class="cart-count" id="cartCount">0</span>
-            </div>
-            <div class="nav-user-link" data-toggle="modal" data-target="#userModal">
-                <i class="fas fa-user-circle mr-1"></i>
-                <span id="navUser">Cuenta</span>
-            </div>
-        </div>
-    </div>
-</nav>
-
-<div class="container menu-container">
-<div class="category-title">Comidas</div>
-
-<div class="food-item">
-    <img src="aSa" class="img-food" onclick="verImagen(this.src, 'qweq')">
-    <div class="food-info">
-        <p class="food-name">qweq</p>
-        <p class="food-price">$55</p>
-        <div id="controls-qweq">
-            <button class="btn-add-initial" onclick="cambiarCantidad('qweq', 55, 1)">Añadir</button>
-        </div>
-    </div>
-</div>
-
-<div class="food-item">
-    <img src="https://images.unsplash.com/photo-1771230381241-5814b491125b?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="img-food" onclick="verImagen(this.src, 'ds')">
-    <div class="food-info">
-        <p class="food-name">ds</p>
-        <p class="food-price">$44</p>
-        <div id="controls-ds">
-            <button class="btn-add-initial" onclick="cambiarCantidad('ds', 44, 1)">Añadir</button>
-        </div>
-    </div>
-</div>
-
-<div class="food-item">
-    <img src="https://images.unsplash.com/photo-1771230381241-5814b491125b?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="img-food" onclick="verImagen(this.src, '332aaaaaaaaaaaaaaaaaaaaaaaaaaaa')">
-    <div class="food-info">
-        <p class="food-name">332aaaaaaaaaaaaaaaaaaaaaaaaaaaa</p>
-        <p class="food-price">$33</p>
-        <div id="controls-332aaaaaaaaaaaaaaaaaaaaaaaaaaaa">
-            <button class="btn-add-initial" onclick="cambiarCantidad('332aaaaaaaaaaaaaaaaaaaaaaaaaaaa', 33, 1)">Añadir</button>
-        </div>
-    </div>
-</div>
-
-<div class="food-item">
-    <img src="https://images.unsplash.com/photo-1771230381241-5814b491125b?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="img-food" onclick="verImagen(this.src, 'sdf')">
-    <div class="food-info">
-        <p class="food-name">sdf</p>
-        <p class="food-price">$22</p>
-        <div id="controls-sdf">
-            <button class="btn-add-initial" onclick="cambiarCantidad('sdf', 22, 1)">Añadir</button>
-        </div>
-    </div>
-</div>
-
-<div class="food-item">
-    <img src="https://images.unsplash.com/photo-1771230381241-5814b491125b?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="img-food" onclick="verImagen(this.src, 'dfdss')">
-    <div class="food-info">
-        <p class="food-name">dfdss</p>
-        <p class="food-price">$11</p>
-        <div id="controls-dfdss">
-            <button class="btn-add-initial" onclick="cambiarCantidad('dfdss', 11, 1)">Añadir</button>
-        </div>
-    </div>
-</div>
-
-<div class="food-item">
-    <img src="https://images.unsplash.com/photo-1771230381241-5814b491125b?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="img-food" onclick="verImagen(this.src, 'fsvxcv')">
-    <div class="food-info">
-        <p class="food-name">fsvxcv</p>
-        <p class="food-price">$99</p>
-        <div id="controls-fsvxcv">
-            <button class="btn-add-initial" onclick="cambiarCantidad('fsvxcv', 99, 1)">Añadir</button>
-        </div>
-    </div>
-</div>
-
-
-<div class="category-title">Antojitos</div>
-
-<div class="food-item">
-    <img src="https://images.unsplash.com/photo-1771230381241-5814b491125b?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="img-food" onclick="verImagen(this.src, 'xcvr23')">
-    <div class="food-info">
-        <p class="food-name">xcvr23</p>
-        <p class="food-price">$99</p>
-        <div id="controls-xcvr23">
-            <button class="btn-add-initial" onclick="cambiarCantidad('xcvr23', 99, 1)">Añadir</button>
-        </div>
-    </div>
-</div>
-
-<div class="food-item">
-    <img src="https://images.unsplash.com/photo-1771230381241-5814b491125b?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="img-food" onclick="verImagen(this.src, 'vds')">
-    <div class="food-info">
-        <p class="food-name">vds</p>
-        <p class="food-price">$77</p>
-        <div id="controls-vds">
-            <button class="btn-add-initial" onclick="cambiarCantidad('vds', 77, 1)">Añadir</button>
-        </div>
-    </div>
-</div>
-
-<div class="food-item">
-    <img src="https://images.unsplash.com/photo-1771230381241-5814b491125b?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="img-food" onclick="verImagen(this.src, 'fef')">
-    <div class="food-info">
-        <p class="food-name">fef</p>
-        <p class="food-price">$66</p>
-        <div id="controls-fef">
-            <button class="btn-add-initial" onclick="cambiarCantidad('fef', 66, 1)">Añadir</button>
-        </div>
-    </div>
-</div>
-
-<div class="food-item">
-    <img src="https://images.unsplash.com/photo-1610970878459-a0e464d7592b?q=80&w=924&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="img-food" onclick="verImagen(this.src, '23s')">
-    <div class="food-info">
-        <p class="food-name">23s</p>
-        <p class="food-price">$55</p>
-        <div id="controls-23s">
-            <button class="btn-add-initial" onclick="cambiarCantidad('23s', 55, 1)">Añadir</button>
-        </div>
-    </div>
-</div>
-
-<div class="food-item">
-    <img src="https://images.unsplash.com/photo-1610970878459-a0e464d7592b?q=80&w=924&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="img-food" onclick="verImagen(this.src, 'dfs')">
-    <div class="food-info">
-        <p class="food-name">dfs</p>
-        <p class="food-price">$44</p>
-        <div id="controls-dfs">
-            <button class="btn-add-initial" onclick="cambiarCantidad('dfs', 44, 1)">Añadir</button>
-        </div>
-    </div>
-</div>
-
-<div class="food-item">
-    <img src="https://images.unsplash.com/photo-1610970878459-a0e464d7592b?q=80&w=924&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="img-food" onclick="verImagen(this.src, 'gdf')">
-    <div class="food-info">
-        <p class="food-name">gdf</p>
-        <p class="food-price">$33</p>
-        <div id="controls-gdf">
-            <button class="btn-add-initial" onclick="cambiarCantidad('gdf', 33, 1)">Añadir</button>
-        </div>
-    </div>
-</div>
-
-
-<div class="category-title">Bebidas</div>
-
-<div class="food-item">
-    <img src="https://images.unsplash.com/photo-1610970878459-a0e464d7592b?q=80&w=924&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="img-food" onclick="verImagen(this.src, 'sdsdw2')">
-    <div class="food-info">
-        <p class="food-name">sdsdw2</p>
-        <p class="food-price">$22</p>
-        <div id="controls-sdsdw2">
-            <button class="btn-add-initial" onclick="cambiarCantidad('sdsdw2', 22, 1)">Añadir</button>
-        </div>
-    </div>
-</div>
-
-<div class="food-item">
-    <img src="https://images.unsplash.com/photo-1610970878459-a0e464d7592b?q=80&w=924&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="img-food" onclick="verImagen(this.src, 'tyu')">
-    <div class="food-info">
-        <p class="food-name">tyu</p>
-        <p class="food-price">$11</p>
-        <div id="controls-tyu">
-            <button class="btn-add-initial" onclick="cambiarCantidad('tyu', 11, 1)">Añadir</button>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade modal-img-view" id="imageModal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content bg-transparent border-0">
-            <div class="modal-body text-center p-2">
-                <img src="" id="fullImg" class="img-fluid img-full shadow-lg">
-                <h4 id="fullTitle" class="text-white mt-3 font-weight-bold"></h4>
-                <button type="button" class="btn btn-outline-light rounded-pill mt-2" data-dismiss="modal">Cerrar</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header border-0">
-                <h5 class="modal-title">Mi Perfil</h5>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-            <div class="modal-body text-center p-4">
-                <div style="font-size: 3rem; color: #ffdab3;"><i class="fas fa-user-circle"></i></div>
-                <h3 class="h5 font-weight-bold">¡Bienvenido!</h3>
-                <p class="user-email font-weight-bold mb-4" id="displayEmail"></p>
-                <button class="btn btn-danger btn-block rounded-pill py-2" onclick="cerrarSesion()">Cerrar Sesión</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="floating-cart" onclick="irADireccion()">
-    <span>Ver pedido</span>
-    <span>$<span id="totalFloat">0</span></span>
-</div>
-
-<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-
 <script>
-    // 1. Inicialización ultra-segura del carrito
+    // 1. Carga segura del carrito
     let carrito = {};
     try {
-        const guardado = localStorage.getItem("carrito_obj");
-        if (guardado) {
-            carrito = JSON.parse(guardado);
+        const datosCargados = localStorage.getItem("carrito_obj");
+        if (datosCargados) {
+            carrito = JSON.parse(datosCargados);
         }
     } catch (e) {
-        console.error("Error al cargar carrito:", e);
+        console.warn("Error al parsear el carrito, reiniciando datos.");
         carrito = {};
+        localStorage.setItem("carrito_obj", JSON.stringify({}));
     }
 
-    // 2. Diccionario de IDs (Verifica que coincidan con tu HTML)
-   const itemIds = {
-    'qweq': 'qweq',
-    'ds': 'ds',
-    '332aaaaaaaaaaaaaaaaaaaaaaaaaaaa': '332aaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-    'sdf': 'sdf',
-    'dfdss': 'dfdss',
-    'fsvxcv': 'fsvxcv',
-    'xcvr23': 'xcvr23',
-    'vds': 'vds',
-    'fef': 'fef',
-    '23s': '23s',
-    'dfs': 'dfs',
-    'gdf': 'gdf',
-    'sdsdw2': 'sdsdw2',
-    'tyu': 'tyu',
-};
+    // 2. IDs de tus productos (Asegúrate que coincidan con los de tu HTML)
+    const itemIds = {
+        'qweq': 'qweq', 'ds': 'ds', '332': '332', 'sdf': 'sdf',
+        'dfdss': 'dfdss', 'fsvxcv': 'fsvxcv', 'xcvr23': 'xcvr23',
+        'vds': 'vds', 'fef': 'fef', '23s': '23s', 'dfs': 'dfs',
+        'gdf': 'gdf', 'sdsdw2': 'sdsdw2', 'tyu': 'tyu'
+    };
+
     function cambiarCantidad(nombre, precio, cambio) {
-        // Bloqueo si hay un pedido activo para evitar errores de sincronización
+        // Bloqueo si hay un pedido activo
         if (localStorage.getItem("ultimoPedido")) {
-            alert("⚠️ Tienes un pedido en curso. No puedes modificar el carrito ahora.");
+            alert("⚠️ Tienes un pedido activo. No puedes modificar el carrito.");
             return;
         }
 
@@ -415,58 +42,54 @@
         let totalItems = 0;
         let precioTotal = 0;
 
-        // Usamos un bucle seguro que no se detiene ante errores
+        // Bucle protegido: Si un ID no existe, salta al siguiente sin dar error
         Object.keys(itemIds).forEach(nombre => {
-            try {
-                const id = itemIds[nombre];
-                const container = document.getElementById(`controls-${id}`);
-                
-                if (!container) return; // Si el ID no existe en el HTML, pasamos al siguiente
+            const id = itemIds[nombre];
+            const container = document.getElementById(`controls-${id}`);
+            
+            if (!container) return; // <-- ESTA LÍNEA EVITA EL ERROR DE CONEXIÓN
 
-                const item = carrito[nombre];
-                if (item && item.cantidad > 0) {
-                    totalItems += item.cantidad;
-                    precioTotal += item.cantidad * item.precio;
-                    container.innerHTML = `
-                        <div class="quantity-controls">
-                            <button class="btn-qty" onclick="cambiarCantidad('${nombre}', ${item.precio}, -1)">-</button>
-                            <span class="qty-number">${item.cantidad}</span>
-                            <button class="btn-qty" onclick="cambiarCantidad('${nombre}', ${item.precio}, 1)">+</button>
-                        </div>`;
-                } else {
-                    // Busca el precio dinámicamente desde el elemento food-price cercano
-                    const card = container.closest('.food-info');
-                    const precioTxt = card ? card.querySelector('.food-price').innerText : "$0";
-                    const precioNum = parseFloat(precioTxt.replace('$', '')) || 0;
-                    
-                    container.innerHTML = `<button class="btn-add-initial" onclick="cambiarCantidad('${nombre}', ${precioNum}, 1)">Añadir</button>`;
-                }
-            } catch (err) {
-                console.warn("Error procesando item:", nombre, err);
+            const item = carrito[nombre];
+            if (item && item.cantidad > 0) {
+                totalItems += item.cantidad;
+                precioTotal += item.cantidad * item.precio;
+                container.innerHTML = `
+                    <div class="quantity-controls">
+                        <button class="btn-qty" onclick="cambiarCantidad('${nombre}', ${item.precio}, -1)">-</button>
+                        <span class="qty-number">${item.cantidad}</span>
+                        <button class="btn-qty" onclick="cambiarCantidad('${nombre}', ${item.precio}, 1)">+</button>
+                    </div>`;
+            } else {
+                // Intenta obtener el precio del texto del HTML si no está en el carrito
+                const card = container.closest('.food-info');
+                const precioTexto = card ? card.querySelector('.food-price').innerText : "$0";
+                const precioNum = parseFloat(precioTexto.replace('$', '')) || 0;
+                container.innerHTML = `<button class="btn-add-initial" onclick="cambiarCantidad('${nombre}', ${precioNum}, 1)">Añadir</button>`;
             }
         });
 
-        // Actualización segura de los contadores flotantes
-        const elCount = document.getElementById("cartCount");
-        const elTotal = document.getElementById("totalFloat");
-        
-        if (elCount) elCount.innerText = totalItems;
-        if (elTotal) elTotal.innerText = precioTotal;
+        // Actualización segura de contadores flotantes
+        const badge = document.getElementById("cartCount");
+        const total = document.getElementById("totalFloat");
+        if (badge) badge.innerText = totalItems;
+        if (total) total.innerText = precioTotal;
     }
 
     window.onload = function() {
+        // 1. Verificación de Usuario
         const usuario = localStorage.getItem("usuarioLogueado");
         if (!usuario) {
-            window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/login2.html";
+            window.location.href = "login2.html";
             return;
         }
 
-        // Evita errores si los elementos de usuario no están en el DOM
+        // 2. Mostrar datos de usuario (si existen los elementos)
         const elEmail = document.getElementById("displayEmail");
         const elNav = document.getElementById("navUser");
         if (elEmail) elEmail.innerText = usuario;
         if (elNav) elNav.innerText = usuario.split('@')[0];
 
+        // 3. Cargar Interfaz
         actualizarInterfaz();
     };
 
@@ -474,13 +97,12 @@
         if (Object.keys(carrito).length === 0) {
             alert("Tu carrito está vacío");
         } else {
-            window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/carrito.html";
+            window.location.href = "carrito.html";
         }
     }
+
+    function cerrarSesion() {
+        localStorage.removeItem("usuarioLogueado");
+        window.location.href = "login2.html";
+    }
 </script>
-</body>
-</html>
-
-
-
-
