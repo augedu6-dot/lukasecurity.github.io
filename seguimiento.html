@@ -1,124 +1,85 @@
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+window.onload = function() {
+    const pedidoLocal = JSON.parse(localStorage.getItem("ultimoPedido"));
+    const contenedor = document.getElementById("contenido-seguimiento");
 
-    const firebaseConfig = {
-        apiKey: "AIzaSyB-liGmmv0jHh1hqkBNg0mKfjnSBCZXKHs",
-        authDomain: "dbnot-50172.firebaseapp.com",
-        databaseURL: "https://dbnot-50172-default-rtdb.firebaseio.com",
-        projectId: "dbnot-50172"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-
-    function notificarAndroid(mensaje) {
-        if (typeof Android !== 'undefined' && Android !== null) {
-            Android.sendDataToAndroid(mensaje);
-        }
+    if (!pedidoLocal || !pedidoLocal.id) {
+        contenedor.innerHTML = `<div class="alert alert-warning text-center small">No hay pedidos activos.</div>`;
+        return;
     }
 
-    function actualizarUI(estado) {
-        const badge = document.getElementById("statusBadge");
-        const barra = document.getElementById("pBar");
-        if (!badge || !barra) return;
+    // --- CORRECCIÓN DE HORA APROXIMADA ---
+    // Si la propiedad 'hora' no existe, calculamos una basada en el momento actual + 45 min
+    let horaEntrega = pedidoLocal.hora || pedidoLocal.entregaAprox;
+    
+    if (!horaEntrega) {
+        const ahora = new Date();
+        ahora.setMinutes(ahora.getMinutes() + 45);
+        horaEntrega = ahora.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+    // -------------------------------------
 
-        let porcentaje = 0;
-        let color = "bg-warning";
-        const e = estado.toLowerCase().trim();
+    let listaProdHTML = "";
+    if (pedidoLocal.productos) {
+        // Convertimos a array por si viene como objeto desde Firebase
+        const productosArray = Array.isArray(pedidoLocal.productos) 
+            ? pedidoLocal.productos 
+            : Object.values(pedidoLocal.productos);
 
-        if (e === "pedido recibido") { porcentaje = 10; color = "bg-secondary"; }
-        else if (e === "confirmar / aceptado") { porcentaje = 25; color = "bg-warning"; }
-        else if (e === "cocinando") { porcentaje = 45; color = "bg-warning"; }
-        else if (e === "repartido / recolectar") { porcentaje = 60; color = "bg-info"; }
-        else if (e === "en camino") { porcentaje = 75; color = "bg-info"; }
-        else if (e === "afuera del domicilio") { porcentaje = 90; color = "bg-primary"; }
-        else if (e === "entregado") { porcentaje = 100; color = "bg-success"; }
-
-        badge.innerText = estado.toUpperCase();
-        barra.style.width = porcentaje + "%";
-        barra.className = `progress-bar progress-bar-striped progress-bar-animated ${color}`;
+        listaProdHTML = productosArray.map(p => `
+            <div class="product-item d-flex justify-content-between">
+                <span><b>${p.cantidad}x</b> ${p.nombre || "Producto"}</span>
+                <span class="text-muted">$${(p.precio || 0) * (p.cantidad || 0)}</span>
+            </div>
+        `).join("");
     }
 
-    window.onload = function() {
-        const pedidoLocal = JSON.parse(localStorage.getItem("ultimoPedido"));
-        const contenedor = document.getElementById("contenido-seguimiento");
+    contenedor.innerHTML = `
+        <div class="card card-tracking p-3">
+            <div class="status-header">
+                <span class="order-id">Orden #${pedidoLocal.id}</span>
+                <span id="statusBadge" class="badge badge-secondary">CONECTANDO...</span>
+            </div>
 
-        if (!pedidoLocal || !pedidoLocal.id) {
-            contenedor.innerHTML = `<div class="alert alert-warning text-center small">No hay pedidos activos.</div>`;
-            return;
-        }
+            <div class="progress mb-4">
+                <div id="pBar" class="progress-bar progress-bar-striped progress-bar-animated bg-secondary" style="width: 5%"></div>
+            </div>
 
-        // LÓGICA DE HORA: Si no viene en el pedido, calculamos +45 min ahora
-        let horaEntrega = pedidoLocal.entregaAprox; 
-        if (!horaEntrega) {
-            const fecha = new Date();
-            fecha.setMinutes(fecha.getMinutes() + 45);
-            horaEntrega = fecha.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        }
-
-        // Renderizar Productos
-        let listaProdHTML = "";
-        if (pedidoLocal.productos) {
-            const productosArray = Array.isArray(pedidoLocal.productos) ? pedidoLocal.productos : Object.values(pedidoLocal.productos);
-            listaProdHTML = productosArray.map(p => `
-                <div class="product-item d-flex justify-content-between">
-                    <span><b>${p.cantidad}x</b> ${p.nombre || "Producto"}</span>
-                    <span class="text-muted">$${(p.precio || 0) * (p.cantidad || 0)}</span>
+            <div class="row text-center mb-4">
+                <div class="col-6 border-right">
+                    <small class="text-muted d-block font-weight-bold" style="font-size: 0.7rem;">ENTREGA APROX.</small>
+                    <h5 class="font-weight-bold mb-0" style="color: #6f1a07;">${horaEntrega}</h5>
                 </div>
-            `).join("");
-        }
-
-        // Diseño de la tarjeta
-        contenedor.innerHTML = `
-            <div class="card card-tracking p-3">
-                <div class="status-header">
-                    <span class="order-id">Orden #${pedidoLocal.id}</span>
-                    <span id="statusBadge" class="badge badge-secondary">CONECTANDO...</span>
-                </div>
-
-                <div class="progress mb-4">
-                    <div id="pBar" class="progress-bar progress-bar-striped progress-bar-animated bg-secondary" style="width: 5%"></div>
-                </div>
-
-                <div class="row text-center mb-4">
-                    <div class="col-6 border-right">
-                        <small class="text-muted d-block font-weight-bold" style="font-size: 0.7rem;">ENTREGA APROX.</small>
-                        <h5 class="font-weight-bold mb-0" style="color: #6f1a07;" id="horaEntregaFinal">${horaEntrega}</h5>
-                    </div>
-                    <div class="col-6">
-                        <small class="text-muted d-block font-weight-bold" style="font-size: 0.7rem;">TOTAL A PAGAR</small>
-                        <h5 class="font-weight-bold mb-0" style="color: #6f1a07;">$${pedidoLocal.total}</h5>
-                    </div>
-                </div>
-
-                <div class="address-box">
-                    <h6 class="font-weight-bold" style="color: #6f1a07; font-size: 0.75rem;"><i class="fas fa-map-marker-alt mr-2"></i>ENTREGAR EN:</h6>
-                    <p class="mb-0 text-muted">${pedidoLocal.direccion || "No especificada"}</p>
-                </div>
-
-                <div class="products-section">
-                    <h6 class="font-weight-bold mb-2" style="color: #6f1a07; font-size: 0.75rem;"><i class="fas fa-shopping-bag mr-2"></i>TUS PRODUCTOS:</h6>
-                    <div class="border rounded p-2 bg-white">
-                        ${listaProdHTML}
-                    </div>
+                <div class="col-6">
+                    <small class="text-muted d-block font-weight-bold" style="font-size: 0.7rem;">TOTAL</small>
+                    <h5 class="font-weight-bold mb-0" style="color: #6f1a07;">$${pedidoLocal.total}</h5>
                 </div>
             </div>
-        `;
 
-        // Escuchar cambios en Firebase
-        const pedidoRef = ref(db, 'pedidos/' + pedidoLocal.id);
-        onValue(pedidoRef, (snapshot) => {
-            const data = snapshot.val();
-            if (data && data.estado) {
-                if (data.estado.toLowerCase().trim() === "finalizado") {
-                    notificarAndroid("Tu pedido ha sido finalizado. ¡Gracias!");
-                    contenedor.innerHTML = `<div class="text-center py-5"><h4>¡Pedido Finalizado!</h4><a href="menu.html" class="btn btn-danger mt-3">Volver al Menú</a></div>`;
-                    localStorage.removeItem("ultimoPedido");
-                } else {
-                    actualizarUI(data.estado);
-                }
+            <div class="address-box">
+                <h6 class="font-weight-bold" style="color: #6f1a07; font-size: 0.75rem;"><i class="fas fa-map-marker-alt mr-2"></i>ENTREGAR EN:</h6>
+                <p class="mb-0 text-muted">${pedidoLocal.direccion || "No especificada"}</p>
+            </div>
+
+            <div class="products-section">
+                <h6 class="font-weight-bold mb-2" style="color: #6f1a07; font-size: 0.75rem;"><i class="fas fa-shopping-bag mr-2"></i>TUS PRODUCTOS:</h6>
+                <div class="border rounded p-2 bg-white">
+                    ${listaProdHTML}
+                </div>
+            </div>
+        </div>
+    `;
+
+    const pedidoRef = ref(db, 'pedidos/' + pedidoLocal.id);
+    onValue(pedidoRef, (snapshot) => {
+        const data = snapshot.val();
+        if (data && data.estado) {
+            if (data.estado.toLowerCase().trim() === "finalizado") {
+                notificarAndroid("Tu pedido ha sido finalizado. ¡Gracias!");
+                contenedor.innerHTML = `<div class="text-center py-5"><h4>¡Pedido Finalizado!</h4><a href="https://augedu6-dot.github.io/lukasecurity.github.io/menu.html" class="btn btn-danger mt-3">Volver al Menú</a></div>`;
+                localStorage.removeItem("ultimoPedido");
+            } else {
+                actualizarUI(data.estado);
             }
-        });
-    };
-</script>
+        }
+    });
+};
