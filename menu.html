@@ -364,25 +364,36 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 
 <script>
-    let carrito = JSON.parse(localStorage.getItem("carrito_obj")) || {};
+    // --- LÓGICA SEGURA PARA LEER LOCALSTORAGE ---
+    let carrito = {};
+    try {
+        const carritoGuardado = localStorage.getItem("carrito_obj");
+        if (carritoGuardado) {
+            carrito = JSON.parse(carritoGuardado);
+        }
+    } catch (e) {
+        console.error("Error al leer el carrito, reiniciando:", e);
+        localStorage.removeItem("carrito_obj"); // Borra si está corrupto
+        carrito = {};
+    }
     
     // IMPORTANTE: Actualiza esta lista con los IDs generados por tu admin.html
-  const itemIds = {
-    'qweq': 'qweq',
-    'ds': 'ds',
-    '332': '332',
-    'sdf': 'sdf',
-    'dfdss': 'dfdss',
-    'fsvxcv': 'fsvxcv',
-    'xcvr23': 'xcvr23',
-    'vds': 'vds',
-    'fef': 'fef',
-    '23s': '23s',
-    'dfs': 'dfs',
-    'gdf': 'gdf',
-    'sdsdw2': 'sdsdw2',
-    'tyu': 'tyu',
-};
+    const itemIds = {
+        'qweq': 'qweq',
+        'ds': 'ds',
+        '332': '332',
+        'sdf': 'sdf',
+        'dfdss': 'dfdss',
+        'fsvxcv': 'fsvxcv',
+        'xcvr23': 'xcvr23',
+        'vds': 'vds',
+        'fef': 'fef',
+        '23s': '23s',
+        'dfs': 'dfs',
+        'gdf': 'gdf',
+        'sdsdw2': 'sdsdw2',
+        'tyu': 'tyu',
+    };
 
     function verImagen(src, nombre) {
         document.getElementById('fullImg').src = src;
@@ -390,11 +401,10 @@
         $('#imageModal').modal('show');
     }
 
-function cambiarCantidad(nombre, precio, cambio) {
-        // CORRECCIÓN: Se añade la propiedad 'nombre' dentro del objeto
+    function cambiarCantidad(nombre, precio, cambio) {
         if (!carrito[nombre]) {
             carrito[nombre] = { 
-                nombre: nombre, // <--- Esto es lo que faltaba
+                nombre: nombre,
                 precio: precio, 
                 cantidad: 0 
             };
@@ -406,20 +416,25 @@ function cambiarCantidad(nombre, precio, cambio) {
             delete carrito[nombre];
         }
         
-        localStorage.setItem("carrito_obj", JSON.stringify(carrito));
+        try {
+            localStorage.setItem("carrito_obj", JSON.stringify(carrito));
+        } catch (e) {
+            console.error("Error al guardar en localStorage", e);
+        }
         actualizarInterfaz();
     }
 
     function actualizarInterfaz() {
         let totalItems = 0; let precioTotal = 0;
         
-        // Obtenemos todos los nombres de productos definidos en el HTML actual
         const productosEnPagina = Object.keys(itemIds);
 
         productosEnPagina.forEach(nombre => {
             const id = itemIds[nombre];
             const container = document.getElementById(`controls-${id}`);
-            if (!container) return;
+            
+            // --- VALIDACIÓN DE SEGURIDAD ---
+            if (!container) return; // Si no existe el contenedor en el HTML, saltar
 
             const item = carrito[nombre];
             if (item && item.cantidad > 0) {
@@ -439,8 +454,12 @@ function cambiarCantidad(nombre, precio, cambio) {
             }
         });
         
-        document.getElementById("cartCount").innerText = totalItems;
-        document.getElementById("totalFloat").innerText = precioTotal;
+        // --- VALIDACIÓN DE ELEMENTOS DOM ---
+        const cartCountEl = document.getElementById("cartCount");
+        const totalFloatEl = document.getElementById("totalFloat");
+        
+        if (cartCountEl) cartCountEl.innerText = totalItems;
+        if (totalFloatEl) totalFloatEl.innerText = precioTotal;
     }
 
     window.onload = function() {
@@ -448,15 +467,18 @@ function cambiarCantidad(nombre, precio, cambio) {
         if (!usuario) {
             window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/login2.html";
         } else {
-            document.getElementById("displayEmail").innerText = usuario;
-            document.getElementById("navUser").innerText = usuario.split('@')[0];
+            const displayEmailEl = document.getElementById("displayEmail");
+            const navUserEl = document.getElementById("navUser");
+            if (displayEmailEl) displayEmailEl.innerText = usuario;
+            if (navUserEl) navUserEl.innerText = usuario.split('@')[0];
         }
         actualizarInterfaz();
     };
 
     function cerrarSesion() {
         localStorage.removeItem("usuarioLogueado");
-        localStorage.removeItem("sesion_activa"); // Limpia también el estado de login2.html
+        localStorage.removeItem("sesion_activa");
+        localStorage.removeItem("carrito_obj"); // Limpiar carrito al cerrar sesión
         window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/login2.html";
     }
 
@@ -467,4 +489,5 @@ function cambiarCantidad(nombre, precio, cambio) {
 </script>
 </body>
 </html>
+
 
