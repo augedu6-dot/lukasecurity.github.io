@@ -216,22 +216,36 @@
             estado: "Recibido"
         };
 
+            const totalNum = parseFloat(document.getElementById("totalFinal").innerText);
+            const idPedido = Math.floor(Math.random() * 0xFFFFFF).toString(16).toUpperCase().padStart(6, '0');
+            const usuarioEmail = localStorage.getItem("usuarioLogueado") || "Invitado";
+            const direccionFull = `${domicilioData.calle} #${domicilioData.numero}, ${domicilioData.ciudad}`;
+
+            // 2. Creamos el resumen de productos en texto plano
+            const listaProductos = Object.entries(carrito)
+                .map(([nombre, item]) => `${nombre} (x${item.cantidad})`)
+                .join(", ");
+            const resumenCompleto = `
+            USUARIO: ${usuarioEmail} | 
+            PEDIDO: ${listaProductos} | 
+            TOTAL: $${totalNum} | 
+            DIRECCIÓN: ${direccionFull} | 
+            PAGO: ${metodoSeleccionado} | 
+            `.replace(/\n/g, ' '); // Quitamos saltos de línea para que Google Sheets lo reciba bien
+        
         try {
             // 1. Guardar en Firebase
             await update(ref(db, 'pedidos/' + idPedido), infoPedido);
             
             // 3. Notificamos a Google Sheets
-     // 1. GUARDAR EN GOOGLE SHEETS
-            await fetch(GOOGLE_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                body: JSON.stringify({ 
-                    nombre: { 
-                       infoPedido 
-                    }, 
-                    pedido: idPedido                  
-                })
-            });
+           fetch(GOOGLE_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            body: JSON.stringify({ 
+                nombre: resumenCompleto, // Aquí va todo el resumen
+                idpedido: idPedido      // Aquí solo el ID
+            })
+        });
 
             // 2. Guardar localmente para seguimiento
             localStorage.setItem("ultimoPedido", JSON.stringify(infoPedido));
@@ -273,5 +287,6 @@
 </script>
 </body>
 </html>
+
 
 
