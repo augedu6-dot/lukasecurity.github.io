@@ -320,20 +320,21 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 
 <script>
-    // CORRECCIÓN: Asegurar el nombre de la llave localStorage
     let carrito = JSON.parse(localStorage.getItem("carrito_obj")) || {};
     
-    const itemIds = {
-        'qwdqweqweqweqweqweqwe': 'qwdqweqweqweqweqweqwe',
-        'qweqweqweqweqwe': 'qweqweqweqweqwe',
-        'qweqw': 'qweqw',
-        'qweqwe': 'qweqwe',
-        'qweqweqweqweqwe': 'qweqweqweqweqwe',
-        'eqweqweqweqweqwe': 'eqweqweqweqweqwe',
-        'qweqweqweqweqweqweqwe': 'qweqweqweqweqweqweqwe',
-        'qweqweqweqweqweqwe': 'qweqweqweqweqweqwe',
-        'qweqweqwe': 'qweqweqwe'
-    };
+    // IMPORTANTE: Actualiza esta lista con los IDs generados por tu admin.html
+  const itemIds = {
+    'qwdqweqweqweqweqweqwe': 'qwdqweqweqweqweqweqwe',
+    'qweqweqweqweqwe': 'qweqweqweqweqwe',
+    'qweqw': 'qweqw',
+    'qweqwe': 'qweqwe',
+    'qweqweqweqweqwe': 'qweqweqweqweqwe',
+    'eqweqweqweqweqwe': 'eqweqweqweqweqwe',
+    'qweqw': 'qweqw',
+    'qweqweqweqweqweqweqwe': 'qweqweqweqweqweqweqwe',
+    'qweqweqweqweqweqwe': 'qweqweqweqweqweqwe',
+    'qweqweqwe': 'qweqweqwe',
+};
 
     function verImagen(src, nombre) {
         document.getElementById('fullImg').src = src;
@@ -345,8 +346,6 @@
         if (!carrito[nombre]) carrito[nombre] = { precio: precio, cantidad: 0 };
         carrito[nombre].cantidad += cambio;
         if (carrito[nombre].cantidad <= 0) delete carrito[nombre];
-        
-        // CORRECCIÓN: Sincronización de llave
         localStorage.setItem("carrito_obj", JSON.stringify(carrito));
         actualizarInterfaz();
     }
@@ -354,14 +353,18 @@
     function actualizarInterfaz() {
         let totalItems = 0; let precioTotal = 0;
         
-        // Renderizar controles según el estado del carrito
-        Object.keys(itemIds).forEach(nombre => {
+        // Obtenemos todos los nombres de productos definidos en el HTML actual
+        const productosEnPagina = Object.keys(itemIds);
+
+        productosEnPagina.forEach(nombre => {
             const id = itemIds[nombre];
             const container = document.getElementById(`controls-${id}`);
             if (!container) return;
 
             const item = carrito[nombre];
             if (item && item.cantidad > 0) {
+                totalItems += item.cantidad; 
+                precioTotal += item.cantidad * item.precio;
                 container.innerHTML = `
                     <div class="quantity-controls">
                         <button class="btn-qty" onclick="cambiarCantidad('${nombre}', ${item.precio}, -1)">-</button>
@@ -369,19 +372,12 @@
                         <button class="btn-qty" onclick="cambiarCantidad('${nombre}', ${item.precio}, 1)">+</button>
                     </div>`;
             } else {
-                // Buscamos el precio en el HTML si no está en el carrito
-                const card = container.closest('.food-info');
-                const precioText = card.querySelector('.food-price').innerText;
-                const precioNumerico = parseFloat(precioText.replace('$', ''));
+                // Buscamos el precio en el HTML si no está en el carrito para el botón inicial
+                const precioElemento = container.closest('.food-info').querySelector('.food-price').innerText;
+                const precioNumerico = parseFloat(precioElemento.replace('$', ''));
                 container.innerHTML = `<button class="btn-add-initial" onclick="cambiarCantidad('${nombre}', ${precioNumerico}, 1)">Añadir</button>`;
             }
         });
-
-        // Calcular totales globales del carrito
-        for (const nombre in carrito) {
-            totalItems += carrito[nombre].cantidad;
-            precioTotal += carrito[nombre].cantidad * carrito[nombre].precio;
-        }
         
         document.getElementById("cartCount").innerText = totalItems;
         document.getElementById("totalFloat").innerText = precioTotal;
@@ -400,7 +396,7 @@
 
     function cerrarSesion() {
         localStorage.removeItem("usuarioLogueado");
-        localStorage.removeItem("sesion_activa");
+        localStorage.removeItem("sesion_activa"); // Limpia también el estado de login2.html
         window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/login2.html";
     }
 
