@@ -187,7 +187,7 @@
         document.getElementById("totalFinal").innerText = precioTotal;
     }
 
-   window.confirmarPedidoFinal = async function() {
+window.confirmarPedidoFinal = async function() {
     const domicilioData = JSON.parse(localStorage.getItem('domicilio'));
     if (!domicilioData) { 
         alert("Por favor, registra tu dirección antes de pagar."); 
@@ -200,8 +200,9 @@
     }
 
     const btn = document.getElementById("btnPagarFlotante");
-    const totalTexto = document.getElementById("totalFinal").innerText; // Ejemplo: "500"
-    const totalNum = parseFloat(totalTexto);
+    // 1. Obtenemos el texto del total y lo convertimos a número
+    const totalTexto = document.getElementById("totalFinal").innerText; 
+    const totalNum = parseFloat(totalTexto); 
 
     btn.disabled = true; 
     btn.innerText = "Preparando pago...";
@@ -221,10 +222,10 @@
     };
 
     try {
-        // 1. Guardamos el registro en tu base de datos (Firebase/Sheets)
+        // 2. Guardamos el registro en Firebase
         await update(ref(db, 'pedidos/' + idPedido), dataPedido);
         
-        // 2. Notificamos a Google Sheets
+        // 3. Notificamos a Google Sheets
         fetch(GOOGLE_URL, {
             method: 'POST',
             mode: 'no-cors',
@@ -235,31 +236,28 @@
             })
         });
 
-  // --- LÓGICA DE REDIRECCIÓN A STRIPE ---
-            
-            // TU ENLACE DE PAGO (Asegúrate de que sea el de 'buy.stripe.com')
-            const STRIPE_LINK = "https://buy.stripe.com/dRm14nbUz5Qjf13d2fdfG05"; 
-            
-            // El total que ya tenemos en la variable totalAmount (ej: "500")
-            const totalNumerico = parseFloat(totalAmount);
-            
-            // Si tu producto en Stripe vale $10, dividimos entre 10 para sacar la cantidad
-            // Usamos Math.round para evitar decimales que Stripe no acepta
-            const cantidadFinal = Math.round(totalNumerico / 10);
+        // --- LÓGICA DE REDIRECCIÓN A STRIPE ---
+        
+        const STRIPE_LINK = "https://buy.stripe.com/dRm14nbUz5Qjf13d2fdfG05"; 
+        
+        // CORRECCIÓN: Usamos 'totalNum' que es la variable definida arriba
+        // Calculamos la cantidad (Total / 10 porque tu producto en Stripe vale $10)
+        const cantidadFinal = Math.round(totalNum / 10);
 
-            // Guardamos el ID del pedido para seguimiento, pero no borramos el carrito por seguridad
-            localStorage.setItem("ultimoPedido", JSON.stringify(dataPedido));
-            
-            // REDIRECCIÓN CON PARÁMETRO DE CANTIDAD
-            // Esto construye: https://buy.stripe.com/xxx?quantity=50
-            window.location.href = `${STRIPE_LINK}?quantity=${cantidadFinal}`;
+        // Guardamos el pedido localmente para la página de seguimiento
+        localStorage.setItem("ultimoPedido", JSON.stringify(dataPedido));
+        
+        // 4. Redirección final con el parámetro de cantidad correcto
+        window.location.href = `${STRIPE_LINK}?quantity=${cantidadFinal}`;
 
-        } catch (error) {
-            console.error("Error al procesar:", error);
-            btn.disabled = false; 
-            btn.innerText = "Reintentar";
-        }
+    } catch (error) {
+        console.error("Error al procesar:", error);
+        alert("Hubo un error al conectar con la base de datos.");
+        btn.disabled = false; 
+        btn.innerText = "Reintentar";
+    }
 };
+    
     window.cerrarSesion = function() {
         localStorage.removeItem("usuarioLogueado");
         window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/login2.html";
@@ -273,6 +271,7 @@
 </script>
 </body>
 </html>
+
 
 
 
