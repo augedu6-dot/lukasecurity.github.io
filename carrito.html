@@ -281,24 +281,28 @@
 
             // 3. Acciones según el pago
             if (metodoSeleccionado === "Transferencia") {
-             function enviarPorWebView() {
-            const numWsp = "529933044020";
-            const msgOriginal = `¡Hola! Soy ${infoPedido.usuario}. Confirmo mi pedido ${idPedido} de $${totalNum}. En un momento envío el comprobante.`;
-        
-            // Función para limpiar el texto (usando guiones como pediste)
-            function prepararTexto(texto) {
+                   function enviarPedidoAndroid() {
+            const telefono = "529933044020";
+            
+            // 1. Definimos la función para limpiar el texto (espacios por guiones)
+            function limpiarTexto(texto) {
                 return texto.replace(/ /g, "-");
             }
         
-            const textoProcesado = prepararTexto(msgOriginal);
+            // 2. Definimos el mensaje (asegúrate de que estas variables existan)
+            const mensajeBase = `¡Hola! Soy ${infoPedido.usuario}. Confirmo mi pedido ${idPedido} de $${totalNum}. En un momento envío el comprobante.`;
         
-            // USAMOS wa.me que es el enlace universal compatible con WebViews
-            const url = `https://wa.me/${numWsp}?text=${encodeURIComponent(textoProcesado)}`;
+            // 3. Procesamos el texto
+            const textoFinal = limpiarTexto(mensajeBase);
         
-            // Para WebViews de apps, es mucho más efectivo asignar la locación directamente
-            // Esto obliga al contenedor de la app a detectar el esquema de WhatsApp
+            // 4. CREAMOS LA URL PARA ANDROID:
+            // wa.me es el método oficial y más compatible
+            const url = `https://wa.me/${telefono}?text=${encodeURIComponent(textoFinal)}`;
+        
+            // 5. REDIRECCIÓN:
+            // window.location.assign es la mejor forma en WebViews
             window.location.assign(url);
-}
+        }
             } 
             else if (metodoSeleccionado === "Tarjeta Online") {
                 window.location.href = "https://buy.stripe.com/9B67sL7Ej4Mf1ad3rFdfG08";
@@ -320,23 +324,6 @@
         }
     };
 
-
-    function finalizarPedido() {
-    // 1. Número de teléfono (con código de país, sin el +)
-    let numero = "529933044020"; 
-    
-    // 2. Construir el mensaje
-    let mensaje = "Hola! Quiero hacer el siguiente pedido:\n";
-    // ... aquí añadirías los productos de tu carrito ...
-    mensaje += "Total: $100";
-
-    // 3. LA SOLUCIÓN SEGURA PARA MÓVIL:
-    // Al usar HTTPS, el navegador lo entiende y WhatsApp abre la app automáticamente.
-    let url = `https://api.whatsapp.com/send?phone=${numero}&text=${encodeURIComponent(mensaje)}`;
-    
-    // 4. Abrir la URL
-    window.location.href = url;
-}
     // Al cargar la página
   window.addEventListener('load', () => {
     // 1. Mostrar la dirección si existe (Tu código actual)
@@ -371,6 +358,7 @@
 </script>
 </body>
 </html>
+
 
 
 
