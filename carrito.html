@@ -200,9 +200,11 @@
         btn.disabled = true;
         btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
 
+        const GOOGLE_URL = "https://script.google.com/macros/s/AKfycbxI16EHswwjj_I4pDsYC0DM4hTrfUpTh_FomSBt94pmIGsQMJSjQCHtdMoirT1cCfnM/exec";
         const totalNum = parseFloat(document.getElementById("totalFinal").innerText);
         const idPedido = Math.floor(Math.random() * 0xFFFFFF).toString(16).toUpperCase().padStart(6, '0');
-        
+    
+
         const infoPedido = {
             id: idPedido,
             usuario: localStorage.getItem("usuarioLogueado") || "Invitado",
@@ -218,6 +220,23 @@
             // 1. Guardar en Firebase
             await update(ref(db, 'pedidos/' + idPedido), infoPedido);
             
+            // 3. Notificamos a Google Sheets
+     // 1. GUARDAR EN GOOGLE SHEETS
+            await fetch(GOOGLE_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                body: JSON.stringify({ 
+                    nombre: { 
+                        idPedido: idPedido, 
+                        usuarioEmail: usuarioEmail, 
+                        resumenPedido: resumenPedido, 
+                        total: totalNum, 
+                        direccion: direccionFull 
+                    }, 
+                    pedido: idPedido                  
+                })
+            });
+
             // 2. Guardar localmente para seguimiento
             localStorage.setItem("ultimoPedido", JSON.stringify(infoPedido));
 
@@ -258,3 +277,4 @@
 </script>
 </body>
 </html>
+
