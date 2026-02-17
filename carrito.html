@@ -281,7 +281,7 @@
 
             // 3. Acciones según el pago
             if (metodoSeleccionado === "Transferencia") {
-                   function enviarPedidoAndroid() {
+                  
                     const telefono = "529933044020";
                     
                     // 1. Definimos la función para limpiar el texto (espacios por guiones)
@@ -302,7 +302,7 @@
                     // 5. REDIRECCIÓN:
                     // window.location.assign es la mejor forma en WebViews
                     window.location.assign(url);
-                }
+                
             } 
             else if (metodoSeleccionado === "Tarjeta Online") {
                 window.location.href = "https://buy.stripe.com/9B67sL7Ej4Mf1ad3rFdfG08";
@@ -358,6 +358,7 @@
 </script>
 </body>
 </html>
+
 
 
 
