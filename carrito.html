@@ -219,18 +219,18 @@
   
 
             // 2. Creamos el resumen de productos en texto plano
-            const listaProductos = Object.entries(carrito)
-                .map(([nombre, item]) => `${nombre} (x${item.cantidad})`)
-                .join(", ");
-            const resumenCompleto = {
-                 id: idPedido,
+             const listaProductos = Object.entries(carrito)
+            .map(([nombre, item]) => `${nombre} (x${item.cantidad})`)
+            .join(", ");
+        
+        const resumenCompleto = {
+            idPedido: idPedido,
             usuario: localStorage.getItem("usuarioLogueado") || "Invitado",
-                listaProductos,
-           total: totalNum,
-            TOTAL: $${totalNum} ,
+            productos: listaProductos,
+            total: `$${totalNum}`, // Corregido: Ahora es un string con comillas invertidas
             direccion: `${domicilioData.calle} #${domicilioData.numero}, ${domicilioData.ciudad}`,
-             metodoPago: metodoSeleccionado
-             } ; // Quitamos saltos de línea para que Google Sheets lo reciba bien
+            metodoPago: metodoSeleccionado
+        };
         
         try {
             // 1. Guardar en Firebase
@@ -286,6 +286,7 @@
 </script>
 </body>
 </html>
+
 
 
 
