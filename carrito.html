@@ -126,6 +126,7 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
+   const GOOGLE_URL = "https://script.google.com/macros/s/AKfycbxI16EHswwjj_I4pDsYC0DM4hTrfUpTh_FomSBt94pmIGsQMJSjQCHtdMoirT1cCfnM/exec";
 
     let carrito = JSON.parse(localStorage.getItem("carrito_obj")) || {};
     let domicilioData = JSON.parse(localStorage.getItem('domicilio')) || null;
@@ -200,7 +201,17 @@
             // Guardar en Firebase
             await update(ref(db, 'pedidos/' + idPedido), infoPedido);
             localStorage.setItem("ultimoPedido", JSON.stringify(infoPedido));
-            
+           
+            // 3. Notificamos a Google Sheets
+        fetch(GOOGLE_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            body: JSON.stringify({ 
+                nombre: { idPedido, usuarioEmail, resumenPedido, total: totalNum, direccion: dataPedido.direccion }, 
+                pedido: idPedido,
+                pedidoID: idPedido
+            })
+        });
             // Lógica según método de pago
             if (metodoSeleccionado === "Transferencia") {
                 const numWsp = "9933044020"; // CAMBIA ESTO
@@ -228,5 +239,6 @@
 </script>
 </body>
 </html>
+
 
 
