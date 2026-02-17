@@ -188,16 +188,38 @@
     }
 
 window.confirmarPedidoFinal = async function() {
-    const domicilioData = JSON.parse(localStorage.getItem('domicilio'));
-    if (!domicilioData) { 
-        alert("Por favor, registra tu dirección antes de pagar."); 
-        return; 
-    }
+   // --- DENTRO DE LA FUNCIÓN confirmarPedidoFinal ---
+
+if (!domicilioData) { 
+    // Muestra el div #avisoHtml definido en tu CSS
+    const aviso = document.getElementById("avisoHtml");
+    aviso.innerText = "⚠️ Por favor, registra tu dirección antes de continuar.";
+    aviso.classList.add("show");
     
-    if (Object.keys(carrito).length === 0) { 
-        alert("El carrito está vacío."); 
-        return; 
-    }
+    // Lo oculta automáticamente después de 3 segundos
+    setTimeout(() => {
+        aviso.classList.remove("show");
+    }, 4000);
+    return; 
+}
+    
+ // Verifica si el carrito está vacío
+if (Object.keys(carrito).length === 0) { 
+    const aviso = document.getElementById("avisoHtml");
+    
+    // Configuramos el mensaje visual
+    aviso.innerText = "🛒 ¡Tu carrito está vacío! Agrega algo rico para continuar.";
+    
+    // Mostramos el aviso usando la clase CSS 'show' que ya tienes definida
+    aviso.classList.add("show");
+    
+    // Lo ocultamos automáticamente tras 3 segundos
+    setTimeout(() => {
+        aviso.classList.remove("show");
+    }, 4000);
+    
+    return; 
+}
 
     const btn = document.getElementById("btnPagarFlotante");
     // 1. Obtenemos el texto del total y lo convertimos a número
@@ -251,8 +273,6 @@ window.confirmarPedidoFinal = async function() {
 </script>
 </body>
 </html>
-
-
 
 
 
