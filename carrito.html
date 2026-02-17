@@ -236,27 +236,7 @@ window.confirmarPedidoFinal = async function() {
             })
         });
 
-        // --- LÓGICA DE REDIRECCIÓN A STRIPE ---
-        
-        const STRIPE_LINK = "https://buy.stripe.com/cNi8wPe2H0vZ3il9Q3dfG07"; 
-        
-        // CORRECCIÓN: Usamos 'totalNum' que es la variable definida arriba
-        // Calculamos la cantidad (Total / 10 porque tu producto en Stripe vale $10)
-        const cantidadFinal = Math.round(totalNum / 10);
-
-        // Guardamos el pedido localmente para la página de seguimiento
-        localStorage.setItem("ultimoPedido", JSON.stringify(dataPedido));
-        
-        // 4. Redirección final con el parámetro de cantidad correcto
-        window.location.href = `${STRIPE_LINK}?quantity=${cantidadFinal}`;
-
-    } catch (error) {
-        console.error("Error al procesar:", error);
-        alert("Hubo un error al conectar con la base de datos.");
-        btn.disabled = false; 
-        btn.innerText = "Reintentar";
-    }
-};
+      
     
     window.cerrarSesion = function() {
         localStorage.removeItem("usuarioLogueado");
@@ -271,6 +251,7 @@ window.confirmarPedidoFinal = async function() {
 </script>
 </body>
 </html>
+
 
 
 
