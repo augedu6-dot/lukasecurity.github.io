@@ -478,6 +478,21 @@
             window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/carrito.html";
         }
     }
+
+function cerrarSesion() {
+    // 1. Borramos los datos específicos de la sesión
+    localStorage.removeItem("usuarioLogueado");
+    localStorage.removeItem("sesion_activa");
+    
+    // 2. Borramos el carrito para que no persista si entra otro usuario
+    localStorage.removeItem("carrito_obj");
+    
+    // 3. Borramos cualquier pedido en seguimiento
+  
+
+    // 4. Redirigimos al login
+    window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/login2.html";
+}
 </script>
 </body>
 </html>
