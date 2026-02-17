@@ -1,24 +1,45 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Mi WebApp</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Procesando Pago - DeMasita</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding: 50px; background: #fefcf5; }
+        .loader { border: 16px solid #f3f3f3; border-top: 16px solid #6f1a07; border-radius: 50%; width: 60px; height: 60px; animation: spin 2s linear infinite; margin: 20px auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
 </head>
 <body>
 
-    <h1>Finalizar Compra</h1>
-    <p>Haz clic abajo para pagar de forma segura:</p>
+    <h2 id="mensaje">Redirigiendo al pago seguro...</h2>
+    <div class="loader"></div>
+    <p>Monto a pagar: $<span id="montoDisplay">0</span></p>
 
-<script async
-  src="https://js.stripe.com/v3/buy-button.js">
-</script>
+    <script>
+        // 1. Obtener el monto de la URL que enviamos desde carrito.html
+        const urlParams = new URLSearchParams(window.location.search);
+        const monto = urlParams.get('monto');
+        
+        // 2. Tu link de pago de Stripe (Copia el link directo, NO el código embed)
+        // Ejemplo: https://buy.stripe.com/6oEbLp2M1...
+        const STRIPE_LINK = "https://buy.stripe.com/eVqbJ17EjfqTaKNaU7dfG00";
 
-<stripe-buy-button
-  buy-button-id="buy_btn_1T1heCE5J13mmz4P4L8180zn"
-  publishable-key="pk_live_51T1hAJE5J13mmz4PUUefuKCJm8luRUvpUjPii6ULsivVSRMVbLQk5RFgHFMyqa41qGyGCArOCC8HesYyBY9xsntf00ZX2q9mCL"
->
-</stripe-buy-button>
-  
-    </body>
+        if (monto && monto > 0) {
+            document.getElementById('montoDisplay').innerText = monto;
+            
+            /* IMPORTANTE: Para que esto funcione, en Stripe tu producto debe valer $1 
+               y tener activada la opción "Permitir a los clientes ajustar la cantidad".
+               Así, si el total es 50, mandamos quantity=50 y el total será $50.
+            */
+            setTimeout(() => {
+                window.location.href = `${STRIPE_LINK}?quantity=${monto}`;
+            }, 1500); 
+
+        } else {
+            document.getElementById('mensaje').innerText = "Error: No hay productos en el carrito.";
+            setTimeout(() => { window.location.href = 'carrito.html'; }, 3000);
+        }
+    </script>
+</body>
 </html>
