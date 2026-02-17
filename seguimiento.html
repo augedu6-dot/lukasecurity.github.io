@@ -146,19 +146,25 @@
             }
 
             // Lógica de productos corregida para soportar nombres largos
-            let listaProdHTML = "";
-            if (pedidoLocal.productos && Array.isArray(pedidoLocal.productos)) {
-                listaProdHTML = pedidoLocal.productos.map(p => `
-                    <div class="product-item">
-                        <div class="product-info">
-                            <span class="font-weight-bold">${p.cantidad}x</span> 
-                            <span>${p.nombre}</span>
+           let listaProdHTML = "";
+            if (pedidoLocal.productos) {
+                // Convertimos el objeto/array de productos para iterar con seguridad
+                const productosArray = Array.isArray(pedidoLocal.productos) 
+                    ? pedidoLocal.productos 
+                    : Object.values(pedidoLocal.productos);
+
+                listaProdHTML = productosArray.map(p => {
+                    // Si p.nombre no existe, no mostramos nada o usamos un genérico
+                    const nombreProducto = p.nombre || "Producto"; 
+                    const subtotal = (p.precio || 0) * (p.cantidad || 0);
+                    
+                    return `
+                        <div class="product-item d-flex justify-content-between">
+                            <span><b>${p.cantidad}x</b> ${nombreProducto}</span>
+                            <span class="text-muted">$${subtotal}</span>
                         </div>
-                        <div class="product-price">
-                            $${p.precio * p.cantidad}
-                        </div>
-                    </div>
-                `).join("");
+                    `;
+                }).join("");
             }
 
             contenedor.innerHTML = `
@@ -214,3 +220,4 @@
     </script>
 </body>
 </html>
+
