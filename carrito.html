@@ -289,7 +289,7 @@
                     return msg.replace(/ /g, "-");
                 }
                 let productoConGuiones = reemplazarEspaciosPorGuiones();
-                const url = `https://api.whatsapp.com/send?phone=${numWsp}&text=${encodeURIComponent(productoConGuiones)}`;   
+                const url = `https://wa.me/${numWsp}?text=${encodeURIComponent(productoConGuiones)}`;   
                 // OPCIÓN CORRECTA: Abrir en pestaña nueva para no perder tu página
               window.open(url, '_blank');
             } 
@@ -364,6 +364,7 @@
 </script>
 </body>
 </html>
+
 
 
 
