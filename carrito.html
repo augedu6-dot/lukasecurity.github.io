@@ -281,7 +281,17 @@
 
             // 3. Acciones según el pago
             if (metodoSeleccionado === "Transferencia") {
-               finalizarPedido();
+                  url = `https://wa.me/${numero}?text=${encodeURIComponent(mensaje)}`
+                 const numWsp = "529933044020";
+                const msg = `¡Hola! Soy ${infoPedido.usuario}. Confirmo mi pedido ${idPedido} de $${totalNum}. En un momento envío el comprobante.`;
+                function reemplazarEspaciosPorGuiones(msg) 
+                    // y .replace() para cambiarlos por un guion (-)
+                    return msg.replace(/ /g, "-");
+                }
+                let productoConGuiones = reemplazarEspaciosPorGuiones();
+                const url = `https://api.whatsapp.com/send?phone=${numWsp}&text=${encodeURIComponent(productoConGuiones)}`;   
+                // OPCIÓN CORRECTA: Abrir en pestaña nueva para no perder tu página
+              window.open(url, '_blank');
             } 
             else if (metodoSeleccionado === "Tarjeta Online") {
                 window.location.href = "https://buy.stripe.com/9B67sL7Ej4Mf1ad3rFdfG08";
@@ -354,6 +364,7 @@
 </script>
 </body>
 </html>
+
 
 
 
