@@ -161,7 +161,7 @@
             </div>
             <div class="nav-user-link" data-toggle="modal" data-target="#userModal">
                 <i class="fas fa-user-circle mr-1"></i>
-                <span id="navUser">Cuenta</span>
+                <span id="navUser"></span>
             </div>
         </div>
     </div>
@@ -482,7 +482,7 @@
 
         // Evita errores si los elementos de usuario no están en el DOM
         const elEmail = document.getElementById("displayEmail");
-        const elNav = document.getElementById("navUser");
+     //   const elNav = document.getElementById("navUser");
         if (elEmail) elEmail.innerText = usuario;
         if (elNav) elNav.innerText = usuario.split('@')[0];
 
@@ -522,6 +522,7 @@ function verImagen(src, titulo) {
 </script>
 </body>
 </html>
+
 
 
 
