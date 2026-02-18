@@ -122,7 +122,7 @@
     async function saveToFirestore(user) {
         if (isLogin) {
             log("Login detectado, saltando guardado...");
-            window.location.href = "dashboard.html";
+            window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/dashboard.html";
             return;
         }
 
@@ -143,7 +143,7 @@
             });
             log("¡Escritura exitosa!");
             alert("Cuenta creada y guardada en Firestore");
-            window.location.href = "dashboard.html";
+            window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/dashboard.html";
         } catch (e) {
             log("Error Firestore: " + e.code);
             alert("Error al guardar: " + e.message);
@@ -217,3 +217,4 @@
 </script>
 </body>
 </html>
+
