@@ -117,16 +117,25 @@
             localStorage.setItem("user_contact", metodo === "phone" ? p : em);
             localStorage.setItem("sesion_activa", "true");
 
-            if (metodo === "phone") {
-                status.innerText = "Abriendo WhatsApp...";
-                const msg = `Hola, soy ${n}. Mi ID: ${user.uid.substring(0,5)}`;
-                const waUrl = `https://wa.me/529602252137?text=${encodeURIComponent(msg)}`;
-                
-                setTimeout(() => { window.location.href = waUrl; }, 800);
-            } else {
-                status.innerText = "Entrando al menú...";
-                window.location.href = "menu.html";
-            }
+          if (metodo === "phone") {
+    status.innerHTML = `
+        <b style="color:green">¡Mensaje listo!</b><br>
+        1. Envía el mensaje en WhatsApp.<br>
+        2. Regresa aquí y presiona el botón:<br><br>
+        <button onclick="window.location.href='menu.html'" 
+            style="padding:10px; background:green; color:white; border:none; border-radius:10px; cursor:pointer">
+            YA ENVIÉ EL MENSAJE - ENTRAR
+        </button>
+    `;
+    
+    const msg = `Hola, soy ${n}. Mi ID: ${user.uid.substring(0,5)}`;
+    const waUrl = `https://wa.me/529602252137?text=${encodeURIComponent(msg)}`;
+    
+    // Abrimos WhatsApp automáticamente tras 1 segundo
+    setTimeout(() => { 
+        window.location.href = waUrl; 
+    }, 800);
+}
 
         } catch (e) {
             console.error(e);
@@ -137,3 +146,4 @@
 </script>
 </body>
 </html>
+
