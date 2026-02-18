@@ -9,7 +9,7 @@
         * { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
         input { -webkit-user-select: text; user-select: text; }
         body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
-        .auth-card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); width: 100%; max-width: 400px; transition: all 0.3s; }
+        .auth-card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); width: 100%; max-width: 400px; }
         h2 { color: var(--primary); text-align: center; margin-bottom: 5px; }
         p.subtitle { color: #666; text-align: center; font-size: 14px; margin-bottom: 25px; }
         .form-group { margin-bottom: 15px; flex: 1; }
@@ -22,11 +22,9 @@
         .method-btn.active { background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); color: var(--primary); }
         .btn-main { background: var(--primary); color: white; border: none; padding: 15px; width: 100%; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
         .switch-mode { text-align: center; margin-top: 20px; font-size: 14px; color: #666; cursor: pointer; }
-        .switch-mode b { color: var(--primary); }
         .otp-container { display: flex; justify-content: space-between; gap: 8px; margin: 20px 0; }
         .otp-input { width: 45px; height: 55px; text-align: center; font-size: 20px; border: 2px solid var(--gray); border-radius: 10px; }
         .hidden { display: none; }
-        #recaptcha-container { margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -92,6 +90,7 @@
     </div>
 
 <script type="module">
+    // IMPORTACIONES V12
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
     import { getAuth, RecaptchaVerifier, signInWithPhoneNumber, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
     import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
@@ -114,29 +113,37 @@
     let currentMethod = 'phone';
     let confirmationResult;
 
-    // Recaptcha
+    // Inicializar Recaptcha
     window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', { 'size': 'invisible' });
 
-    // Lógica para guardar datos
+    // FUNCIÓN CRÍTICA: GUARDAR EN FIRESTORE
     async function saveUserData(user) {
-        const name = document.getElementById('name').value;
-        const lastname = document.getElementById('lastname').value;
-        const phone = document.getElementById('phone').value;
+        const name = document.getElementById('name').value.trim();
+        const lastname = document.getElementById('lastname').value.trim();
+        const phone = document.getElementById('phone').value.trim();
 
-        if (!isLoginMode && name) {
-            await setDoc(doc(db, "usuarios", user.uid), {
-                nombre: name,
-                apellido: lastname,
-                telefono: "+52" + phone,
-                email: user.email || "",
-                creado: serverTimestamp()
-            });
+        if (!isLoginMode && name !== "") {
+            try {
+                console.log("Intentando guardar datos para UID:", user.uid);
+                await setDoc(doc(db, "usuarios", user.uid), {
+                    nombre: name,
+                    apellido: lastname,
+                    telefono: "+52" + phone,
+                    email: user.email || "",
+                    creado: serverTimestamp()
+                });
+                console.log("Firestore: Datos guardados correctamente");
+            } catch (error) {
+                console.error("Error detallado Firestore:", error);
+                alert("Error al guardar en BD: " + error.message);
+                return; // Detener si falla
+            }
         }
         window.location.href = "dashboard.html";
     }
 
-    // Manejar Click Principal
-    document.getElementById('btn-submit').onclick = async () => {
+    // EVENTOS DE BOTONES
+    document.getElementById('btn-submit').addEventListener('click', async () => {
         if (currentMethod === 'phone') {
             const phone = "+52" + document.getElementById('phone').value;
             signInWithPhoneNumber(auth, phone, window.recaptchaVerifier)
@@ -144,7 +151,7 @@
                     confirmationResult = res;
                     document.getElementById('step-1').classList.add('hidden');
                     document.getElementById('step-otp').classList.remove('hidden');
-                }).catch(err => alert(err.message));
+                }).catch(err => alert("Error SMS: " + err.message));
         } else {
             const email = document.getElementById('email').value;
             const pass = document.getElementById('password').value;
@@ -152,20 +159,21 @@
                 const res = isLoginMode 
                     ? await signInWithEmailAndPassword(auth, email, pass)
                     : await createUserWithEmailAndPassword(auth, email, pass);
-                saveUserData(res.user);
-            } catch (err) { alert(err.message); }
+                await saveUserData(res.user);
+            } catch (err) { alert("Error Auth: " + err.message); }
         }
-    };
+    });
 
-    // Verificar OTP
-    document.getElementById('btn-verify').onclick = async () => {
+    document.getElementById('btn-verify').addEventListener('click', async () => {
         const code = Array.from(document.querySelectorAll('.otp-input')).map(i => i.value).join('');
+        if(code.length < 6) return alert("Ingresa el código completo");
+        
         confirmationResult.confirm(code)
-            .then(res => saveUserData(res.user))
-            .catch(() => alert("Código incorrecto"));
-    };
+            .then(async (res) => await saveUserData(res.user))
+            .catch(err => alert("Código incorrecto: " + err.message));
+    });
 
-    // Toggles de Interfaz
+    // INTERFAZ
     document.getElementById('btn-switch').onclick = () => {
         isLoginMode = !isLoginMode;
         document.getElementById('main-title').innerText = isLoginMode ? 'Bienvenido' : 'Crear Cuenta';
@@ -184,15 +192,10 @@
         document.getElementById('email-input-area').classList.toggle('hidden', method !== 'email');
     }
 
-    // Salto de inputs OTP
     const inputs = document.querySelectorAll('.otp-input');
     inputs.forEach((input, i) => {
         input.oninput = () => { if(input.value && i < 5) inputs[i+1].focus(); };
         input.onkeydown = (e) => { if(e.key === 'Backspace' && !input.value && i > 0) inputs[i-1].focus(); };
-    });
-
-    onAuthStateChanged(auth, (user) => {
-        if (user) window.location.href = "dashboard.html";
     });
 </script>
 </body>
