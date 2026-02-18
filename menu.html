@@ -474,17 +474,21 @@
     }
 
     window.onload = function() {
-        const usuario = localStorage.getItem("usuarioLogueado");
-        if (!usuario) {
-            window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/login2.html";
-            return;
-        }
+     // 1. Verificamos sesión
+    const sesion = localStorage.getItem("sesion_activa");
+    const usuarioInfo = localStorage.getItem("usuarioLogueado");
+    const contacto = localStorage.getItem("user_contact");
+
+    if (!sesion || !usuarioInfo) {
+        window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/logeo3.html";
+        return;
+    }
 
         // Evita errores si los elementos de usuario no están en el DOM
         const elEmail = document.getElementById("displayEmail");
         const elNav = document.getElementById("navUser");
-        if (elEmail) elEmail.innerText = usuario;
-        if (elNav) elNav.innerText = usuario.split('@')[0];
+        if (elEmail) elEmail.innerText = usuarioInfo;
+        if (elNav) elNav.innerText = contacto.split('@')[0];
 
         actualizarInterfaz();
     };
@@ -522,6 +526,7 @@ function verImagen(src, titulo) {
 </script>
 </body>
 </html>
+
 
 
 
