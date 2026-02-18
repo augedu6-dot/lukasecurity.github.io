@@ -3,97 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Acceso Unificado</title>
+    <title>Sistema de Registro Seguro</title>
     <style>
         :root { --primary: #6f1a07; --bg: #f8f9fa; --gray: #ced4da; }
-        * { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
-        input { -webkit-user-select: text; user-select: text; }
-        body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
-        .auth-card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); width: 100%; max-width: 400px; }
+        * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: var(--bg); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
+        .auth-card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 400px; }
         h2 { color: var(--primary); text-align: center; margin-bottom: 5px; }
-        p.subtitle { color: #666; text-align: center; font-size: 14px; margin-bottom: 25px; }
-        .form-group { margin-bottom: 15px; flex: 1; }
+        .subtitle { color: #666; text-align: center; font-size: 14px; margin-bottom: 20px; }
+        .form-group { margin-bottom: 15px; }
         label { display: block; font-size: 12px; font-weight: bold; margin-bottom: 5px; color: #444; }
-        .input-field { width: 100%; padding: 12px; border: 2px solid var(--gray); border-radius: 10px; outline: none; font-size: 15px; }
+        .input-field { width: 100%; padding: 12px; border: 2px solid var(--gray); border-radius: 10px; outline: none; font-size: 16px; }
         .input-field:focus { border-color: var(--primary); }
         .row { display: flex; gap: 10px; }
         .method-selector { display: flex; background: #eee; border-radius: 10px; padding: 4px; margin-bottom: 20px; }
         .method-btn { flex: 1; border: none; padding: 8px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: bold; background: transparent; }
         .method-btn.active { background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); color: var(--primary); }
-        .btn-main { background: var(--primary); color: white; border: none; padding: 15px; width: 100%; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .btn-main { background: var(--primary); color: white; border: none; padding: 15px; width: 100%; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px; }
         .switch-mode { text-align: center; margin-top: 20px; font-size: 14px; color: #666; cursor: pointer; }
         .otp-container { display: flex; justify-content: space-between; gap: 8px; margin: 20px 0; }
         .otp-input { width: 45px; height: 55px; text-align: center; font-size: 20px; border: 2px solid var(--gray); border-radius: 10px; }
         .hidden { display: none; }
+        #status-log { font-size: 10px; color: #999; margin-top: 10px; text-align: center; }
     </style>
 </head>
 <body>
 
-    <div class="auth-card">
-        <div id="step-1">
-            <h2 id="main-title">Crear Cuenta</h2>
-            <p class="subtitle" id="main-subtitle">Completa tus datos para continuar</p>
+<div class="auth-card">
+    <div id="step-1">
+        <h2 id="main-title">Crear Cuenta</h2>
+        <p class="subtitle" id="main-subtitle">Ingresa tus datos personales</p>
 
-            <div id="name-fields" class="row">
-                <div class="form-group">
-                    <label>Nombre</label>
-                    <input type="text" id="name" class="input-field" placeholder="Juan">
-                </div>
-                <div class="form-group">
-                    <label>Apellido</label>
-                    <input type="text" id="lastname" class="input-field" placeholder="Pérez">
-                </div>
+        <div id="name-fields" class="row">
+            <div class="form-group" style="flex:1">
+                <label>Nombre</label>
+                <input type="text" id="name" class="input-field" placeholder="Juan">
             </div>
-
-            <div class="method-selector">
-                <button id="btn-method-phone" class="method-btn active">Teléfono</button>
-                <button id="btn-method-email" class="method-btn">Correo</button>
+            <div class="form-group" style="flex:1">
+                <label>Apellido</label>
+                <input type="text" id="lastname" class="input-field" placeholder="Pérez">
             </div>
-
-            <div id="phone-input-area">
-                <label>Número de Teléfono</label>
-                <div style="display: flex; gap: 5px;">
-                    <input type="text" value="+52" readonly style="width: 50px; text-align: center; border: 2px solid var(--gray); border-radius: 10px;">
-                    <input type="tel" id="phone" class="input-field" placeholder="5512345678" maxlength="10">
-                </div>
-            </div>
-
-            <div id="email-input-area" class="hidden">
-                <label>Correo Electrónico</label>
-                <input type="email" id="email" class="input-field" placeholder="correo@ejemplo.com">
-                <label style="margin-top: 10px;">Contraseña</label>
-                <input type="password" id="password" class="input-field" placeholder="******">
-            </div>
-
-            <button class="btn-main" id="btn-submit">Registrarme</button>
-            
-            <div class="switch-mode" id="btn-switch">
-                <span id="switch-label">¿Ya tienes cuenta? <b>Inicia Sesión</b></span>
-            </div>
-
-            <div id="recaptcha-container"></div>
         </div>
 
-        <div id="step-otp" class="hidden">
-            <h2 style="font-size: 20px;">Verifica tu Teléfono</h2>
-            <p class="subtitle">Ingresa el código de 6 dígitos</p>
-            <div class="otp-container">
-                <input type="tel" class="otp-input" maxlength="1">
-                <input type="tel" class="otp-input" maxlength="1">
-                <input type="tel" class="otp-input" maxlength="1">
-                <input type="tel" class="otp-input" maxlength="1">
-                <input type="tel" class="otp-input" maxlength="1">
-                <input type="tel" class="otp-input" maxlength="1">
-            </div>
-            <button class="btn-main" id="btn-verify">Confirmar e Entrar</button>
+        <div class="method-selector">
+            <button id="use-phone" class="method-btn active">Teléfono</button>
+            <button id="use-email" class="method-btn">Correo</button>
         </div>
+
+        <div id="phone-area">
+            <label>Teléfono (10 dígitos)</label>
+            <div style="display: flex; gap: 5px;">
+                <input type="text" value="+52" readonly style="width: 50px; text-align: center; border: 2px solid var(--gray); border-radius: 10px;">
+                <input type="tel" id="phone" class="input-field" placeholder="5512345678" maxlength="10">
+            </div>
+        </div>
+
+        <div id="email-area" class="hidden">
+            <label>Correo Electrónico</label>
+            <input type="email" id="email" class="input-field" placeholder="ejemplo@correo.com">
+            <label style="margin-top:10px">Contraseña</label>
+            <input type="password" id="password" class="input-field" placeholder="******">
+        </div>
+
+        <button class="btn-main" id="submit-btn">Registrarme</button>
+        <div class="switch-mode" id="toggle-auth">¿Ya tienes cuenta? <b>Inicia Sesión</b></div>
+        <div id="recaptcha-container"></div>
     </div>
 
+    <div id="step-otp" class="hidden">
+        <h2>Verifica el SMS</h2>
+        <p class="subtitle">Escribe el código de 6 dígitos</p>
+        <div class="otp-container">
+            <input type="tel" class="otp-i" maxlength="1">
+            <input type="tel" class="otp-i" maxlength="1">
+            <input type="tel" class="otp-i" maxlength="1">
+            <input type="tel" class="otp-i" maxlength="1">
+            <input type="tel" class="otp-i" maxlength="1">
+            <input type="tel" class="otp-i" maxlength="1">
+        </div>
+        <button class="btn-main" id="verify-btn">Verificar Código</button>
+    </div>
+
+    <div id="status-log">Iniciado...</div>
+</div>
+
 <script type="module">
-    // IMPORTACIONES V12
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
-    import { getAuth, RecaptchaVerifier, signInWithPhoneNumber, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
-    import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+    // IMPORTACIÓN MODULAR ESTABLE
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth, RecaptchaVerifier, signInWithPhoneNumber, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyC9iekWKnkE65klFfsbAyZhks7WuwHBOu0",
@@ -105,94 +103,113 @@
         measurementId: "G-B8DM8VMPR9"
     };
 
+    // Inicialización
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
+    let confirmationResult = null;
+    let isLogin = false;
+    let method = 'phone';
 
-    let isLoginMode = false;
-    let currentMethod = 'phone';
-    let confirmationResult;
+    const log = (msg) => document.getElementById('status-log').innerText = msg;
 
-    // Inicializar Recaptcha
-    window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', { 'size': 'invisible' });
+    // Configuración Recaptcha
+    window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+        'size': 'invisible'
+    });
 
-    // FUNCIÓN CRÍTICA: GUARDAR EN FIRESTORE
-    async function saveUserData(user) {
-        const name = document.getElementById('name').value.trim();
-        const lastname = document.getElementById('lastname').value.trim();
-        const phone = document.getElementById('phone').value.trim();
-
-        if (!isLoginMode && name !== "") {
-            try {
-                console.log("Intentando guardar datos para UID:", user.uid);
-                await setDoc(doc(db, "usuarios", user.uid), {
-                    nombre: name,
-                    apellido: lastname,
-                    telefono: "+52" + phone,
-                    email: user.email || "",
-                    creado: serverTimestamp()
-                });
-                console.log("Firestore: Datos guardados correctamente");
-            } catch (error) {
-                console.error("Error detallado Firestore:", error);
-                alert("Error al guardar en BD: " + error.message);
-                return; // Detener si falla
-            }
+    // --- FUNCIÓN DE GUARDADO (AQUÍ ESTÁ EL TRUCO) ---
+    async function saveToFirestore(user) {
+        if (isLogin) {
+            log("Login detectado, saltando guardado...");
+            window.location.href = "dashboard.html";
+            return;
         }
-        window.location.href = "dashboard.html";
+
+        const name = document.getElementById('name').value.trim();
+        const last = document.getElementById('lastname').value.trim();
+        const ph = document.getElementById('phone').value.trim();
+
+        log("Intentando escribir en Firestore...");
+        
+        try {
+            await setDoc(doc(db, "usuarios", user.uid), {
+                nombre: name,
+                apellido: last,
+                telefono: method === 'phone' ? "+52" + ph : "N/A",
+                email: user.email || "N/A",
+                fecha: serverTimestamp(),
+                uid: user.uid
+            });
+            log("¡Escritura exitosa!");
+            alert("Cuenta creada y guardada en Firestore");
+            window.location.href = "dashboard.html";
+        } catch (e) {
+            log("Error Firestore: " + e.code);
+            alert("Error al guardar: " + e.message);
+            console.error(e);
+        }
     }
 
-    // EVENTOS DE BOTONES
-    document.getElementById('btn-submit').addEventListener('click', async () => {
-        if (currentMethod === 'phone') {
-            const phone = "+52" + document.getElementById('phone').value;
-            signInWithPhoneNumber(auth, phone, window.recaptchaVerifier)
-                .then(res => {
-                    confirmationResult = res;
-                    document.getElementById('step-1').classList.add('hidden');
-                    document.getElementById('step-otp').classList.remove('hidden');
-                }).catch(err => alert("Error SMS: " + err.message));
+    // --- LÓGICA DE BOTONES ---
+    document.getElementById('submit-btn').onclick = async () => {
+        log("Procesando...");
+        if (method === 'phone') {
+            const num = "+52" + document.getElementById('phone').value;
+            try {
+                confirmationResult = await signInWithPhoneNumber(auth, num, window.recaptchaVerifier);
+                document.getElementById('step-1').classList.add('hidden');
+                document.getElementById('step-otp').classList.remove('hidden');
+                log("SMS Enviado");
+            } catch (e) { alert("Error SMS: " + e.message); log("Fallo SMS"); }
         } else {
-            const email = document.getElementById('email').value;
+            const mail = document.getElementById('email').value;
             const pass = document.getElementById('password').value;
             try {
-                const res = isLoginMode 
-                    ? await signInWithEmailAndPassword(auth, email, pass)
-                    : await createUserWithEmailAndPassword(auth, email, pass);
-                await saveUserData(res.user);
-            } catch (err) { alert("Error Auth: " + err.message); }
+                const res = isLogin 
+                    ? await signInWithEmailAndPassword(auth, mail, pass)
+                    : await createUserWithEmailAndPassword(auth, mail, pass);
+                saveToFirestore(res.user);
+            } catch (e) { alert("Error: " + e.message); }
         }
-    });
-
-    document.getElementById('btn-verify').addEventListener('click', async () => {
-        const code = Array.from(document.querySelectorAll('.otp-input')).map(i => i.value).join('');
-        if(code.length < 6) return alert("Ingresa el código completo");
-        
-        confirmationResult.confirm(code)
-            .then(async (res) => await saveUserData(res.user))
-            .catch(err => alert("Código incorrecto: " + err.message));
-    });
-
-    // INTERFAZ
-    document.getElementById('btn-switch').onclick = () => {
-        isLoginMode = !isLoginMode;
-        document.getElementById('main-title').innerText = isLoginMode ? 'Bienvenido' : 'Crear Cuenta';
-        document.getElementById('btn-submit').innerText = isLoginMode ? 'Iniciar Sesión' : 'Registrarme';
-        document.getElementById('name-fields').classList.toggle('hidden', isLoginMode);
     };
 
-    document.getElementById('btn-method-phone').onclick = () => switchMethod('phone');
-    document.getElementById('btn-method-email').onclick = () => switchMethod('email');
+    document.getElementById('verify-btn').onclick = async () => {
+        const code = Array.from(document.querySelectorAll('.otp-i')).map(i => i.value).join('');
+        log("Verificando código...");
+        try {
+            const result = await confirmationResult.confirm(code);
+            log("Código correcto");
+            saveToFirestore(result.user);
+        } catch (e) { alert("Código inválido"); }
+    };
 
-    function switchMethod(method) {
-        currentMethod = method;
-        document.getElementById('btn-method-phone').classList.toggle('active', method === 'phone');
-        document.getElementById('btn-method-email').classList.toggle('active', method === 'email');
-        document.getElementById('phone-input-area').classList.toggle('hidden', method !== 'phone');
-        document.getElementById('email-input-area').classList.toggle('hidden', method !== 'email');
-    }
+    // --- INTERFAZ ---
+    document.getElementById('use-phone').onclick = () => {
+        method = 'phone';
+        document.getElementById('use-phone').classList.add('active');
+        document.getElementById('use-email').classList.remove('active');
+        document.getElementById('phone-area').classList.remove('hidden');
+        document.getElementById('email-area').classList.add('hidden');
+    };
 
-    const inputs = document.querySelectorAll('.otp-input');
+    document.getElementById('use-email').onclick = () => {
+        method = 'email';
+        document.getElementById('use-email').classList.add('active');
+        document.getElementById('use-phone').classList.remove('active');
+        document.getElementById('email-area').classList.remove('hidden');
+        document.getElementById('phone-area').classList.add('hidden');
+    };
+
+    document.getElementById('toggle-auth').onclick = () => {
+        isLogin = !isLogin;
+        document.getElementById('main-title').innerText = isLogin ? "Bienvenido" : "Crear Cuenta";
+        document.getElementById('submit-btn').innerText = isLogin ? "Entrar" : "Registrarme";
+        document.getElementById('name-fields').classList.toggle('hidden', isLogin);
+    };
+
+    // Auto-salto de OTP
+    const inputs = document.querySelectorAll('.otp-i');
     inputs.forEach((input, i) => {
         input.oninput = () => { if(input.value && i < 5) inputs[i+1].focus(); };
         input.onkeydown = (e) => { if(e.key === 'Backspace' && !input.value && i > 0) inputs[i-1].focus(); };
