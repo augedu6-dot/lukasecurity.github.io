@@ -10,14 +10,11 @@
         body { font-family: "Ubuntu", sans-serif; background-color: var(--bg); display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
         .login-card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 90%; max-width: 400px; text-align: center; }
         .login-card h2 { font-family: 'Marck Script', cursive; color: var(--primary); font-size: 2.5rem; margin-bottom: 20px; }
-        
         .method-selector { display: flex; gap: 10px; margin-bottom: 20px; }
         .method-btn { flex: 1; padding: 10px; border: 2px solid #eee; border-radius: 10px; background: none; cursor: pointer; font-weight: bold; color: #666; transition: 0.3s; }
         .method-btn.active { border-color: var(--primary); color: var(--primary); background: #fff5f2; }
-        
         input { width: 100%; padding: 12px; margin: 8px 0; border: 2px solid #eee; border-radius: 10px; font-size: 16px; box-sizing: border-box; }
         input:focus { border-color: var(--primary); outline: none; }
-        
         .btn-accion { width: 100%; padding: 15px; background-color: var(--primary); color: white; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; margin-top: 15px; }
         .btn-toggle { background: none; border: none; color: #d35400; font-weight: 700; cursor: pointer; text-decoration: underline; font-size: 0.9rem; }
         .hidden { display: none; }
@@ -28,7 +25,6 @@
 
 <div class="login-card">
     <h2 id="titulo">Crear Cuenta</h2>
-    
     <div id="selector-metodo" class="method-selector">
         <button id="btn-metodo-phone" class="method-btn active" onclick="cambiarMetodo('phone')">Teléfono</button>
         <button id="btn-metodo-email" class="method-btn" onclick="cambiarMetodo('email')">Correo</button>
@@ -39,16 +35,13 @@
             <input type="text" id="name" placeholder="Nombre" required>
             <input type="text" id="last" placeholder="Apellido" required>
         </div>
-
         <div id="section-phone">
             <input type="tel" id="phone" placeholder="Tu número (10 dígitos)">
         </div>
-
         <div id="section-email" class="hidden">
             <input type="email" id="email" placeholder="correo@ejemplo.com">
             <input type="password" id="password" placeholder="Contraseña (8 letras)">
         </div>
-
         <button type="submit" class="btn-accion" id="btnSubmit">Registrar y Validar</button>
     </form>
 
@@ -56,7 +49,6 @@
         <span id="txtToggle">¿Ya tienes cuenta?</span> 
         <button class="btn-toggle" onclick="toggleModo()" id="btnModo">Inicia sesión aquí</button>
     </p>
-
     <div id="status">Esperando datos...</div>
 </div>
 
@@ -78,10 +70,10 @@
     const db = getFirestore(app);
     const auth = getAuth(app);
 
-    let modo = "registro"; // registro o login
-    let metodo = "phone"; // phone o email
+    let modo = "registro"; 
+    let metodo = "phone"; 
 
-    // --- AUTO-LOGIN ---
+    // AUTO-LOGIN: Verificación inmediata al entrar
     if (localStorage.getItem("sesion_activa") === "true") {
         window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/menu.html";
     }
@@ -124,7 +116,6 @@
                     user = res.user;
                 }
                 
-                // Guardar en Firestore
                 await setDoc(doc(db, "usuarios", user.uid), {
                     nombre: n,
                     apellido: l,
@@ -133,13 +124,12 @@
                     fecha: serverTimestamp()
                 });
             } else {
-                // Modo Login (solo para Email)
-                if (metodo === "phone") return alert("Para iniciar sesión con teléfono, usa la opción de registro.");
+                if (metodo === "phone") return alert("Usa la opción de registro para entrar por teléfono.");
                 const res = await signInWithEmailAndPassword(auth, em, pass);
                 user = res.user;
             }
 
-            // Guardar Sesión Local
+            // GUARDADO DE SESIÓN CRÍTICO: Antes de WhatsApp
             localStorage.setItem("usuarioLogueado", modo === "registro" ? n : (user.email || "Usuario"));
             localStorage.setItem("user_contact", metodo === "phone" ? p : em);
             localStorage.setItem("sesion_activa", "true");
@@ -147,8 +137,11 @@
             if (metodo === "phone" && modo === "registro") {
                 const msg = `Hola, soy ${n}. Mi código es: ${user.uid.substring(0,5)}`;
                 const waUrl = `https://wa.me/529602252137?text=${encodeURIComponent(msg)}`;
-                alert("Validación final: Envía el mensaje de WhatsApp.");
-                window.location.href = waUrl;
+                
+                // Pequeña pausa para asegurar el guardado en LocalStorage
+                setTimeout(() => {
+                    window.location.href = waUrl;
+                }, 500);
             } else {
                 window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/menu.html";
             }
