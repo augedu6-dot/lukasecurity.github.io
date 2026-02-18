@@ -82,6 +82,11 @@
             console.error(e);
         }
     };
+
+    window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+    'size': 'normal' // Cambia 'invisible' por 'normal'
+});
 </script>
 </body>
+
 </html>
