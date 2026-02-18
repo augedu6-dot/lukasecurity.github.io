@@ -9,9 +9,26 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
     <style>
         body { font-family: "Ubuntu", sans-serif; background-color: #fefcf5; overflow-x: hidden; }
-        .navbar { background-color: white; border-bottom: 2px solid #ffdab3; padding: 0.5rem 1rem; }
-        .navbar-brand { font-family: 'Marck Script', cursive; font-size: 1.5rem; color: #6f1a07 !important; }
-        
+        .navbar { 
+            background-color: white; 
+            border-bottom: 2px solid #ffdab3; 
+            position: sticky; 
+            top: 0; 
+            z-index: 1000;
+            padding: 0.5rem 0.8rem;
+        }
+        .navbar .container {
+            display: flex;
+            flex-wrap: nowrap;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .navbar-brand { 
+            font-family: 'Marck Script', cursive; 
+            font-size: 1.5rem; 
+            color: #6f1a07 !important; 
+            margin-right: 5px;
+        }
         /* TARJETA PRINCIPAL ADAPTADA */
         .card-tracking { 
             border: none; 
@@ -213,6 +230,7 @@
     </script>
 </body>
 </html>
+
 
 
 
