@@ -3,45 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro - DeMasita</title>
+    <title>Acceso - DeMasita</title>
+    <link href="https://fonts.googleapis.com/css2?family=Marck+Script&family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #6f1a07; --bg: #f8f9fa; --gray: #ced4da; }
-        * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
-        body { background-color: var(--bg); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
-        .card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 90%; max-width: 380px; text-align: center; }
-        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid var(--gray); border-radius: 10px; font-size: 16px; }
-        .btn { background: var(--primary); color: white; border: none; padding: 15px; width: 100%; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        .method-link { font-size: 14px; color: #666; cursor: pointer; margin-top: 15px; display: block; }
+        :root { --primary: #6f1a07; --secondary: #25D366; --bg: #f3e6d8; }
+        body { font-family: "Ubuntu", sans-serif; background-color: var(--bg); display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
+        .login-card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 90%; max-width: 400px; text-align: center; }
+        .login-card h2 { font-family: 'Marck Script', cursive; color: var(--primary); font-size: 2.5rem; margin-bottom: 20px; }
+        
+        .method-selector { display: flex; gap: 10px; margin-bottom: 20px; }
+        .method-btn { flex: 1; padding: 10px; border: 2px solid #eee; border-radius: 10px; background: none; cursor: pointer; font-weight: bold; color: #666; transition: 0.3s; }
+        .method-btn.active { border-color: var(--primary); color: var(--primary); background: #fff5f2; }
+        
+        input { width: 100%; padding: 12px; margin: 8px 0; border: 2px solid #eee; border-radius: 10px; font-size: 16px; box-sizing: border-box; }
+        input:focus { border-color: var(--primary); outline: none; }
+        
+        .btn-accion { width: 100%; padding: 15px; background-color: var(--primary); color: white; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; margin-top: 15px; }
+        .btn-toggle { background: none; border: none; color: #d35400; font-weight: 700; cursor: pointer; text-decoration: underline; font-size: 0.9rem; }
         .hidden { display: none; }
-        .log { font-size: 11px; color: #888; margin-top: 10px; }
+        #status { font-size: 12px; color: #888; margin-top: 15px; }
     </style>
 </head>
 <body>
 
-<div class="card">
-    <h2 id="title">Crear Cuenta</h2>
-    <p id="subtitle">Ingresa tus datos para continuar</p>
-
-    <div id="name-fields">
-        <input type="text" id="name" placeholder="Nombre">
-        <input type="text" id="last" placeholder="Apellido">
-    </div>
-
-    <div id="phone-area">
-        <input type="tel" id="phone" placeholder="Teléfono (10 dígitos)">
-    </div>
-
-    <div id="email-area" class="hidden">
-        <input type="email" id="email" placeholder="correo@ejemplo.com">
-        <input type="password" id="password" placeholder="Contraseña">
-    </div>
-
-    <button class="btn" id="btn-go">Continuar</button>
+<div class="login-card">
+    <h2 id="titulo">Crear Cuenta</h2>
     
-    <span class="method-link" id="toggle-method">Usar Correo Electrónico</span>
-    <span class="method-link" id="toggle-login">¿Ya tienes cuenta? <b>Inicia Sesión</b></span>
+    <div id="selector-metodo" class="method-selector">
+        <button id="btn-metodo-phone" class="method-btn active" onclick="cambiarMetodo('phone')">Teléfono</button>
+        <button id="btn-metodo-email" class="method-btn" onclick="cambiarMetodo('email')">Correo</button>
+    </div>
 
-    <div id="status" class="log">Esperando acción...</div>
+    <form id="authForm">
+        <div id="section-registro">
+            <input type="text" id="name" placeholder="Nombre" required>
+            <input type="text" id="last" placeholder="Apellido" required>
+        </div>
+
+        <div id="section-phone">
+            <input type="tel" id="phone" placeholder="Tu número (10 dígitos)">
+        </div>
+
+        <div id="section-email" class="hidden">
+            <input type="email" id="email" placeholder="correo@ejemplo.com">
+            <input type="password" id="password" placeholder="Contraseña (8 letras)">
+        </div>
+
+        <button type="submit" class="btn-accion" id="btnSubmit">Registrar y Validar</button>
+    </form>
+
+    <p style="margin-top: 20px; font-size: 0.85rem; color: #666;">
+        <span id="txtToggle">¿Ya tienes cuenta?</span> 
+        <button class="btn-toggle" onclick="toggleModo()" id="btnModo">Inicia sesión aquí</button>
+    </p>
+
+    <div id="status">Esperando datos...</div>
 </div>
 
 <script type="module">
@@ -62,103 +78,85 @@
     const db = getFirestore(app);
     const auth = getAuth(app);
 
-    let isLogin = false;
-    let method = 'phone';
+    let modo = "registro"; // registro o login
+    let metodo = "phone"; // phone o email
 
-    // --- LÓGICA DE AUTO-LOGIN ---
-    window.addEventListener('load', () => {
-        if (localStorage.getItem("sesion_activa") === "true") {
-            window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/menu.html";
-        }
-    });
-
-    // --- FUNCIÓN DE GUARDADO ADAPTADA ---
-    async function saveToFirestore(user) {
-        const nameVal = document.getElementById('name').value.trim();
-        const phoneVal = document.getElementById('phone').value.trim();
-        const emailVal = document.getElementById('email').value.trim();
-
-        // Si es login, solo guardamos sesión y redirigimos
-        if (isLogin) {
-            const ident = user.email || user.phoneNumber || "Usuario";
-            localStorage.setItem("usuarioLogueado", ident);
-            localStorage.setItem("user_contact", ident);
-            localStorage.setItem("sesion_activa", "true");
-            window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/menu.html";
-            return;
-        }
-
-        try {
-            document.getElementById('status').innerText = "Guardando perfil...";
-            
-            const userData = {
-                nombre: nameVal || "Usuario",
-                apellido: document.getElementById('last').value.trim() || "",
-                telefono: phoneVal || "N/A",
-                email: emailVal || user.email || "N/A",
-                fecha: serverTimestamp(),
-                uid: user.uid
-            };
-
-            await setDoc(doc(db, "usuarios", user.uid), userData);
-
-            // Guardamos en LocalStorage para el Menú
-            // Prioridad: Nombre > Email > Teléfono
-            const displayLabel = nameVal ? nameVal : (emailVal || phoneVal);
-            const contactLabel = emailVal || phoneVal;
-
-            localStorage.setItem("usuarioLogueado", displayLabel);
-            localStorage.setItem("user_contact", contactLabel);
-            localStorage.setItem("sesion_activa", "true");
-
-            window.location.href = "menu.html";
-
-        } catch (e) {
-            alert("Error al guardar: " + e.message);
-        }
+    // --- AUTO-LOGIN ---
+    if (localStorage.getItem("sesion_activa") === "true") {
+        window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/menu.html";
     }
 
-    // --- PROCESO DE AUTENTICACIÓN ---
-    document.getElementById('btn-go').onclick = async () => {
-        document.getElementById('status').innerText = "Autenticando...";
-        
+    window.cambiarMetodo = (m) => {
+        metodo = m;
+        document.getElementById('btn-metodo-phone').classList.toggle('active', m === 'phone');
+        document.getElementById('btn-metodo-email').classList.toggle('active', m === 'email');
+        document.getElementById('section-phone').classList.toggle('hidden', m !== 'phone');
+        document.getElementById('section-email').classList.toggle('hidden', m !== 'email');
+    };
+
+    window.toggleModo = () => {
+        modo = (modo === "registro") ? "login" : "registro";
+        document.getElementById('titulo').innerText = modo === "registro" ? "Crear Cuenta" : "Iniciar Sesión";
+        document.getElementById('btnSubmit').innerText = modo === "registro" ? "Continuar" : "Ingresar";
+        document.getElementById('section-registro').classList.toggle('hidden', modo === "login");
+        document.getElementById('txtToggle').innerText = modo === "registro" ? "¿Ya tienes cuenta?" : "¿No tienes cuenta?";
+        document.getElementById('btnModo').innerText = modo === "registro" ? "Inicia sesión aquí" : "Regístrate aquí";
+    };
+
+    document.getElementById('authForm').onsubmit = async (e) => {
+        e.preventDefault();
+        const n = document.getElementById('name').value;
+        const l = document.getElementById('last').value;
+        const p = document.getElementById('phone').value;
+        const em = document.getElementById('email').value;
+        const pass = document.getElementById('password').value;
+
+        document.getElementById('status').innerText = "Procesando...";
+
         try {
-            if (method === 'phone') {
-                // Para simplificar y que sea gratis (sin SMS reales), usamos Anónimo
-                // pero guardamos el teléfono manualmente en Firestore
-                const res = await signInAnonymously(auth);
-                await saveToFirestore(res.user);
-            } else {
-                const email = document.getElementById('email').value;
-                const pass = document.getElementById('password').value;
-                
-                let res;
-                if (isLogin) {
-                    res = await signInWithEmailAndPassword(auth, email, pass);
+            let user;
+            if (modo === "registro") {
+                if (metodo === "phone") {
+                    const res = await signInAnonymously(auth);
+                    user = res.user;
                 } else {
-                    res = await createUserWithEmailAndPassword(auth, email, pass);
+                    const res = await createUserWithEmailAndPassword(auth, em, pass);
+                    user = res.user;
                 }
-                await saveToFirestore(res.user);
+                
+                // Guardar en Firestore
+                await setDoc(doc(db, "usuarios", user.uid), {
+                    nombre: n,
+                    apellido: l,
+                    contacto: metodo === "phone" ? p : em,
+                    metodo: metodo,
+                    fecha: serverTimestamp()
+                });
+            } else {
+                // Modo Login (solo para Email)
+                if (metodo === "phone") return alert("Para iniciar sesión con teléfono, usa la opción de registro.");
+                const res = await signInWithEmailAndPassword(auth, em, pass);
+                user = res.user;
             }
+
+            // Guardar Sesión Local
+            localStorage.setItem("usuarioLogueado", modo === "registro" ? n : (user.email || "Usuario"));
+            localStorage.setItem("user_contact", metodo === "phone" ? p : em);
+            localStorage.setItem("sesion_activa", "true");
+
+            if (metodo === "phone" && modo === "registro") {
+                const msg = `Hola, soy ${n}. Mi código es: ${user.uid.substring(0,5)}`;
+                const waUrl = `https://wa.me/529602252137?text=${encodeURIComponent(msg)}`;
+                alert("Validación final: Envía el mensaje de WhatsApp.");
+                window.location.href = waUrl;
+            } else {
+                window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/menu.html";
+            }
+
         } catch (e) {
             alert("Error: " + e.message);
-            document.getElementById('status').innerText = "Error en el proceso.";
+            document.getElementById('status').innerText = "Fallo en el acceso.";
         }
-    };
-
-    // --- INTERFAZ (Toggles) ---
-    document.getElementById('toggle-method').onclick = () => {
-        method = (method === 'phone') ? 'email' : 'phone';
-        document.getElementById('phone-area').classList.toggle('hidden');
-        document.getElementById('email-area').classList.toggle('hidden');
-        document.getElementById('toggle-method').innerText = (method === 'phone') ? 'Usar Correo Electrónico' : 'Usar Teléfono';
-    };
-
-    document.getElementById('toggle-login').onclick = () => {
-        isLogin = !isLogin;
-        document.getElementById('title').innerText = isLogin ? "Bienvenido" : "Crear Cuenta";
-        document.getElementById('name-fields').classList.toggle('hidden', isLogin);
-        document.getElementById('toggle-login').innerHTML = isLogin ? "¿No tienes cuenta? <b>Regístrate</b>" : "¿Ya tienes cuenta? <b>Inicia Sesión</b>";
     };
 </script>
 </body>
