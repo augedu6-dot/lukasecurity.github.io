@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro Gratuito por Número</title>
+    <style>
+        :root { --primary: #25D366; --bg: #f0f2f5; } /* Color WhatsApp */
+        body { font-family: sans-serif; background: var(--bg); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 90%; max-width: 380px; text-align: center; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; }
+        .btn { background: var(--primary); color: white; border: none; padding: 15px; width: 100%; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; }
+        .log { font-size: 12px; color: #888; margin-top: 15px; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>Registro Rápido</h2>
+    <p>Ingresa tus datos para continuar</p>
+    <input type="text" id="name" placeholder="Nombre">
+    <input type="text" id="last" placeholder="Apellido">
+    <input type="tel" id="phone" placeholder="Tu número (10 dígitos)">
+    
+    <button class="btn" id="btn-go">Registrar y Validar</button>
+    <div id="status" class="log">Esperando datos...</div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyC9iekWKnkE65klFfsbAyZhks7WuwHBOu0",
+        authDomain: "mi-app-registro-98c60.firebaseapp.com",
+        projectId: "mi-app-registro-98c60",
+        storageBucket: "mi-app-registro-98c60.firebasestorage.app",
+        messagingSenderId: "754337945837",
+        appId: "1:754337945837:web:d61b55b397f15d67cb14e4"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    document.getElementById('btn-go').onclick = async () => {
+        const n = document.getElementById('name').value;
+        const l = document.getElementById('last').value;
+        const p = document.getElementById('phone').value;
+
+        if(!n || !p) return alert("Llena los campos");
+
+        try {
+            document.getElementById('status').innerText = "Guardando en base de datos...";
+            
+            // 1. Logueamos de forma anónima (Gratis y sin tarjeta) para tener un UID
+            const userCred = await signInAnonymously(auth);
+            const uid = userCred.user.uid;
+
+            // 2. Guardamos en Firestore
+            await setDoc(doc(db, "usuarios", uid), {
+                nombre: n,
+                apellido: l,
+                telefono: p,
+                fecha: serverTimestamp(),
+                metodo: "WhatsApp-Verify"
+            });
+
+            document.getElementById('status').innerText = "¡Datos guardados!";
+
+            // 3. Simulamos el "SMS" abriendo WhatsApp del usuario
+            // Esto valida que el número existe porque el mensaje sale de su propio WA
+            const msg = `Hola, soy ${n} ${l}. Mi código de registro es: ${uid.substring(0,5)}`;
+            const waUrl = `https://wa.me/521TU_NUMERO?text=${encodeURIComponent(msg)}`; 
+            
+            alert("Para terminar, envíanos el mensaje de WhatsApp que se abrirá a continuación.");
+            window.location.href = waUrl;
+
+        } catch (e) {
+            alert("Error: " + e.message);
+            console.error(e);
+        }
+    };
+</script>
+</body>
+</html>
