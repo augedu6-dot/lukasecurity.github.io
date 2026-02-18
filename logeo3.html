@@ -6,26 +6,25 @@
     <title>Acceso - DeMasita</title>
     <link href="https://fonts.googleapis.com/css2?family=Marck+Script&family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #6f1a07; --secondary: #25D366; --bg: #f3e6d8; }
+        :root { --primary: #6f1a07; --bg: #f3e6d8; }
         body { font-family: "Ubuntu", sans-serif; background-color: var(--bg); display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
         .login-card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 90%; max-width: 400px; text-align: center; }
         .login-card h2 { font-family: 'Marck Script', cursive; color: var(--primary); font-size: 2.5rem; margin-bottom: 20px; }
         .method-selector { display: flex; gap: 10px; margin-bottom: 20px; }
-        .method-btn { flex: 1; padding: 10px; border: 2px solid #eee; border-radius: 10px; background: none; cursor: pointer; font-weight: bold; color: #666; transition: 0.3s; }
+        .method-btn { flex: 1; padding: 10px; border: 2px solid #eee; border-radius: 10px; background: none; cursor: pointer; font-weight: bold; color: #666; }
         .method-btn.active { border-color: var(--primary); color: var(--primary); background: #fff5f2; }
         input { width: 100%; padding: 12px; margin: 8px 0; border: 2px solid #eee; border-radius: 10px; font-size: 16px; box-sizing: border-box; }
-        input:focus { border-color: var(--primary); outline: none; }
         .btn-accion { width: 100%; padding: 15px; background-color: var(--primary); color: white; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; margin-top: 15px; }
-        .btn-toggle { background: none; border: none; color: #d35400; font-weight: 700; cursor: pointer; text-decoration: underline; font-size: 0.9rem; }
         .hidden { display: none; }
-        #status { font-size: 12px; color: #888; margin-top: 15px; }
+        #status { font-size: 13px; color: #d35400; margin-top: 15px; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="login-card">
     <h2 id="titulo">Crear Cuenta</h2>
-    <div id="selector-metodo" class="method-selector">
+    
+    <div class="method-selector">
         <button id="btn-metodo-phone" class="method-btn active" onclick="cambiarMetodo('phone')">Teléfono</button>
         <button id="btn-metodo-email" class="method-btn" onclick="cambiarMetodo('email')">Correo</button>
     </div>
@@ -36,20 +35,15 @@
             <input type="text" id="last" placeholder="Apellido" required>
         </div>
         <div id="section-phone">
-            <input type="tel" id="phone" placeholder="Tu número (10 dígitos)">
+            <input type="tel" id="phone" placeholder="Número (10 dígitos)">
         </div>
         <div id="section-email" class="hidden">
             <input type="email" id="email" placeholder="correo@ejemplo.com">
-            <input type="password" id="password" placeholder="Contraseña (8 letras)">
+            <input type="password" id="password" placeholder="Contraseña">
         </div>
-        <button type="submit" class="btn-accion" id="btnSubmit">Registrar y Validar</button>
+        <button type="submit" class="btn-accion" id="btnSubmit">Continuar</button>
     </form>
-
-    <p style="margin-top: 20px; font-size: 0.85rem; color: #666;">
-        <span id="txtToggle">¿Ya tienes cuenta?</span> 
-        <button class="btn-toggle" onclick="toggleModo()" id="btnModo">Inicia sesión aquí</button>
-    </p>
-    <div id="status">Esperando datos...</div>
+    <div id="status">Listo para ingresar</div>
 </div>
 
 <script type="module">
@@ -70,12 +64,11 @@
     const db = getFirestore(app);
     const auth = getAuth(app);
 
-    let modo = "registro"; 
-    let metodo = "phone"; 
+    let metodo = "phone";
 
-    // AUTO-LOGIN: Verificación inmediata al entrar
+    // --- AUTO LOGIN ---
     if (localStorage.getItem("sesion_activa") === "true") {
-        window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/menu.html";
+        window.location.href = "menu.html";
     }
 
     window.cambiarMetodo = (m) => {
@@ -86,69 +79,59 @@
         document.getElementById('section-email').classList.toggle('hidden', m !== 'email');
     };
 
-    window.toggleModo = () => {
-        modo = (modo === "registro") ? "login" : "registro";
-        document.getElementById('titulo').innerText = modo === "registro" ? "Crear Cuenta" : "Iniciar Sesión";
-        document.getElementById('btnSubmit').innerText = modo === "registro" ? "Continuar" : "Ingresar";
-        document.getElementById('section-registro').classList.toggle('hidden', modo === "login");
-        document.getElementById('txtToggle').innerText = modo === "registro" ? "¿Ya tienes cuenta?" : "¿No tienes cuenta?";
-        document.getElementById('btnModo').innerText = modo === "registro" ? "Inicia sesión aquí" : "Regístrate aquí";
-    };
-
     document.getElementById('authForm').onsubmit = async (e) => {
         e.preventDefault();
-        const n = document.getElementById('name').value;
-        const l = document.getElementById('last').value;
-        const p = document.getElementById('phone').value;
-        const em = document.getElementById('email').value;
-        const pass = document.getElementById('password').value;
+        const n = document.getElementById('name').value.trim();
+        const p = document.getElementById('phone').value.trim();
+        const em = document.getElementById('email').value.trim();
+        const pass = document.getElementById('password').value.trim();
+        const status = document.getElementById('status');
 
-        document.getElementById('status').innerText = "Procesando...";
+        status.innerText = "Paso 1: Autenticando...";
 
         try {
             let user;
-            if (modo === "registro") {
-                if (metodo === "phone") {
-                    const res = await signInAnonymously(auth);
-                    user = res.user;
-                } else {
-                    const res = await createUserWithEmailAndPassword(auth, em, pass);
-                    user = res.user;
-                }
-                
-                await setDoc(doc(db, "usuarios", user.uid), {
-                    nombre: n,
-                    apellido: l,
-                    contacto: metodo === "phone" ? p : em,
-                    metodo: metodo,
-                    fecha: serverTimestamp()
-                });
+            if (metodo === "phone") {
+                // Registro anónimo para evitar bloqueo de SMS
+                const res = await signInAnonymously(auth);
+                user = res.user;
             } else {
-                if (metodo === "phone") return alert("Usa la opción de registro para entrar por teléfono.");
-                const res = await signInWithEmailAndPassword(auth, em, pass);
+                const res = await createUserWithEmailAndPassword(auth, em, pass);
                 user = res.user;
             }
 
-            // GUARDADO DE SESIÓN CRÍTICO: Antes de WhatsApp
-            localStorage.setItem("usuarioLogueado", modo === "registro" ? n : (user.email || "Usuario"));
+            status.innerText = "Paso 2: Guardando en Base de Datos...";
+            
+            // GUARDADO EN FIRESTORE
+            await setDoc(doc(db, "usuarios", user.uid), {
+                nombre: n,
+                contacto: metodo === "phone" ? p : em,
+                metodo: metodo,
+                fecha: serverTimestamp()
+            });
+
+            status.innerText = "Paso 3: Creando sesión...";
+
+            // GUARDAR LOCALMENTE
+            localStorage.setItem("usuarioLogueado", n || (user.email ? user.email.split('@')[0] : "Usuario"));
             localStorage.setItem("user_contact", metodo === "phone" ? p : em);
             localStorage.setItem("sesion_activa", "true");
 
-            if (metodo === "phone" && modo === "registro") {
-                const msg = `Hola, soy ${n}. Mi código es: ${user.uid.substring(0,5)}`;
+            if (metodo === "phone") {
+                status.innerText = "Abriendo WhatsApp...";
+                const msg = `Hola, soy ${n}. Mi ID: ${user.uid.substring(0,5)}`;
                 const waUrl = `https://wa.me/529602252137?text=${encodeURIComponent(msg)}`;
                 
-                // Pequeña pausa para asegurar el guardado en LocalStorage
-                setTimeout(() => {
-                    window.location.href = waUrl;
-                }, 500);
+                setTimeout(() => { window.location.href = waUrl; }, 800);
             } else {
-                window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/menu.html";
+                status.innerText = "Entrando al menú...";
+                window.location.href = "menu.html";
             }
 
         } catch (e) {
+            console.error(e);
+            status.innerText = "ERROR: " + e.code;
             alert("Error: " + e.message);
-            document.getElementById('status').innerText = "Fallo en el acceso.";
         }
     };
 </script>
