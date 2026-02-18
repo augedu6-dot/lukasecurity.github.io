@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi App - Dashboard</title>
+    <style>
+        :root { --primary: #6f1a07; --bg: #f8f9fa; }
+        * { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        
+        .welcome-card {
+            background: white; padding: 40px 20px; border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08); max-width: 400px; width: 100%; text-align: center;
+        }
+
+        .user-name { color: var(--primary); font-size: 26px; font-weight: bold; margin: 15px 0; }
+        .contact-info { color: #6c757d; font-size: 14px; margin-bottom: 30px; }
+        
+        .btn-logout {
+            background: #f1f3f5; border: none; padding: 12px 25px;
+            border-radius: 12px; color: #495057; font-weight: bold; cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-logout:active { background: #e9ecef; transform: scale(0.95); }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="welcome-card">
+        <p style="margin: 0; color: #888; text-transform: uppercase; letter-spacing: 1px; font-size: 12px;">Bienvenido</p>
+        
+        <div id="loader">
+            <p>Cargando tu perfil...</p>
+        </div>
+
+        <div id="user-display" class="hidden">
+            <div class="user-name" id="full-name">Cargando...</div>
+            <div class="contact-info" id="user-contact"></div>
+        </div>
+
+        <button class="btn-logout" id="btnLogout">Cerrar Sesión</button>
+    </div>
+
+    <script type="module">
+        // 1. Importaciones de la versión Modular v12
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+
+        // 2. Tus credenciales integradas
+        const firebaseConfig = {
+            apiKey: "AIzaSyC9iekWKnkE65klFfsbAyZhks7WuwHBOu0",
+            authDomain: "mi-app-registro-98c60.firebaseapp.com",
+            projectId: "mi-app-registro-98c60",
+            storageBucket: "mi-app-registro-98c60.firebasestorage.app",
+            messagingSenderId: "754337945837",
+            appId: "1:754337945837:web:d61b55b397f15d67cb14e4",
+            measurementId: "G-B8DM8VMPR9"
+        };
+
+        // 3. Inicializar servicios
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // 4. Escuchar el estado de la sesión
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                obtenerDatosUsuario(user);
+            } else {
+                // Si no hay sesión, mandamos al login (index.html)
+                window.location.href = "index.html";
+            }
+        });
+
+        // 5. Función para obtener datos de Firestore
+        async function obtenerDatosUsuario(user) {
+            try {
+                const docRef = doc(db, "usuarios", user.uid);
+                const docSnap = await getDoc(docRef);
+
+                document.getElementById('loader').classList.add('hidden');
+                document.getElementById('user-display').classList.remove('hidden');
+
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    document.getElementById('full-name').innerText = `${data.nombre} ${data.apellido}`;
+                    document.getElementById('user-contact').innerText = data.telefono || data.email || "Usuario verificado";
+                } else {
+                    // Si el usuario no tiene documento en Firestore aún
+                    document.getElementById('full-name').innerText = "Usuario Nuevo";
+                    document.getElementById('user-contact').innerText = user.email || user.phoneNumber;
+                }
+            } catch (error) {
+                console.error("Error al obtener datos:", error);
+            }
+        }
+
+        // 6. Botón de Cerrar Sesión
+        document.getElementById('btnLogout').addEventListener('click', () => {
+            signOut(auth).then(() => {
+                window.location.href = "index.html";
+            });
+        });
+    </script>
+</body>
+</html>
