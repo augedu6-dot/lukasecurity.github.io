@@ -153,25 +153,28 @@
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
-.btn-cat {
-    background: #fff5eb;
-    color: #6f1a07;
-    border: 1px solid #ffdab3;
-    padding: 5px 15px;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    font-weight: 500;
-    transition: all 0.3s;
+.category-bar {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    padding: 10px;
+    background: #fefcf5;
+    position: sticky;
+    top: 60px; /* Se queda debajo del navbar */
+    z-index: 998;
 }
-
-.btn-cat:active {
+.category-bar button {
     background: #6f1a07;
     color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    cursor: pointer;
 }
-
-/* Evita que el navbar tape el título al saltar */
+/* Esto evita que el navbar tape el título al llegar */
 .category-title {
-    scroll-margin-top: 120px; 
+    scroll-margin-top: 130px; 
 }
     </style>
 </head>
@@ -195,12 +198,10 @@
         </div>
     </div>
 </nav>
-    <div class="category-nav">
-    <div class="container d-flex justify-content-around py-2">
-        <button class="btn-cat" onclick="scrollToCategory('comidas')">Comidas</button>
-        <button class="btn-cat" onclick="scrollToCategory('antojitos')">Antojitos</button>
-        <button class="btn-cat" onclick="scrollToCategory('bebidas')">Bebidas</button>
-    </div>
+    <div class="category-bar">
+    <button onclick="irA('sec-comidas')">Comidas</button>
+    <button onclick="irA('sec-antojitos')">Antojitos</button>
+    <button onclick="irA('sec-bebidas')">Bebidas</button>
 </div>
 <div id="alerta-pedido-activo" class="container mt-2" style="display: none;">
     <div class="alert alert-warning border-0 shadow-sm" style="border-radius: 15px; background-color: #fff3cd; color: #856404;">
@@ -571,8 +572,8 @@ function verImagen(src, titulo) {
     // 3. Mostramos el modal usando la función de Bootstrap
     $('#imageModal').modal('show');
 }
-    function scrollToCategory(id) {
-    const elemento = document.getElementById(id);
+ function irA(idSeccion) {
+    const elemento = document.getElementById(idSeccion);
     if (elemento) {
         elemento.scrollIntoView({ behavior: 'smooth' });
     }
