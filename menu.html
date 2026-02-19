@@ -17,9 +17,9 @@
         .navbar { 
             background-color: white; 
             border-bottom: 2px solid #ffdab3; 
-            position: sticky; 
+            position: fixed; 
             top: 0; 
-            z-index: 1000;
+            z-index: 1010;
             padding: 0.5rem 0.8rem;
             height: 60px;
         }
@@ -70,7 +70,7 @@
         }
 
         .category-title {/* ESTA ES LA CLAVE: */
-    scroll-margin-top: 170px; color: #6f1a07; font-weight: bold; margin: 20px 0 10px; font-size: 1.2rem; border-left: 4px solid #f44336; padding-left: 10px; }
+    scroll-margin-top: 190px; color: #6f1a07; font-weight: bold; margin: 20px 0 10px; font-size: 1.2rem; border-left: 4px solid #f44336; padding-left: 10px; }
         
         /* CORRECCIÓN DE TARJETAS Y TEXTO */
         .food-item { 
@@ -147,12 +147,12 @@
         .modal-img-view { background: rgba(0,0,0,0.9); }
         .img-full { border-radius: 15px; width: 100%; }
         .category-nav {
-    background: white;
-    position: sticky;
-    top: 60px; /* Ajusta esto según la altura de tu navbar */
-    z-index: 999;
-    border-bottom: 1px solid #eee;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        background: white;
+        position: sticky;
+        top: 60px; /* Ajusta esto según la altura de tu navbar */
+        z-index: 999;
+        border-bottom: 1px solid #eee;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
 /* BARRA DE CATEGORÍAS MEJORADA PARA MÓVIL */
@@ -167,8 +167,8 @@
     gap: 8px;
     padding: 10px;
     background: #fefcf5;
-    position: sticky;
-    top: 54px; /* Ajuste para que pegue justo bajo el navbar */
+   position: fixed;
+    top: 60px;/* Ajuste para que pegue justo bajo el navbar */
     border-bottom: 1px solid #ffdab3;
 }
 
@@ -221,7 +221,7 @@
     50% { transform: scale(1.05); box-shadow: 0 0 15px rgba(244, 67, 54, 0.8); }
     100% { transform: scale(1); }
 }
-        .modal-promo .close {
+    .modal-promo .close {
    position: absolute;
     right: 15px;
     top: 10px;
@@ -253,6 +253,9 @@
         transform: scale(1) rotate(0deg);
         opacity: 0.8;
     }
+}
+        .menu-container {
+    margin-top: 180px; /* La suma de la altura del navbar + la barra de categorías */
 }
     </style>
 </head>
@@ -736,6 +739,7 @@ function irA(idSeccion, elBoton) {
 </div>
 </body>
 </html>
+
 
 
 
