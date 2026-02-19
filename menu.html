@@ -68,7 +68,8 @@
             position: absolute; top: -8px; right: -8px; 
         }
 
-        .category-title { color: #6f1a07; font-weight: bold; margin: 20px 0 10px; font-size: 1.2rem; border-left: 4px solid #f44336; padding-left: 10px; }
+        .category-title {/* ESTA ES LA CLAVE: */
+    scroll-margin-top: 200px; color: #6f1a07; font-weight: bold; margin: 20px 0 10px; font-size: 1.2rem; border-left: 4px solid #f44336; padding-left: 10px; }
         
         /* CORRECCIÓN DE TARJETAS Y TEXTO */
         .food-item { 
@@ -156,6 +157,7 @@
 /* BARRA DE CATEGORÍAS MEJORADA PARA MÓVIL */
 /* BARRA DE CATEGORÍAS INAMOVIBLE Y ADAPTADA */
 .category-bar {
+    top: 54px
     flex-wrap: wrap;
     display: grid;
     /* Crea 3 columnas iguales para los botones normales */
@@ -674,17 +676,17 @@ function verImagen(src, titulo) {
     $('#imageModal').modal('show');
 }
 function irA(idSeccion, elBoton) {
-    // 1. Ir a la sección de comida
     const elemento = document.getElementById(idSeccion);
     if (elemento) {
+        // Al tener scroll-margin-top en el CSS, 
+        // esta línea dejará el título justo a la vista.
         elemento.scrollIntoView({ behavior: 'smooth' });
     }
 
-    // 2. Cambiar color del botón
+    // Cambiar estado de los botones
     document.querySelectorAll('.category-bar button').forEach(btn => {
         btn.classList.remove('active');
     });
-
     if (elBoton) {
         elBoton.classList.add('active');
     }
@@ -733,6 +735,7 @@ function irA(idSeccion, elBoton) {
 </div>
 </body>
 </html>
+
 
 
 
