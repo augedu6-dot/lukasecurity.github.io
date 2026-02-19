@@ -546,14 +546,14 @@
         precio: "$65.00"
     };
 
-    if (promo.activa) {
-        document.getElementById('promoTitle').innerText = promo.titulo;
-        document.getElementById('promoDesc').innerText = promo.descripcion;
-        document.getElementById('promoPrice').innerText = promo.precio;
-        
-        // Muestra la ventana después de 1.5 segundos de cargar la página
-        setTimeout(() => {
+   // --- LÓGICA DE APARECER SOLO UNA VEZ ---
+    const yaVioPromo = localStorage.getItem("promoVista");
+
+    if (!yaVioPromo) {
+        setTimeout(() => { 
             $('#promoModal').modal('show');
+            // Guardamos la marca para que no vuelva a salir
+            localStorage.setItem("promoVista", "true");
         }, 1500);
     }
 }
@@ -638,6 +638,7 @@ function verImagen(src, titulo) {
 </div>
 </body>
 </html>
+
 
 
 
