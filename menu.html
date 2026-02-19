@@ -181,6 +181,14 @@
     color: white !important;
     font-weight: bold;
 }
+        /* Agrega esto a tu bloque de <style> */
+.modal-promo .close {
+    position: absolute;
+    right: 15px;
+    top: 10px;
+    z-index: 10;
+    color: #333 !important; /* Para que la X sea visible */
+}
     </style>
 </head>
 <body>
@@ -521,46 +529,43 @@
         if (elTotal) elTotal.innerText = precioTotal;
     }
 
-    window.onload = function() {
-        const usuario = localStorage.getItem("usuarioLogueado");
-        if (!usuario) {
-            window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/login2.html";
-            return;
-        }
+   window.onload = function() {
+    const usuario = localStorage.getItem("usuarioLogueado");
+    if (!usuario) {
+        window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/login2.html";
+        return;
+    }
 
-        // Evita errores si los elementos de usuario no están en el DOM
-        const elEmail = document.getElementById("displayEmail");
-     //   const elNav = document.getElementById("navUser");
-        if (elEmail) elEmail.innerText = usuario;
-      //  if (elNav) elNav.innerText = usuario.split('@')[0];
+    const elEmail = document.getElementById("displayEmail");
+    if (elEmail) elEmail.innerText = usuario;
 
-        actualizarInterfaz();
-        verificarPromocion(); // <--- AGREGA ESTA LÍNEA
-      // --- CONFIGURACIÓN DE LA PROMOCIÓN ---
-   // --- CONFIGURACIÓN DE LA PROMOCIÓN ---
-    const hayPromo = true; // Cambia a false para desactivar
+    actualizarInterfaz();
+
+    // --- CONFIGURACIÓN DE LA PROMOCIÓN ---
+    const hayPromo = true; 
     const yaVioPromo = localStorage.getItem("promoVista");
 
+    // Si quieres probarla de nuevo, borra el "localStorage" de tu navegador
     if (hayPromo && !yaVioPromo) {
-        // 1. Definimos los datos que nos diste
         const promoData = {
             titulo: "Combo Hamburguesa",
             descripcion: "Llévate una hamburguesa y un refresco por un precio especial.",
             precio: "$65.00"
         };
 
-        // 2. Los cargamos en el HTML antes de mostrar el modal
-        document.getElementById('promoTitle').innerText = promoData.titulo;
-        document.getElementById('promoDesc').innerText = promoData.descripcion;
-        document.getElementById('promoPrice').innerText = promoData.precio;
+        // Verificamos que los elementos existan antes de llenarlos
+        if(document.getElementById('promoTitle')){
+            document.getElementById('promoTitle').innerText = promoData.titulo;
+            document.getElementById('promoDesc').innerText = promoData.descripcion;
+            document.getElementById('promoPrice').innerText = promoData.precio;
 
-        // 3. Mostramos el modal después de 1.5 segundos
-        setTimeout(() => { 
-            $('#promoModal').modal('show');
-            localStorage.setItem("promoVista", "true");
-        }, 1500);
+            setTimeout(() => { 
+                $('#promoModal').modal('show');
+                localStorage.setItem("promoVista", "true");
+            }, 1500);
+        }
     }
-    };
+};
 
    function irADireccion() {
     const avisoVacio = document.getElementById("alerta-carrito-vacio");
@@ -644,6 +649,7 @@ function verImagen(src, titulo) {
 </div>
 </body>
 </html>
+
 
 
 
