@@ -189,6 +189,23 @@
     z-index: 10;
     color: #333 !important; /* Para que la X sea visible */
 }
+        /* Botón de Promo Llamativo */
+.btn-promo-nav {
+    background: linear-gradient(45deg, #f44336, #ff9800) !important;
+    color: white !important;
+    font-weight: bold !important;
+    border: none !important;
+    padding: 6px 15px !important;
+    border-radius: 20px !important;
+    animation: pulse-promo 2s infinite;
+    box-shadow: 0 0 10px rgba(244, 67, 54, 0.5);
+}
+
+@keyframes pulse-promo {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); box-shadow: 0 0 15px rgba(244, 67, 54, 0.8); }
+    100% { transform: scale(1); }
+}
     </style>
 </head>
 <body>
@@ -215,6 +232,9 @@
     <button class="active" onclick="irA('sec-comidas', this)">Comidas</button>
     <button onclick="irA('sec-antojitos', this)">Antojitos</button>
     <button onclick="irA('sec-bebidas', this)">Bebidas</button>
+      <button class="btn-promo-nav" onclick="mostrarPromoForzada()">
+        <i class="fas fa-tag"></i> ¡PROMO!
+    </button>
 </div>
 <div id="alerta-pedido-activo" class="container mt-2" style="display: none;">
     <div class="alert alert-warning border-0 shadow-sm" style="border-radius: 15px; background-color: #fff3cd; color: #856404;">
@@ -624,6 +644,22 @@ function verImagen(src, titulo) {
         elBoton.classList.add('active');
     }
 }
+
+    function mostrarPromoForzada() {
+    const promoData = {
+        titulo: "Combo Hamburguesa",
+        descripcion: "Llévate una hamburguesa y un refresco por un precio especial.",
+        precio: "$65.00"
+    };
+
+    // Llenamos los datos por si acaso
+    document.getElementById('promoTitle').innerText = promoData.titulo;
+    document.getElementById('promoDesc').innerText = promoData.descripcion;
+    document.getElementById('promoPrice').innerText = promoData.precio;
+
+    // Abrimos el modal
+    $('#promoModal').modal('show');
+}
 </script>
 <div class="modal fade modal-promo" id="promoModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -647,8 +683,11 @@ function verImagen(src, titulo) {
         </div>
     </div>
 </div>
+
+    
 </body>
 </html>
+
 
 
 
