@@ -546,6 +546,11 @@
         precio: "$65.00"
     };
 
+            const hayPromo = true; // Cambia a false para quitarla
+    if (hayPromo) {
+        setTimeout(() => { $('#promoModal').modal('show'); }, 1500);
+    }
+
    // --- LÓGICA DE APARECER SOLO UNA VEZ ---
     const yaVioPromo = localStorage.getItem("promoVista");
 
@@ -556,7 +561,6 @@
             localStorage.setItem("promoVista", "true");
         }, 1500);
     }
-}
     };
 
    function irADireccion() {
@@ -638,6 +642,7 @@ function verImagen(src, titulo) {
 </div>
 </body>
 </html>
+
 
 
 
