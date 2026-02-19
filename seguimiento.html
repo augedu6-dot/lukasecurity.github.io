@@ -81,6 +81,22 @@
        /* Opcional: añade un poco de espacio a la derecha del nombre */
         padding-right: 10px;
          }
+        /* Estilo para el Modal de Promoción */
+.modal-promo .modal-content {
+    border: none;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #6f1a07 0%, #f44336 100%);
+    color: white;
+}
+.promo-badge {
+    background: #ffdab3;
+    color: #6f1a07;
+    padding: 5px 15px;
+    border-radius: 50px;
+    font-weight: bold;
+    display: inline-block;
+    margin-bottom: 15px;
+}
     </style>
 </head>
 <body>
@@ -231,8 +247,25 @@
     });
 };
     </script>
+    <div class="modal fade modal-promo" id="promoModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content shadow-lg">
+            <div class="modal-body text-center p-4">
+                <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+                <div class="promo-badge">¡OFERTA LIMITADA!</div>
+                <h2 id="promoTitle" class="font-weight-bold"></h2>
+                <p id="promoDesc" class="lead"></p>
+                <div class="p-3 bg-white text-dark rounded-lg mb-3">
+                    <h4 class="m-0 font-weight-bold" id="promoPrice"></h4>
+                </div>
+                <button type="button" class="btn btn-light btn-block rounded-pill font-weight-bold py-2" data-dismiss="modal">¡Aprovechar!</button>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>
+
 
 
 
