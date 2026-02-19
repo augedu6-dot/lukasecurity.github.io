@@ -21,6 +21,7 @@
             top: 0; 
             z-index: 1000;
             padding: 0.5rem 0.8rem;
+            height: 60px;
         }
         .navbar .container {
             display: flex;
@@ -69,7 +70,7 @@
         }
 
         .category-title {/* ESTA ES LA CLAVE: */
-    scroll-margin-top: 200px; color: #6f1a07; font-weight: bold; margin: 20px 0 10px; font-size: 1.2rem; border-left: 4px solid #f44336; padding-left: 10px; }
+    scroll-margin-top: 170px; color: #6f1a07; font-weight: bold; margin: 20px 0 10px; font-size: 1.2rem; border-left: 4px solid #f44336; padding-left: 10px; }
         
         /* CORRECCIÓN DE TARJETAS Y TEXTO */
         .food-item { 
@@ -157,7 +158,8 @@
 /* BARRA DE CATEGORÍAS MEJORADA PARA MÓVIL */
 /* BARRA DE CATEGORÍAS INAMOVIBLE Y ADAPTADA */
 .category-bar {
-    top: 54px
+    top: 60px; 
+    z-index: 999;
     flex-wrap: wrap;
     display: grid;
     /* Crea 3 columnas iguales para los botones normales */
@@ -167,7 +169,6 @@
     background: #fefcf5;
     position: sticky;
     top: 54px; /* Ajuste para que pegue justo bajo el navbar */
-    z-index: 998;
     border-bottom: 1px solid #ffdab3;
 }
 
@@ -735,6 +736,7 @@ function irA(idSeccion, elBoton) {
 </div>
 </body>
 </html>
+
 
 
 
