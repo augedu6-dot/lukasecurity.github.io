@@ -203,10 +203,10 @@
         </div>
     </div>
 </nav>
-    <div class="category-bar">
-    <button onclick="irA('sec-comidas')">Comidas</button>
-    <button onclick="irA('sec-antojitos')">Antojitos</button>
-    <button onclick="irA('sec-bebidas')">Bebidas</button>
+  <div class="category-bar">
+    <button class="active" onclick="irA('sec-comidas', this)">Comidas</button>
+    <button onclick="irA('sec-antojitos', this)">Antojitos</button>
+    <button onclick="irA('sec-bebidas', this)">Bebidas</button>
 </div>
 <div id="alerta-pedido-activo" class="container mt-2" style="display: none;">
     <div class="alert alert-warning border-0 shadow-sm" style="border-radius: 15px; background-color: #fff3cd; color: #856404;">
@@ -577,15 +577,27 @@ function verImagen(src, titulo) {
     // 3. Mostramos el modal usando la función de Bootstrap
     $('#imageModal').modal('show');
 }
- function irA(idSeccion) {
+ function irA(idSeccion, elBoton) {
+    // 1. Ir a la sección
     const elemento = document.getElementById(idSeccion);
     if (elemento) {
         elemento.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // 2. Quitar el color café de todos los botones
+    document.querySelectorAll('.category-bar button').forEach(btn => {
+        btn.classList.remove('active');
+    });
+
+    // 3. Ponerle el color café al botón que tocaste
+    if (elBoton) {
+        elBoton.classList.add('active');
     }
 }
 </script>
 </body>
 </html>
+
 
 
 
