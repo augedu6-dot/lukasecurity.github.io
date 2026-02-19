@@ -154,44 +154,53 @@
 }
 
 /* BARRA DE CATEGORÍAS MEJORADA PARA MÓVIL */
+/* BARRA DE CATEGORÍAS INAMOVIBLE Y ADAPTADA */
 .category-bar {
-    display: flex;
-    flex-wrap: nowrap; /* Evita que los botones se bajen a otra línea */
-    overflow-x: auto;  /* Permite deslizar a los lados si no caben */
-    -webkit-overflow-scrolling: touch; /* Scroll suave en iPhone */
+    display: grid;
+    /* Crea 3 columnas iguales para los botones normales */
+    grid-template-columns: repeat(3, 1fr); 
     gap: 8px;
-    padding: 10px 15px;
+    padding: 10px;
     background: #fefcf5;
     position: sticky;
-    top: 60px;
+    top: 54px; /* Ajuste para que pegue justo bajo el navbar */
     z-index: 998;
     border-bottom: 1px solid #ffdab3;
 }
 
-/* Ocultar la barra de scroll para que se vea más limpio */
-.category-bar::-webkit-scrollbar {
-    display: none;
-}
-
 .category-bar button {
-    flex: 0 0 auto; /* Importante: evita que los botones se encojan */
+    width: 100%;
     background: #fff;
     color: #6f1a07;
     border: 1px solid #ffdab3;
-    padding: 8px 16px;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    font-weight: 500;
-    white-space: nowrap; /* Evita que el texto se parta en dos líneas */
-    transition: all 0.3s ease;
+    padding: 8px 2px; /* Reducimos padding lateral para que quepa el texto */
+    border-radius: 12px;
+    font-size: 0.8rem; /* Tamaño ideal para móvil */
+    font-weight: 600;
+    transition: all 0.2s;
 }
 
-/* Botón activo (Seleccionado) */
+/* El botón de PROMO ocupará toda la segunda fila */
+.btn-promo-nav {
+    grid-column: 1 / span 3; /* Se extiende por las 3 columnas */
+    background: linear-gradient(45deg, #f44336, #ff9800) !important;
+    color: white !important;
+    border: none !important;
+    margin-top: 4px;
+    padding: 10px !important;
+    animation: pulse-promo 2s infinite;
+}
+
 .category-bar button.active {
     background: #6f1a07 !important;
     color: white !important;
-    border-color: #6f1a07;
-    box-shadow: 0 2px 5px rgba(111, 26, 7, 0.3);
+}
+
+/* Evita que los botones se muevan al hacer scroll */
+.category-nav-container {
+    position: sticky;
+    top: 54px;
+    z-index: 999;
 }
 
 /* Estilo especial para el botón de Promo */
@@ -233,8 +242,9 @@
     <button class="active" onclick="irA('sec-comidas', this)">Comidas</button>
     <button onclick="irA('sec-antojitos', this)">Antojitos</button>
     <button onclick="irA('sec-bebidas', this)">Bebidas</button>
+    
     <button class="btn-promo-nav" onclick="mostrarPromoForzada()">
-        <i class="fas fa-tag"></i> ¡PROMO!
+        <i class="fas fa-tag"></i> ¡PROMOCIÓN ESPECIAL AQUÍ!
     </button>
 </div>
 <div id="alerta-pedido-activo" class="container mt-2" style="display: none;">
@@ -635,16 +645,13 @@ function irA(idSeccion, elBoton) {
         elemento.scrollIntoView({ behavior: 'smooth' });
     }
 
-    // 2. Gestionar clases de botones
+    // 2. Cambiar color del botón
     document.querySelectorAll('.category-bar button').forEach(btn => {
         btn.classList.remove('active');
     });
 
     if (elBoton) {
         elBoton.classList.add('active');
-        
-        // --- NUEVO: Centrar el botón automáticamente en la pantalla del celular ---
-        elBoton.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
     }
 }
 
@@ -690,6 +697,7 @@ function irA(idSeccion, elBoton) {
     
 </body>
 </html>
+
 
 
 
