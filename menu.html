@@ -536,28 +536,26 @@
 
         actualizarInterfaz();
         verificarPromocion(); // <--- AGREGA ESTA LÍNEA
-        function verificarPromocion() {
-    // Aquí defines si hay una promoción. 
-    // Puedes cambiar 'activa: false' a 'true' cuando quieras que aparezca.
-    const promo = {
-        activa: true, 
-        titulo: "Combo Hamburguesa",
-        descripcion: "Llévate una hamburguesa y un refresco por un precio especial.",
-        precio: "$65.00"
-    };
-
-            const hayPromo = true; // Cambia a false para quitarla
-    if (hayPromo) {
-        setTimeout(() => { $('#promoModal').modal('show'); }, 1500);
-    }
-
-   // --- LÓGICA DE APARECER SOLO UNA VEZ ---
+      // --- CONFIGURACIÓN DE LA PROMOCIÓN ---
+    const hayPromo = true; // Cambia a false para desactivar
     const yaVioPromo = localStorage.getItem("promoVista");
 
-    if (!yaVioPromo) {
+    if (hayPromo && !yaVioPromo) {
+        // 1. Definimos los datos que nos diste
+        const promoData = {
+            titulo: "Combo Hamburguesa",
+            descripcion: "Llévate una hamburguesa y un refresco por un precio especial.",
+            precio: "$65.00"
+        };
+
+        // 2. Los cargamos en el HTML antes de mostrar el modal
+        document.getElementById('promoTitle').innerText = promoData.titulo;
+        document.getElementById('promoDesc').innerText = promoData.descripcion;
+        document.getElementById('promoPrice').innerText = promoData.precio;
+
+        // 3. Mostramos el modal después de 1.5 segundos
         setTimeout(() => { 
             $('#promoModal').modal('show');
-            // Guardamos la marca para que no vuelva a salir
             localStorage.setItem("promoVista", "true");
         }, 1500);
     }
@@ -621,20 +619,23 @@ function verImagen(src, titulo) {
     }
 }
 </script>
-    <div class="modal fade modal-promo" id="promoModal" tabindex="-1" role="dialog" aria-hidden="true">
+   <div class="modal fade modal-promo" id="promoModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content shadow-lg">
             <div class="modal-body text-center p-4">
                 <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
-                <div class="promo-badge">¡OFERTA LIMITADA!</div>
+                <div class="promo-badge" style="background: #ffdab3; color: #6f1a07; padding: 5px 15px; border-radius: 50px; font-weight: bold; display: inline-block; margin-bottom: 15px;">¡OFERTA LIMITADA!</div>
+                
                 <h2 id="promoTitle" class="font-weight-bold"></h2>
                 <p id="promoDesc" class="lead"></p>
+                
                 <div class="p-3 bg-white text-dark rounded-lg mb-3">
                     <h4 class="m-0 font-weight-bold" id="promoPrice"></h4>
                 </div>
-              <button class="btn btn-light btn-block rounded-pill font-weight-bold py-2" 
-                        onclick="cambiarCantidad('qweq', 55, 1); $('#promoModal').modal('hide');">
-                    ¡Añadir al carrito!
+                
+                <button type="button" class="btn btn-light btn-block rounded-pill font-weight-bold py-2" 
+                        onclick="cambiarCantidad('qweq', 65, 1); $('#promoModal').modal('hide');">
+                    ¡Aprovechar Promo!
                 </button>
             </div>
         </div>
@@ -642,6 +643,7 @@ function verImagen(src, titulo) {
 </div>
 </body>
 </html>
+
 
 
 
