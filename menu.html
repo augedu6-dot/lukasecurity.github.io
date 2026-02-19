@@ -144,6 +144,35 @@
 
         .modal-img-view { background: rgba(0,0,0,0.9); }
         .img-full { border-radius: 15px; width: 100%; }
+        .category-nav {
+    background: white;
+    position: sticky;
+    top: 60px; /* Ajusta esto según la altura de tu navbar */
+    z-index: 999;
+    border-bottom: 1px solid #eee;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.btn-cat {
+    background: #fff5eb;
+    color: #6f1a07;
+    border: 1px solid #ffdab3;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all 0.3s;
+}
+
+.btn-cat:active {
+    background: #6f1a07;
+    color: white;
+}
+
+/* Evita que el navbar tape el título al saltar */
+.category-title {
+    scroll-margin-top: 120px; 
+}
     </style>
 </head>
 <body>
@@ -166,7 +195,13 @@
         </div>
     </div>
 </nav>
-    
+    <div class="category-nav">
+    <div class="container d-flex justify-content-around py-2">
+        <button class="btn-cat" onclick="scrollToCategory('comidas')">Comidas</button>
+        <button class="btn-cat" onclick="scrollToCategory('antojitos')">Antojitos</button>
+        <button class="btn-cat" onclick="scrollToCategory('bebidas')">Bebidas</button>
+    </div>
+</div>
 <div id="alerta-pedido-activo" class="container mt-2" style="display: none;">
     <div class="alert alert-warning border-0 shadow-sm" style="border-radius: 15px; background-color: #fff3cd; color: #856404;">
         <i class="fas fa-exclamation-circle mr-2"></i>
@@ -536,9 +571,16 @@ function verImagen(src, titulo) {
     // 3. Mostramos el modal usando la función de Bootstrap
     $('#imageModal').modal('show');
 }
+    function scrollToCategory(id) {
+    const elemento = document.getElementById(id);
+    if (elemento) {
+        elemento.scrollIntoView({ behavior: 'smooth' });
+    }
+}
 </script>
 </body>
 </html>
+
 
 
 
