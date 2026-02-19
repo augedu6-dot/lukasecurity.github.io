@@ -166,10 +166,17 @@
         </div>
     </div>
 </nav>
+    
 <div id="alerta-pedido-activo" class="container mt-2" style="display: none;">
     <div class="alert alert-warning border-0 shadow-sm" style="border-radius: 15px; background-color: #fff3cd; color: #856404;">
         <i class="fas fa-exclamation-circle mr-2"></i>
         <strong>Pedido en curso:</strong> No puedes modificar el carrito hasta que finalice tu entrega actual.
+    </div>
+</div>
+    <div id="alerta-carrito-vacio" class="container mt-2" style="display: none;">
+    <div class="alert alert-danger border-0 shadow-sm" style="border-radius: 15px; background-color: #f8d7da; color: #721c24;">
+        <i class="fas fa-shopping-basket mr-2"></i>
+        <strong>¡Carrito vacío!</strong> Selecciona algún producto antes de continuar.
     </div>
 </div>
 <div class="container menu-container">
@@ -489,14 +496,24 @@
         actualizarInterfaz();
     };
 
-    function irADireccion() {
-        if (Object.keys(carrito).length === 0) {
-            alert("Tu carrito está vacío");
-        } else {
-            window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/carrito.html";
+   function irADireccion() {
+    const avisoVacio = document.getElementById("alerta-carrito-vacio");
+    
+    if (Object.keys(carrito).length === 0) {
+        // En lugar de alert(), mostramos el mensaje en pantalla
+        if (avisoVacio) {
+            avisoVacio.style.display = "block";
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            // Opcional: Desaparecer el mensaje después de 3 segundos
+            setTimeout(() => {
+                avisoVacio.style.display = "none";
+            }, 4000);
         }
+    } else {
+        window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/carrito.html";
     }
-
+}
 function cerrarSesion() {
     // 1. Borramos los datos específicos de la sesión
     localStorage.removeItem("usuarioLogueado");
@@ -522,6 +539,7 @@ function verImagen(src, titulo) {
 </script>
 </body>
 </html>
+
 
 
 
