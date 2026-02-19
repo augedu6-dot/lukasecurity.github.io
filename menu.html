@@ -299,12 +299,7 @@
         <strong>Pedido en curso:</strong> No puedes modificar el carrito hasta que finalice tu entrega actual.
     </div>
 </div>
-    <div id="alerta-carrito-vacio" class="container mt-2" style="display: none;">
-    <div class="alert alert-danger border-0 shadow-sm" style="border-radius: 15px; background-color: #f8d7da; color: #721c24;">
-        <i class="fas fa-shopping-basket mr-2"></i>
-        <strong>¡Carrito vacío!</strong> Selecciona algún producto antes de continuar.
-    </div>
-</div>
+   
 <div class="container menu-container">
 <div id="sec-comidas" class="category-title">Comidas</div>
 
@@ -645,20 +640,12 @@
 };
 
    function irADireccion() {
-    const avisoVacio = document.getElementById("alerta-carrito-vacio");
-    
+ // Verificamos si el objeto carrito no tiene propiedades (está vacío)
     if (Object.keys(carrito).length === 0) {
-        // En lugar de alert(), mostramos el mensaje en pantalla
-        if (avisoVacio) {
-            avisoVacio.style.display = "block";
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            
-            // Opcional: Desaparecer el mensaje después de 3 segundos
-            setTimeout(() => {
-                avisoVacio.style.display = "none";
-            }, 4000);
-        }
+        // Lanzamos la ventana emergente de Bootstrap
+        $('#modalCarritoVacio').modal('show');
     } else {
+        // Si tiene productos, vamos a la página de pago
         window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/carrito.html";
     }
 }
@@ -742,8 +729,25 @@ function irA(idSeccion, elBoton) {
         </div>
     </div>
 </div>
+    <div class="modal fade" id="modalCarritoVacio" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content" style="border-radius: 20px; border: none; box-shadow: 0 10px 25px rgba(0,0,0,0.2);">
+            <div class="modal-body text-center p-5">
+                <div style="font-size: 4rem; color: #f44336; margin-bottom: 20px;">
+                    <i class="fas fa-shopping-cart"></i>
+                </div>
+                <h3 class="font-weight-bold" style="color: #6f1a07;">Tu carrito está vacío</h3>
+                <p class="text-muted">¡No te quedes con el antojo! Agrega algunos productos para poder continuar con tu pedido.</p>
+                <button type="button" class="btn btn-danger btn-block rounded-pill py-3 font-weight-bold" data-dismiss="modal" style="background-color: #f44336; border: none; font-size: 1rem;">
+                    VOLVER Al MENU
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>
+
 
 
 
