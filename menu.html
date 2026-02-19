@@ -292,14 +292,7 @@
     <button class="btn-promo-nav" onclick="mostrarPromoForzada()">
         <i class="fas fa-tag"></i> ¡PROMOCIÓN AQUÍ!
     </button>
-</div>
-<div id="alerta-pedido-activo" class="container mt-2" style="display: none;">
-    <div class="alert alert-warning border-0 shadow-sm" style="border-radius: 15px; background-color: #fff3cd; color: #856404;">
-        <i class="fas fa-exclamation-circle mr-2"></i>
-        <strong>Pedido en curso:</strong> No puedes modificar el carrito hasta que finalice tu entrega actual.
-    </div>
-</div>
-   
+</div>   
 <div class="container menu-container">
 <div id="sec-comidas" class="category-title">Comidas</div>
 
@@ -531,22 +524,15 @@
     'tyu': 'tyu',
 };
    function cambiarCantidad(nombre, precio, cambio) {
+  function cambiarCantidad(nombre, precio, cambio) {
     // Verificamos si hay un pedido activo
     if (localStorage.getItem("ultimoPedido")) {
-        // En lugar de alert, mostramos el aviso HTML con una pequeña animación
-        const aviso = document.getElementById("alerta-pedido-activo");
-        if (aviso) {
-            aviso.style.display = "block";
-            // Hace que la pantalla suba suavemente al aviso para que el usuario lo vea
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            
-            // Opcional: El aviso parpadea para llamar la atención
-            aviso.classList.add("shake-animation"); 
-        }
-        return; // Detiene la ejecución
+        // En lugar de mostrar el div de arriba, lanzamos el modal
+        $('#modalPedidoActivo').modal('show');
+        return; // Detiene la ejecución para que no agregue al carrito
     }
 
-    // Lógica normal del carrito
+    // Lógica normal del carrito (esto se queda igual)
     if (!carrito[nombre]) {
         carrito[nombre] = { nombre: nombre, precio: precio, cantidad: 0 };
     }
@@ -557,7 +543,6 @@
     localStorage.setItem("carrito_obj", JSON.stringify(carrito));
     actualizarInterfaz();
 }
-
     function actualizarInterfaz() {
         let totalItems = 0;
         let precioTotal = 0;
@@ -745,8 +730,27 @@ function irA(idSeccion, elBoton) {
         </div>
     </div>
 </div>
+    <div class="modal fade" id="modalPedidoActivo" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content" style="border-radius: 20px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+            <div class="modal-body text-center p-5">
+                <div style="font-size: 4rem; color: #ff9800; margin-bottom: 20px;">
+                    <i class="fas fa-truck-loading"></i>
+                </div>
+                <h3 class="font-weight-bold" style="color: #6f1a07;">Pedido en curso</h3>
+                <p class="text-muted">Tienes una entrega activa. No puedes modificar el carrito hasta que recibas tu pedido actual.</p>
+                <button type="button" class="btn btn-warning btn-block rounded-pill py-3 font-weight-bold" 
+                        onclick="window.location.href='https://augedu6-dot.github.io/lukasecurity.github.io/seguimiento.html'"
+                        style="background-color: #ff9800; border: none; color: white;">
+                    VER MI PEDIDO
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>
+
 
 
 
