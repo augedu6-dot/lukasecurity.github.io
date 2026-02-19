@@ -537,6 +537,7 @@
         actualizarInterfaz();
         verificarPromocion(); // <--- AGREGA ESTA LÍNEA
       // --- CONFIGURACIÓN DE LA PROMOCIÓN ---
+   // --- CONFIGURACIÓN DE LA PROMOCIÓN ---
     const hayPromo = true; // Cambia a false para desactivar
     const yaVioPromo = localStorage.getItem("promoVista");
 
@@ -619,7 +620,7 @@ function verImagen(src, titulo) {
     }
 }
 </script>
-   <div class="modal fade modal-promo" id="promoModal" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade modal-promo" id="promoModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content shadow-lg">
             <div class="modal-body text-center p-4">
@@ -643,6 +644,7 @@ function verImagen(src, titulo) {
 </div>
 </body>
 </html>
+
 
 
 
