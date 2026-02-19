@@ -218,6 +218,18 @@
     50% { transform: scale(1.05); box-shadow: 0 0 15px rgba(244, 67, 54, 0.8); }
     100% { transform: scale(1); }
 }
+        .modal-promo .close {
+    position: absolute;
+    right: 15px;
+    top: 10px;
+    font-size: 2rem;
+    color: white !important;
+    opacity: 0.8;
+    z-index: 10;
+}
+.modal-promo .close:hover {
+    opacity: 1;
+}
     </style>
 </head>
 <body>
@@ -677,7 +689,9 @@ function irA(idSeccion, elBoton) {
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content shadow-lg">
             <div class="modal-body text-center p-4">
-                <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
                 <div class="promo-badge" style="background: #ffdab3; color: #6f1a07; padding: 5px 15px; border-radius: 50px; font-weight: bold; display: inline-block; margin-bottom: 15px;">¡OFERTA LIMITADA!</div>
                 
                 <h2 id="promoTitle" class="font-weight-bold"></h2>
@@ -695,10 +709,9 @@ function irA(idSeccion, elBoton) {
         </div>
     </div>
 </div>
-
-    
 </body>
 </html>
+
 
 
 
