@@ -156,6 +156,7 @@
 /* BARRA DE CATEGORÍAS MEJORADA PARA MÓVIL */
 /* BARRA DE CATEGORÍAS INAMOVIBLE Y ADAPTADA */
 .category-bar {
+    flex-wrap: wrap;
     display: grid;
     /* Crea 3 columnas iguales para los botones normales */
     grid-template-columns: repeat(3, 1fr); 
@@ -189,6 +190,7 @@
     margin-top: 4px;
     padding: 10px !important;
     animation: pulse-promo 2s infinite;
+    flex-wrap: wrap;
 }
 
 .category-bar button.active {
@@ -244,7 +246,7 @@
     <button onclick="irA('sec-bebidas', this)">Bebidas</button>
     
     <button class="btn-promo-nav" onclick="mostrarPromoForzada()">
-        <i class="fas fa-tag"></i> ¡PROMOCIÓN ESPECIAL AQUÍ!
+        <i class="fas fa-tag"></i> ¡PROMOCIÓN AQUÍ!
     </button>
 </div>
 <div id="alerta-pedido-activo" class="container mt-2" style="display: none;">
@@ -697,6 +699,7 @@ function irA(idSeccion, elBoton) {
     
 </body>
 </html>
+
 
 
 
