@@ -222,7 +222,7 @@
             usuario: localStorage.getItem("usuarioLogueado") || "Invitado",
             productos: Object.values(carrito),
             total: totalNum,
-            direccion: `${domicilioData.calle} #${domicilioData.numero}, ${domicilioData.ciudad}`,
+            direccion: `${domicilioData.calle} #${domicilioData.numero}, ${domicilioData.ciudad},${domicilioData.letitud},${domicilioData.longitud}`,
             metodoPago: metodoSeleccionado,
             fecha: new Date().toLocaleString(),
             estado: "Recibido"
@@ -264,4 +264,5 @@
 </script>
 </body>
 </html>
+
 
