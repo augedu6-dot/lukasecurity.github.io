@@ -188,22 +188,12 @@
         `).join("");
     }
 // --- PROCESAMIENTO DE DIRECCIÓN ---
-// --- LIMPIEZA AGRESIVA DE DIRECCIÓN (SIN ESPACIOS) ---
+// --- LIMPIEZA AGRESIVA DE DIRECCIÓN (TU CÓDIGO ANTERIOR) ---
     let direccionLimpia = pedidoLocal.direccion || "No especificada";
-
-    // 1. Elimina ",null" o "null" repetidos sin importar los espacios
-    // Esto limpia: "Calle,null,null" -> "Calle"
     direccionLimpia = direccionLimpia.replace(/(,?\s*null)+/gi, "");
-
-    // 2. Elimina coordenadas al final aunque no tengan espacios
-    // Detecta: ",19.432,-99.133" o " , 19.432 , -99.133"
-    // El regex busca: Coma opcional + número (opcionalmente con signo y decimal) + coma + número
     direccionLimpia = direccionLimpia.replace(/,?\s*[-+]?\d*\.?\d+,\s*[-+]?\d*\.?\d+\s*$/, "");
-
-    // 3. Limpieza de seguridad: quitar comas que hayan quedado al final o al inicio
     direccionLimpia = direccionLimpia.trim().replace(/^,|,$/g, "");
 
-    // 4. Validación final
     if (!direccionLimpia || direccionLimpia.toLowerCase() === "null") {
         direccionLimpia = "Dirección no especificada";
     }
@@ -288,6 +278,7 @@ contenedor.innerHTML = `
     </script>
 </body>
 </html>
+
 
 
 
