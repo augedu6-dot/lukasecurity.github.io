@@ -382,17 +382,7 @@ document.getElementById("subtotal").innerText = subtotal;
                    window.location.assign(url);
                      
             } 
-            else if (metodoSeleccionado === "Tarjeta Online") {
-                window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/pago.html";
-            } 
-            else {
-                // Efectivo o Terminal
-                mostrarAviso("✅ ¡Pedido confirmado!");
-                localStorage.removeItem("carrito_obj");
-                setTimeout(() => {
-                    window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/seguimiento.html";
-                }, 2000);
-            }
+            
 
         } catch (error) {
             console.error(error);
@@ -436,6 +426,7 @@ document.getElementById("subtotal").innerText = subtotal;
 </script>
 </body>
 </html>
+
 
 
 
