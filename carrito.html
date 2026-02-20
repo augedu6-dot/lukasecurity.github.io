@@ -382,23 +382,25 @@ document.getElementById("subtotal").innerText = subtotal;
                    window.location.assign(url);
                      
             } 
-            else if (metodoSeleccionado === "Tarjeta Online") {
-            // Forzamos el guardado de datos limpios
-            const totalTexto = document.getElementById("totalFinal").innerText;
-            const totalLimpio = totalTexto.replace('$', '').trim(); // Quitamos el signo si lo tiene
+            else // DENTRO DE confirmarPedidoFinal en carrito.html
+if (metodoSeleccionado === "Tarjeta Online") {
+    // 1. Capturamos el total quitando cualquier signo de pesos si existe
+    const totalTexto = document.getElementById("totalFinal").innerText;
+    const totalLimpio = totalTexto.replace('$', '').trim();
 
-            localStorage.setItem("montoAPagar", totalLimpio); 
-            localStorage.setItem("idPedidoActual", idPedido);
-            localStorage.setItem("ultimoPedido", JSON.stringify(infoPedido));
+    // 2. GUARDADO FORZADO (Esto es lo que enviamos)
+    localStorage.setItem("montoAPagar", totalLimpio); 
+    localStorage.setItem("idPedidoActual", idPedido);
+    
+    console.log("DATOS ENVIADOS:", totalLimpio, idPedido); // Verifica esto en F12
 
-            console.log("Datos guardados:", totalLimpio, idPedido); // Para revisar en consola
-
-            // Guardamos en Firebase y luego redirigimos
-            await update(ref(db, 'pedidos/' + idPedido), infoPedido);
-            
-            window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/pago.html";
-            return; 
-        }
+    // 3. Guardamos en Firebase para que no se pierda la orden
+    await update(ref(db, 'pedidos/' + idPedido), infoPedido);
+    
+    // 4. Salto a la página
+    window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/pago.html";
+    return; 
+}
             else {
                 // Efectivo o Terminal
                 mostrarAviso("✅ ¡Pedido confirmado!");
@@ -450,6 +452,7 @@ document.getElementById("subtotal").innerText = subtotal;
 </script>
 </body>
 </html>
+
 
 
 
