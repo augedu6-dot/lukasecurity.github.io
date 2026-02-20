@@ -281,7 +281,9 @@ contenedor.innerHTML = `
             <p class="mb-0 text-muted">${direccionLimpia}</p>
         </div>
 
-    ${mensajePagoHTML}
+<div id="contenedor-mensaje-pago">
+    ${obtenerMensajePago(pedidoLocal.metodoPago || pedidoLocal.pago, "Recibido")}
+</div>
 
         <div class="products-section">
             <h6 class="font-weight-bold mb-2" style="color: #6f1a07; font-size: 0.75rem;"><i class="fas fa-shopping-bag mr-2"></i>TUS PRODUCTOS:</h6>
@@ -315,6 +317,7 @@ contenedor.innerHTML = `
     </script>
 </body>
 </html>
+
 
 
 
