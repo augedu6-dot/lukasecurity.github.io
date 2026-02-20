@@ -41,56 +41,45 @@
         <a href="carrito.html" class="btn btn-link btn-sm mt-3 text-muted">Cancelar y volver</a>
     </div>
 
-    <script>
-        // URL de tu API en Render (Verificada)
-        const RENDER_API_URL = "https://demasita-backend.onrender.com/create_preference";
-//https://api.render.com/deploy/srv-d6cbfi0gjchc73flc3g0?key=CJbqn53Bko4
-        window.onload = async function() {
-            // 1. Recuperar datos
-            const total = localStorage.getItem("montoAPagar");
-            const idPedido = localStorage.getItem("idPedidoActual");
+  <script>
+    // ESTA ES LA URL DE TU SERVIDOR REAL, NO EL DEPLOY HOOK
+    const RENDER_API_URL = "https://demasita-backend.onrender.com/create_preference";
 
-            console.log("Iniciando pago para:", idPedido, "Monto:", total);
+    window.onload = async function() {
+        const total = localStorage.getItem("montoAPagar");
+        const idPedido = localStorage.getItem("idPedidoActual");
 
-            // 2. Mostrar monto si existe
-            if (total) {
-                document.getElementById('displayTotal').innerText = "$" + total;
-            } else {
-                alert("No se encontró el monto. Volviendo al carrito.");
-                window.location.href = "carrito.html";
-                return;
+        if (total) {
+            document.getElementById('displayTotal').innerText = "$" + total;
+        }
+
+        try {
+            console.log("Conectando a la API real...");
+            const response = await fetch(RENDER_API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    total: parseFloat(total),
+                    idPedido: idPedido
+                })
+            });
+
+            if (!response.ok) throw new Error("Error en el servidor");
+
+            const data = await response.json();
+            if (data.init_point) {
+                document.getElementById('loadingSection').classList.add('hidden');
+                document.getElementById('paymentSection').classList.remove('hidden');
+                document.getElementById('checkout-btn').onclick = () => {
+                    localStorage.removeItem("carrito_obj");
+                    window.location.href = data.init_point;
+                };
             }
-
-            // 3. Llamar a Render
-            try {
-                const response = await fetch(RENDER_API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        total: total,
-                        idPedido: idPedido
-                    })
-                });
-
-                if (!response.ok) throw new Error("Error en respuesta del servidor");
-
-                const data = await response.json();
-
-                if (data.init_point) {
-                    // Mostrar botón de pago
-                    document.getElementById('loadingSection').classList.add('hidden');
-                    document.getElementById('paymentSection').classList.remove('hidden');
-                    
-                    document.getElementById('checkout-btn').onclick = function() {
-                        localStorage.removeItem("carrito_obj"); 
-                        window.location.href = data.init_point;
-                    };
-                }
-            } catch (error) {
-                console.error("Error al conectar con Render:", error);
-                alert("Hubo un problema al generar el pago. Inténtalo de nuevo.");
-            }
-        };
-    </script>
+        } catch (error) {
+            console.error("Error detallado:", error);
+            alert("Todavía no se puede conectar. Asegúrate de haber guardado los cambios con la nueva URL.");
+        }
+    };
+</script>
 </body>
 </html>
