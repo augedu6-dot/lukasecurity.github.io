@@ -25,11 +25,7 @@
         .form-control { border-radius: 10px; border: 1px solid #ffdab3; padding: 10px 15px; }
         .form-control:focus { border-color: #f44336; box-shadow: none; }
         
-        #success-alert { 
-    width: 90%; max-width: 400px; height: auto; padding: 12px 20px; 
-    white-space: nowrap; display: flex; align-items: center; justify-content: center;
-    left: 50%; transform: translateX(-50%); border-radius: 50px;
-}
+     #success-alert { display: none; position: fixed; top: 20px; left: 5%; width: 90%; background-color: #d4edda; color: #155724; border-radius: 15px; padding: 15px; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; z-index: 2000; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
     </style>
 </head>
 <body>
@@ -208,6 +204,7 @@
 </body>
 
 </html>
+
 
 
 
