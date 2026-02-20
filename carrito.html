@@ -245,7 +245,7 @@
             usuario: localStorage.getItem("usuarioLogueado") || "Invitado",
             productos: Object.values(carrito),
             total: totalNum,
-            direccion: `${domicilioData.calle} #${domicilioData.numero}, ${domicilioData.ciudad}`, ${domicilioData.latitud}`, ${domicilioData.longitud}`,
+            direccion: `${domicilioData.calle} #${domicilioData.numero}, ${domicilioData.ciudad},${domicilioData.latitud}, ${domicilioData.longitud}`,
             metodoPago: metodoSeleccionado,
             fecha: new Date().toLocaleString(),
             estado: "Recibido"
@@ -263,7 +263,7 @@
             usuario: localStorage.getItem("usuarioLogueado") || "Invitado",
             productos: listaProductos,
             total: `$${totalNum}`, // Corregido: Ahora es un string con comillas invertidas
-            direccion: `${domicilioData.calle} #${domicilioData.numero}, ${domicilioData.ciudad}`, ${domicilioData.latitud}`, ${domicilioData.longitud}`,
+            direccion: `${domicilioData.calle} #${domicilioData.numero}, ${domicilioData.ciudad},${domicilioData.latitud}, ${domicilioData.longitud}`,
             metodoPago: metodoSeleccionado
         };
         
@@ -376,6 +376,7 @@
 </script>
 </body>
 </html>
+
 
 
 
