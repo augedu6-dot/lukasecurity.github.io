@@ -326,22 +326,7 @@ document.getElementById("subtotal").innerText = subtotal;
             direccion: `${domicilioData.calle} #${domicilioData.numero}, ${domicilioData.ciudad},${domicilioData.latitud}, ${domicilioData.longitud}`,
             metodoPago: metodoSeleccionado
         };
-
-try {
-        // --- LÓGICA PARA PAGO CON TARJETA ---
-        if (metodoSeleccionado === "Tarjeta Online" || metodoSeleccionado === "Mercado Pago") {
-            // Guardamos los datos para que pago.html los pueda leer
-            localStorage.setItem("montoAPagar", totalNum); 
-            localStorage.setItem("idPedidoActual", idPedido);
-            localStorage.setItem("ultimoPedido", JSON.stringify(infoPedido));
-
-   
-            
-            // Saltamos a la página de pago
-            window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/pago.html";
-            return; // Detenemos la ejecución aquí
-        }
-		
+        
         try {
             // 1. Guardar en Firebase
             await update(ref(db, 'pedidos/' + idPedido), infoPedido);
@@ -397,13 +382,44 @@ try {
                    window.location.assign(url);
                      
             } 
+            else(metodoSeleccionado === "Mercado Pago" || metodoSeleccionado === "Tarjeta") {
+				try {
+        // --- COPIA ESTO EXACTAMENTE ---
+        const totalParaPagar = document.getElementById("totalFinal").innerText;
+        localStorage.setItem("montoAPagar", totalParaPagar); 
+        localStorage.setItem("idPedidoActual", idPedido);
+        // ------------------------------
+
+        await update(ref(db, 'pedidos/' + idPedido), infoPedido);
+        
+        // El resto de tu código de Google Sheets y ultimoPedido se queda igual...
+        fetch(GOOGLE_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ nombre: resumenCompleto, pedido: idPedido }) });
+        localStorage.setItem("ultimoPedido", JSON.stringify(infoPedido));
+        
+        // REDIRECCIÓN
+        window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/pago.html"; 
+        return;
+    } catch (error) {
+        console.error(error);
+    }
+}
+            else {
+                // Efectivo o Terminal
+                mostrarAviso("✅ ¡Pedido confirmado!");
+                localStorage.removeItem("carrito_obj");
+                setTimeout(() => {
+                    window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/seguimiento.html";
+                }, 2000);
+            }
+
         } catch (error) {
             console.error(error);
             mostrarAviso("❌ Error al conectar con el servidor.");
             btn.disabled = false;
             btn.innerText = "Finalizar Pedido";
         }
-    };
+  document.getElementById("totalFinal").innerText = subtotal + costoEnvio;
+	};
 
     // Al cargar la página
   window.addEventListener('load', () => {
@@ -439,6 +455,7 @@ try {
 </script>
 </body>
 </html>
+
 
 
 
