@@ -382,25 +382,26 @@ document.getElementById("subtotal").innerText = subtotal;
                    window.location.assign(url);
                      
             } 
-            else // DENTRO DE confirmarPedidoFinal en carrito.html
-if (metodoSeleccionado === "Tarjeta Online") {
-    // 1. Capturamos el total quitando cualquier signo de pesos si existe
-    const totalTexto = document.getElementById("totalFinal").innerText;
-    const totalLimpio = totalTexto.replace('$', '').trim();
+            else if (metodoSeleccionado === "Tarjeta Online") {
+			    // 1. Capturamos el total quitando cualquier signo de pesos si existe
+			    const totalTexto = document.getElementById("totalFinal").innerText;
+			    const totalLimpio = totalTexto.replace('$', '').trim();
+			
+			    // 2. GUARDADO FORZADO (Esto es lo que enviamos)
+			    localStorage.setItem("montoAPagar", totalLimpio); 
+			    localStorage.setItem("idPedidoActual", idPedido);
+			    
+			    console.log("DATOS ENVIADOS:", totalLimpio, idPedido); // Verifica esto en F12
 
-    // 2. GUARDADO FORZADO (Esto es lo que enviamos)
-    localStorage.setItem("montoAPagar", totalLimpio); 
-    localStorage.setItem("idPedidoActual", idPedido);
-    
-    console.log("DATOS ENVIADOS:", totalLimpio, idPedido); // Verifica esto en F12
-
-    // 3. Guardamos en Firebase para que no se pierda la orden
-    await update(ref(db, 'pedidos/' + idPedido), infoPedido);
-    
-    // 4. Salto a la página
-    window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/pago.html";
-    return; 
-}
+				   // 4. Salto a la página
+			    window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/pago.html";
+				
+			    // 3. Guardamos en Firebase para que no se pierda la orden
+			    await update(ref(db, 'pedidos/' + idPedido), infoPedido);
+			    
+			 
+			    return; 
+			}
             else {
                 // Efectivo o Terminal
                 mostrarAviso("✅ ¡Pedido confirmado!");
@@ -452,6 +453,7 @@ if (metodoSeleccionado === "Tarjeta Online") {
 </script>
 </body>
 </html>
+
 
 
 
