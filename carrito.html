@@ -383,7 +383,19 @@ document.getElementById("subtotal").innerText = subtotal;
                      
             } 
             else if (metodoSeleccionado === "Tarjeta Online") {
-                window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/pago.html";
+				    // Obtenemos el total directamente de lo que ve el usuario en pantalla
+    const totalFinalTexto = document.getElementById("totalFinal").innerText;
+    const totalNum = parseFloat(totalFinalTexto);
+
+    // GUARDAMOS EN LOCALSTORAGE (Esto es lo que le falta a tu código)
+    localStorage.setItem("montoAPagar", totalNum); 
+    localStorage.setItem("idPedidoActual", idPedido);
+    localStorage.setItem("ultimoPedido", JSON.stringify(infoPedido));
+
+    // Ahora sí, enviamos a la página de pago
+    window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/pago.html";
+    return;
+              
             } 
             else {
                 // Efectivo o Terminal
@@ -436,6 +448,7 @@ document.getElementById("subtotal").innerText = subtotal;
 </script>
 </body>
 </html>
+
 
 
 
