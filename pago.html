@@ -45,15 +45,20 @@
 
     <script>
         // 1. URL de tu API en Render (CAMBIA ESTO)
-        const RENDER_API_URL = 'https://tu-api-en-render.onrender.com/create_preference';
+        const RENDER_API_URL = 'https://demasita-backend.onrender.com/create_preference';
 
         document.addEventListener('DOMContentLoaded', async () => {
-            const total = localStorage.getItem("montoAPagar");
-            const idPedido = localStorage.getItem("idPedidoActual");
+    // ESTO DEBE COINCIDIR CON LO QUE PUSIMOS EN EL CARRITO
+    const total = localStorage.getItem("montoAPagar"); 
+    const idPedido = localStorage.getItem("idPedidoActual");
+
+    if (total) {
+        document.getElementById('displayTotal').innerText = `$${total}`;
+    }
 
             if (!total || !idPedido) {
                 alert("No hay información de pago pendiente.");
-                window.location.href = "carrito.html";
+                window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/carrito.html";
                 return;
             }
 
