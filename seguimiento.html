@@ -187,7 +187,17 @@
             </div>
         `).join("");
     }
+// --- PROCESAMIENTO DE DIRECCIÓN ---
+let direccionLimpia = pedidoLocal.direccion || "No especificada";
 
+// Si la dirección contiene coordenadas (ej: "19.432,-99.133") o "null", la limpiamos
+const esCoordenada = /^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?),\s*[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$/;
+const esNull = direccionLimpia.toLowerCase().includes("null");
+
+if (esCoordenada.test(direccionLimpia) || esNull) {
+    direccionLimpia = "Ubicación seleccionada en mapa"; 
+    // O puedes dejarlo como "No especificada" si prefieres
+}
    // ... dentro del window.onload, donde defines el contenedor.innerHTML ...
 
 contenedor.innerHTML = `
@@ -212,9 +222,9 @@ contenedor.innerHTML = `
             </div>
         </div>
 
-        <div class="address-box">
+<div class="address-box">
             <h6 class="font-weight-bold" style="color: #6f1a07; font-size: 0.75rem;"><i class="fas fa-map-marker-alt mr-2"></i>ENTREGAR EN:</h6>
-            <p class="mb-0 text-muted">${pedidoLocal.direccion || "No especificada"}</p>
+            <p class="mb-0 text-muted">${direccionLimpia}</p>
         </div>
 
         <div class="payment-box">
@@ -251,6 +261,7 @@ contenedor.innerHTML = `
     </script>
 </body>
 </html>
+
 
 
 
