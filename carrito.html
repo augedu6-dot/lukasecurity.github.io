@@ -298,7 +298,7 @@ document.getElementById("subtotal").innerText = subtotal;
         const idPedido = Math.floor(Math.random() * 0xFFFFFF).toString(16).toUpperCase().padStart(6, '0');
     const estadoInicial = (metodoSeleccionado === "Transferencia" || metodoSeleccionado === "Tarjeta Online") 
     ? "Esperando Pago" 
-    : "Recibido";
+    : "Pendiente";
 		
         const infoPedido = {
             id: idPedido,
@@ -436,6 +436,7 @@ document.getElementById("subtotal").innerText = subtotal;
 </script>
 </body>
 </html>
+
 
 
 
