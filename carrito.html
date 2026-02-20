@@ -296,8 +296,10 @@ document.getElementById("subtotal").innerText = subtotal;
         const GOOGLE_URL = "https://script.google.com/macros/s/AKfycbxI16EHswwjj_I4pDsYC0DM4hTrfUpTh_FomSBt94pmIGsQMJSjQCHtdMoirT1cCfnM/exec";
         const totalNum = parseFloat(document.getElementById("totalFinal").innerText);
         const idPedido = Math.floor(Math.random() * 0xFFFFFF).toString(16).toUpperCase().padStart(6, '0');
-    
-
+    const estadoInicial = (metodoSeleccionado === "Transferencia" || metodoSeleccionado === "Tarjeta Online") 
+    ? "Esperando Pago" 
+    : "Recibido";
+		
         const infoPedido = {
             id: idPedido,
             usuario: localStorage.getItem("usuarioLogueado") || "Invitado",
@@ -306,7 +308,7 @@ document.getElementById("subtotal").innerText = subtotal;
             direccion: `${domicilioData.calle} #${domicilioData.numero}, ${domicilioData.ciudad},${domicilioData.latitud}, ${domicilioData.longitud}`,
             metodoPago: metodoSeleccionado,
             fecha: new Date().toLocaleString(),
-            estado: "Recibido"
+            estado: "estadoInicial"
         };
 
   
@@ -434,6 +436,7 @@ document.getElementById("subtotal").innerText = subtotal;
 </script>
 </body>
 </html>
+
 
 
 
