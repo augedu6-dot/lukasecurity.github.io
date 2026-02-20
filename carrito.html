@@ -327,23 +327,7 @@ document.getElementById("subtotal").innerText = subtotal;
             metodoPago: metodoSeleccionado
         };
 
-		try {
-        // ================================================================
-        // BLOQUE PARA TARJETA ONLINE (PASA VALORES A PAGO.HTML)
-        // ================================================================
-        if (metodoSeleccionado === "Tarjeta Online") {
-            // Guardamos valores para que pago.html los recoja
-            localStorage.setItem("montoAPagar", totalNum); 
-            localStorage.setItem("idPedidoActual", idPedido);
-            localStorage.setItem("ultimoPedido", JSON.stringify(infoPedido));
-
-            // Guardamos en Firebase para que no se pierda el pedido
-            await update(ref(db, 'pedidos/' + idPedido), infoPedido);
-            
-            // Mandamos a la página de pago y terminamos aquí
-            window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/pago.html";
-            return; 
-        }
+	
         try {
             // 1. Guardar en Firebase
             await update(ref(db, 'pedidos/' + idPedido), infoPedido);
@@ -443,6 +427,7 @@ document.getElementById("subtotal").innerText = subtotal;
 </script>
 </body>
 </html>
+
 
 
 
