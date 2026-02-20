@@ -207,6 +207,32 @@
     if (!direccionLimpia || direccionLimpia.toLowerCase() === "null") {
         direccionLimpia = "Dirección no especificada";
     }
+
+       // --- LÓGICA DE MENSAJE DE PAGO ---
+    let mensajePagoHTML = "";
+    const metodo = (pedidoLocal.metodoPago || pedidoLocal.pago || "").toLowerCase();
+
+    if (metodo.includes("efectivo")) {
+        mensajePagoHTML = `
+            <div class="alert alert-light border-warning small text-dark mt-2" style="border-left: 5px solid #ffc107;">
+                <i class="fas fa-money-bill-wave mr-2 text-warning"></i> <b>Paga en efectivo al recibir.</b>
+            </div>`;
+    } else if (metodo.includes("terminal")) {
+        mensajePagoHTML = `
+            <div class="alert alert-light border-info small text-dark mt-2" style="border-left: 5px solid #17a2b8;">
+                <i class="fas fa-credit-card mr-2 text-info"></i> <b>Paga con terminal al recibir.</b>
+            </div>`;
+    } else if (metodo.includes("transferencia")) {
+        mensajePagoHTML = `
+            <div class="alert alert-light border-primary small text-dark mt-2" style="border-left: 5px solid #007bff;">
+                <i class="fas fa-university mr-2 text-primary"></i> <b>Envía la captura de pantalla de la transferencia al WhatsApp</b> o cuando el negocio lo confirme empezará el proceso de tu pedido.
+            </div>`;
+    } else if (metodo.includes("tarjeta") || metodo.includes("online") || metodo.includes("stripe")) {
+        mensajePagoHTML = `
+            <div class="alert alert-light border-secondary small text-dark mt-2" style="border-left: 5px solid #6c757d;">
+                <i class="fas fa-globe mr-2 text-secondary"></i> <b>Esperando confirmación por parte del negocio.</b>
+            </div>`;
+    }
 contenedor.innerHTML = `
     <div class="card card-tracking p-3">
         <div class="status-header">
@@ -234,13 +260,7 @@ contenedor.innerHTML = `
             <p class="mb-0 text-muted">${direccionLimpia}</p>
         </div>
 
-        <div class="payment-box">
-            <h6 class="font-weight-bold" style="color: #0056b3; font-size: 0.75rem;"><i class="fas fa-credit-card mr-2"></i>MÉTODO DE PAGO:</h6>
-            <p class="text-muted">
-                ${pedidoLocal.metodoPago || "Efectivo"} 
-                ${pedidoLocal.pagaCon ? `<br><small>Paga con: $${pedidoLocal.pagaCon}</small>` : ''}
-            </p>
-        </div>
+    ${mensajePagoHTML}
 
         <div class="products-section">
             <h6 class="font-weight-bold mb-2" style="color: #6f1a07; font-size: 0.75rem;"><i class="fas fa-shopping-bag mr-2"></i>TUS PRODUCTOS:</h6>
@@ -268,6 +288,7 @@ contenedor.innerHTML = `
     </script>
 </body>
 </html>
+
 
 
 
