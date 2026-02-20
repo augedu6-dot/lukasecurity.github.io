@@ -17,18 +17,8 @@
         #statusBadge { white-space: normal; text-align: center; padding: 6px 12px; font-size: 0.75rem; border-radius: 50px; }
         .progress { border-radius: 10px; background-color: #eee; height: 12px; }
         .address-box { background: #fff9f0; padding: 12px; border-radius: 12px; border-left: 4px solid #6f1a07; margin-bottom: 15px; }
-        .product-item { border-bottom: 1px solid #eee; padding: 8px 0; font-size: 0.85rem; }
-        
-        /* Cuadro de instrucciones de pago */
-        #pagoInstruccion {
-            background: #fff5eb;
-            border: 1px dashed #6f1a07;
-            border-radius: 12px;
-            padding: 15px;
-            margin-top: 15px;
-            font-size: 0.9rem;
-            text-align: center;
-        }
+        .product-item { border-bottom: 1px solid #eee; padding: 8px 0; font-size: 0.85rem; display: flex; justify-content: space-between; }
+        #pagoInstruccion { background: #fff5eb; border: 1px dashed #6f1a07; border-radius: 12px; padding: 15px; margin-top: 15px; font-size: 0.9rem; text-align: center; }
     </style>
 </head>
 <body>
@@ -73,10 +63,10 @@
             const e = estado.toLowerCase().trim();
 
             if (e.includes("recibido")) { porcentaje = 15; color = "bg-secondary"; }
-            else if (e.includes("esperando pago")) { porcentaje = 10; color = "bg-danger"; }
+            else if (e.includes("pago")) { porcentaje = 10; color = "bg-danger"; }
             else if (e.includes("confirmar") || e.includes("aceptado")) { porcentaje = 30; color = "bg-warning"; }
             else if (e.includes("cocinando")) { porcentaje = 50; color = "bg-warning"; }
-            else if (e.includes("repartido") || e.includes("en camino")) { porcentaje = 80; color = "bg-info"; }
+            else if (e.includes("repartido") || e.includes("camino")) { porcentaje = 80; color = "bg-info"; }
             else if (e.includes("entregado")) { porcentaje = 100; color = "bg-success"; }
 
             badge.innerText = estado.toUpperCase();
@@ -89,75 +79,85 @@
             const contenedor = document.getElementById("contenido-seguimiento");
 
             if (!pedidoLocal) {
-                contenedor.innerHTML = `<div class="alert alert-warning text-center">No tienes pedidos activos actualmente.</div>`;
+                contenedor.innerHTML = `<div class="alert alert-warning text-center">No hay pedidos activos.</div>`;
                 return;
             }
-
-            // Limpieza de dirección para el renderizado inicial
-            const direccionLimpia = pedidoLocal.direccion.replace(/, null, null/g, "");
-
-            contenedor.innerHTML = `
-                <div class="card card-tracking p-3">
-                    <div class="status-header">
-                        <span class="order-id">Orden #${pedidoLocal.id}</span>
-                        <span id="statusBadge" class="badge badge-secondary">CONECTANDO...</span>
-                    </div>
-                    <div class="progress mb-4">
-                        <div id="pBar" class="progress-bar progress-bar-striped progress-bar-animated" style="width: 5%"></div>
-                    </div>
-                    <div class="row text-center mb-3">
-                        <div class="col-6 border-right">
-                            <small class="text-muted font-weight-bold">MÉTODO PAGO</small>
-                            <p class="font-weight-bold mb-0">${pedidoLocal.metodoPago}</p>
-                        </div>
-                        <div class="col-6">
-                            <small class="text-muted font-weight-bold">TOTAL</small>
-                            <h5 class="font-weight-bold mb-0" style="color: #6f1a07;">$${pedidoLocal.total}</h5>
-                        </div>
-                    </div>
-                    <div class="address-box">
-                        <h6 class="font-weight-bold small" style="color: #6f1a07;"><i class="fas fa-map-marker-alt mr-2"></i>ENTREGAR EN:</h6>
-                        <p class="mb-0 text-muted small">${direccionLimpia}</p>
-                    </div>
-                    <div id="pagoInstruccion">Cargando instrucciones de pago...</div>
-                </div>
-            `;
 
             const pedidoRef = ref(db, 'pedidos/' + pedidoLocal.id);
             onValue(pedidoRef, (snapshot) => {
                 const data = snapshot.val();
                 if (data) {
-                    const est = data.estado.toLowerCase().trim();
-                    const metodo = data.metodoPago;
+                    // 1. LIMPIEZA DEFINITIVA DE DIRECCIÓN (Elimina null, null)
+                    const direccionLimpia = data.direccion ? data.direccion.replace(/, null, null/g, "").replace(/null, null/g, "") : "No especificada";
+
+                    // 2. MANTENER TIEMPO DE ENTREGA
+                    let horaEntrega = data.hora || data.entregaAprox;
+                    if (!horaEntrega) {
+                        const ahora = new Date();
+                        ahora.setMinutes(ahora.getMinutes() + 45);
+                        horaEntrega = ahora.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    }
+
+                    // 3. RENDERIZAR PRODUCTOS
+                    let productosHTML = "";
+                    if (data.productos) {
+                        const prods = Array.isArray(data.productos) ? data.productos : Object.values(data.productos);
+                        productosHTML = prods.map(p => `
+                            <div class="product-item">
+                                <span><b>${p.cantidad}x</b> ${p.nombre}</span>
+                                <span class="text-muted">$${(p.precio * p.cantidad)}</span>
+                            </div>
+                        `).join("");
+                    }
+
+                    // 4. LÓGICA DE MENSAJES DE PAGO
                     let msgHtml = "";
+                    const est = data.estado.toLowerCase().trim();
+                    const met = data.metodoPago;
 
-                    // Lógica de mensajes solicitada
-                    if (metodo === "Transferencia") {
-                        if (est === "esperando pago") {
-                            msgHtml = `⚠️ <b>Esperando captura:</b> Envía tu comprobante por WhatsApp para confirmar tu pedido.<br>
-                                       <a href="https://wa.me/529933044020?text=Hola! adjunto captura de mi pedido ${data.id}" class="btn btn-sm btn-success mt-2"><i class="fab fa-whatsapp"></i> Enviar Comprobante</a>`;
-                        } else {
-                            msgHtml = "✅ <b>Pagado por Transferencia</b>";
-                        }
-                    } else if (metodo === "Tarjeta Online") {
+                    if (met === "Transferencia") {
                         msgHtml = (est === "esperando pago") 
-                            ? "⏳ <b>Esperando confirmación:</b> Estamos verificando tu pago con tarjeta para continuar el pedido." 
-                            : "✅ <b>Pago con Tarjeta Confirmado</b>";
-                    } else if (metodo === "Efectivo") {
-                        msgHtml = "💵 <b>Pagar en efectivo al recibir</b> su pedido.";
-                    } else if (metodo === "Terminal") {
-                        msgHtml = "💳 <b>Pagar con terminal al recibir</b> su pedido.";
+                            ? `⚠️ <b>Esperando captura:</b> Envía el comprobante por WhatsApp.<br><a href="https://wa.me/529933044020?text=Comprobante-Pedido-${data.id}" class="btn btn-sm btn-success mt-2">Enviar WhatsApp</a>` 
+                            : "✅ <b>Pagado por Transferencia</b>";
+                    } else if (met === "Tarjeta Online") {
+                        msgHtml = (est === "esperando pago") ? "⏳ <b>Esperando confirmación</b> de tarjeta..." : "✅ <b>Pago con Tarjeta Confirmado</b>";
+                    } else if (met === "Efectivo") {
+                        msgHtml = "💵 <b>Pagar en efectivo al recibir</b>";
+                    } else {
+                        msgHtml = "💳 <b>Pagar con terminal al recibir</b>";
                     }
 
-                    document.getElementById("pagoInstruccion").innerHTML = msgHtml;
+                    contenedor.innerHTML = `
+                        <div class="card card-tracking p-3">
+                            <div class="status-header">
+                                <span class="order-id">Orden #${data.id}</span>
+                                <span id="statusBadge" class="badge badge-secondary">${data.estado.toUpperCase()}</span>
+                            </div>
+                            <div class="progress mb-4">
+                                <div id="pBar" class="progress-bar progress-bar-striped progress-bar-animated" style="width: 5%"></div>
+                            </div>
+                            <div class="row text-center mb-4">
+                                <div class="col-6 border-right">
+                                    <small class="text-muted d-block font-weight-bold" style="font-size: 0.7rem;">ENTREGA APROX.</small>
+                                    <h5 class="font-weight-bold mb-0" style="color: #6f1a07;">${horaEntrega}</h5>
+                                </div>
+                                <div class="col-6">
+                                    <small class="text-muted d-block font-weight-bold" style="font-size: 0.7rem;">TOTAL</small>
+                                    <h5 class="font-weight-bold mb-0" style="color: #6f1a07;">$${data.total}</h5>
+                                </div>
+                            </div>
+                            <div class="address-box">
+                                <h6 class="font-weight-bold small" style="color: #6f1a07;"><i class="fas fa-map-marker-alt mr-2"></i>ENTREGAR EN:</h6>
+                                <p class="mb-0 text-muted small">${direccionLimpia}</p>
+                            </div>
+                            <div class="products-section mb-3">
+                                <h6 class="font-weight-bold small" style="color: #6f1a07;"><i class="fas fa-shopping-bag mr-2"></i>TUS PRODUCTOS:</h6>
+                                <div class="border rounded p-2 bg-white">${productosHTML}</div>
+                            </div>
+                            <div id="pagoInstruccion">${msgHtml}</div>
+                        </div>
+                    `;
                     actualizarUI(data.estado);
-
-                    if (est === "entregado" || est === "finalizado") {
-                        setTimeout(() => {
-                            localStorage.removeItem("ultimoPedido");
-                            window.location.href = "menu.html";
-                        }, 5000);
-                    }
                 }
             });
         };
