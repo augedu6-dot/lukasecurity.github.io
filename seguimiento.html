@@ -102,6 +102,16 @@
     </div>
 
     <script type="module">
+        // Reemplaza la línea de dirección por esta:
+const coordTexto = (domicilioData.latitud && domicilioData.longitud) 
+    ? ` (${domicilioData.latitud}, ${domicilioData.longitud})` 
+    : "";
+
+const infoPedido = {
+    // ... otros campos ...
+    direccion: `${domicilioData.calle} #${domicilioData.numero}, ${domicilioData.ciudad}${coordTexto}`,
+    // ...
+};
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
@@ -233,6 +243,7 @@
     </script>
 </body>
 </html>
+
 
 
 
