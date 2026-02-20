@@ -100,7 +100,9 @@
             </div>
         </div>
     </div>
-
+<div id="pagoInstruccionContainer" class="mt-3 p-2 text-center rounded" style="background: #f0f7ff; border: 1px dashed #007bff;">
+    <small id="pagoStatus" class="font-weight-bold" style="color: #0056b3;"></small>
+</div>
     <script type="module">
         // Reemplaza la línea de dirección por esta:
 const coordTexto = (domicilioData.latitud && domicilioData.longitud) 
@@ -240,9 +242,36 @@ const infoPedido = {
         }
     });
 };
+        // Dentro de actualizarUI o donde renderizas la tarjeta:
+const metodo = pedidoLocal.metodoPago;
+let instruccionPago = "";
+
+if (metodo === "Transferencia") {
+    instruccionPago = (e === "esperando pago") 
+        ? "⚠️ Por favor, envía tu captura por WhatsApp para procesar el pedido." 
+        : "✅ Pagado por Transferencia";
+} else if (metodo === "Efectivo") {
+    instruccionPago = "💵 Pagar en efectivo al recibir";
+} else if (metodo === "Terminal") {
+    instruccionPago = "💳 Pagar con terminal al recibir";
+} else if (metodo === "Tarjeta Online") {
+    instruccionPago = (e === "esperando pago") 
+        ? "⏳ Esperando confirmación de pago con tarjeta..." 
+        : "✅ Pago con Tarjeta Confirmado";
+}
+
+// Inyectar este texto en un div nuevo en tu HTML de seguimiento
+document.getElementById("pagoStatus").innerText = instruccionPago;
+        if (pedidoLocal.metodoPago === "Transferencia" && data.estado === "Esperando Pago") {
+    const btnWhatsapp = `<a href="https://wa.me/529933044020?text=Adjunto-comprobante-del-pedido-${pedidoLocal.id}" 
+                         class="btn btn-success btn-block mt-2">
+                         <i class="fab fa-whatsapp"></i> Enviar Captura Ahora</a>`;
+    document.getElementById("pagoInstruccionContainer").innerHTML += btnWhatsapp;
+}
     </script>
 </body>
 </html>
+
 
 
 
