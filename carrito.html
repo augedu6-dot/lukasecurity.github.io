@@ -382,27 +382,9 @@ document.getElementById("subtotal").innerText = subtotal;
                    window.location.assign(url);
                      
             } 
-            else(metodoSeleccionado === "Mercado Pago" || metodoSeleccionado === "Tarjeta") {
-				try {
-        // --- COPIA ESTO EXACTAMENTE ---
-        const totalParaPagar = document.getElementById("totalFinal").innerText;
-        localStorage.setItem("montoAPagar", totalParaPagar); 
-        localStorage.setItem("idPedidoActual", idPedido);
-        // ------------------------------
-
-        await update(ref(db, 'pedidos/' + idPedido), infoPedido);
-        
-        // El resto de tu código de Google Sheets y ultimoPedido se queda igual...
-        fetch(GOOGLE_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ nombre: resumenCompleto, pedido: idPedido }) });
-        localStorage.setItem("ultimoPedido", JSON.stringify(infoPedido));
-        
-        // REDIRECCIÓN
-        window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/pago.html"; 
-        return;
-    } catch (error) {
-        console.error(error);
-    }
-}
+            else if (metodoSeleccionado === "Tarjeta Online") {
+                window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/pago.html";
+            } 
             else {
                 // Efectivo o Terminal
                 mostrarAviso("✅ ¡Pedido confirmado!");
@@ -418,8 +400,7 @@ document.getElementById("subtotal").innerText = subtotal;
             btn.disabled = false;
             btn.innerText = "Finalizar Pedido";
         }
-  document.getElementById("totalFinal").innerText = subtotal + costoEnvio;
-	};
+    };
 
     // Al cargar la página
   window.addEventListener('load', () => {
@@ -455,8 +436,6 @@ document.getElementById("subtotal").innerText = subtotal;
 </script>
 </body>
 </html>
-
-
 
 
 
