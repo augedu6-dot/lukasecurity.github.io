@@ -8,93 +8,26 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
     <style>
-        body { font-family: "Ubuntu", sans-serif; background-color: #fefcf5; overflow-x: hidden; -webkit-touch-callout: none; -webkit-user-select: none;-khtml-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;  }
-       input, textarea {
-    -webkit-user-select: text;user-select: text;
-}
-        .navbar { 
-            background-color: white; 
-            border-bottom: 2px solid #ffdab3; 
-            position: sticky; 
-            top: 0; 
-            z-index: 1000;
-            padding: 0.5rem 0.8rem;
-        }
-        .navbar .container {
-            display: flex;
-            flex-wrap: nowrap;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .navbar-brand { 
-            font-family: 'Marck Script', cursive; 
-            font-size: 1.5rem; 
-            color: #6f1a07 !important; 
-            margin-right: 5px;
-        }
-        /* TARJETA PRINCIPAL ADAPTADA */
-        .card-tracking { 
-            border: none; 
-            border-radius: 20px; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
-            background: white;
-            margin: 0 auto;
-            max-width: 100%; /* Evita que la tarjeta sea más ancha que la pantalla */
-        }
-
-        /* CONTENEDOR DE CABECERA (ID + ESTATUS) */
-        .status-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start; /* Alinea arriba para que si el texto crece no mueva todo */
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
+        body { font-family: "Ubuntu", sans-serif; background-color: #fefcf5; overflow-x: hidden; -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
+        input, textarea { -webkit-user-select: text; user-select: text; }
+        .navbar { background-color: white; border-bottom: 2px solid #ffdab3; position: sticky; top: 0; z-index: 1000; padding: 0.5rem 0.8rem; }
+        .navbar .container { display: flex; flex-wrap: nowrap; justify-content: space-between; align-items: center; }
+        .navbar-brand { font-family: 'Marck Script', cursive; font-size: 1.5rem; color: #6f1a07 !important; margin-right: 5px; }
+        .card-tracking { border: none; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); background: white; margin: 0 auto; max-width: 100%; }
+        .status-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 15px; }
         .order-id { font-family: monospace; font-weight: bold; color: #6f1a07; font-size: 0.9rem; }
-
-        /* EL BADGE CORREGIDO PARA QUE NO SE SALGA */
-        #statusBadge { 
-            white-space: normal !important; /* Permite saltos de línea */
-            word-wrap: break-word; 
-            overflow-wrap: break-word;
-            text-align: center;
-            line-height: 1.2;
-            padding: 6px 10px !important;
-            font-size: 0.75rem; /* Tamaño optimizado para móvil */
-            max-width: 50%; /* No permite que el badge ocupe más de la mitad de la tarjeta */
-            display: block;
-        }
-
+        #statusBadge { white-space: normal !important; word-wrap: break-word; overflow-wrap: break-word; text-align: center; line-height: 1.2; padding: 6px 10px !important; font-size: 0.75rem; max-width: 50%; display: block; }
         .progress { border-radius: 10px; background-color: #eee; height: 12px; }
         .address-box { background: #fff9f0; padding: 12px; border-radius: 12px; border-left: 4px solid #6f1a07; margin-bottom: 15px; }
         .address-box p { font-size: 0.85rem; line-height: 1.3; }
-
         .product-item { border-bottom: 1px solid #eee; padding: 8px 0; font-size: 0.85rem; }
-        .product-item span:first-child {
-      /* Permite romper palabras largas en cualquier punto */
-         word-break: break-all;
-    
-       /* Asegura que el texto ocupe el espacio disponible sin empujar el precio */
-        overflow-wrap: break-word;
-    
-       /* Opcional: añade un poco de espacio a la derecha del nombre */
-        padding-right: 10px;
-         }
-.payment-box { 
-    background: #f0f7ff; 
-    padding: 12px; 
-    border-radius: 12px; 
-    border-left: 4px solid #007bff; 
-    margin-bottom: 15px; 
-}
-.payment-box p { font-size: 0.85rem; line-height: 1.3; margin-bottom: 0; }
+        .product-item span:first-child { word-break: break-all; overflow-wrap: break-word; padding-right: 10px; }
     </style>
 </head>
 <body>
 
-  <nav class="navbar navbar-light">
-        <div class="container ">
+    <nav class="navbar navbar-light">
+        <div class="container">
             <a class="navbar-brand" href="https://augedu6-dot.github.io/lukasecurity.github.io/menu.html">DeMasita</a>
             <a class="btn btn-sm btn-outline-danger font-weight-bold" href="https://augedu6-dot.github.io/lukasecurity.github.io/menu.html">Menú</a>
         </div>
@@ -129,6 +62,31 @@
             }
         }
 
+        function obtenerMensajePago(metodo, estado) {
+            const m = (metodo || "").toLowerCase();
+            const e = (estado || "").toLowerCase().trim();
+            const estadosConfirmados = ["confirmar / aceptado", "cocinando", "repartido / recolectar", "en camino", "afuera del domicilio", "entregado"];
+            const yaConfirmado = estadosConfirmados.includes(e);
+
+            if (m.includes("transferencia")) {
+                return yaConfirmado ? 
+                    `<div class="alert alert-light border-success small text-dark mt-2" style="border-left: 5px solid #28a745;"><i class="fas fa-check-circle mr-2 text-success"></i><b>Transferencia confirmada. Pedido en proceso.</b></div>` :
+                    `<div class="alert alert-light border-primary small text-dark mt-2" style="border-left: 5px solid #007bff;"><i class="fas fa-university mr-2 text-primary"></i><b>Envía captura de transferencia al WhatsApp.</b></div>`;
+            }
+            if (m.includes("tarjeta") || m.includes("online") || m.includes("stripe")) {
+                return yaConfirmado ? 
+                    `<div class="alert alert-light border-success small text-dark mt-2" style="border-left: 5px solid #28a745;"><i class="fas fa-check-circle mr-2 text-success"></i><b>Pago confirmado, pedido en proceso.</b></div>` :
+                    `<div class="alert alert-light border-secondary small text-dark mt-2" style="border-left: 5px solid #6c757d;"><i class="fas fa-hourglass-half mr-2 text-secondary"></i><b>Esperando confirmación del negocio.</b></div>`;
+            }
+            if (m.includes("efectivo")) {
+                return `<div class="alert alert-light border-warning small text-dark mt-2" style="border-left: 5px solid #ffc107;"><i class="fas fa-money-bill-wave mr-2 text-warning"></i><b>Paga en efectivo al recibir.</b></div>`;
+            }
+            if (m.includes("terminal")) {
+                return `<div class="alert alert-light border-info small text-dark mt-2" style="border-left: 5px solid #17a2b8;"><i class="fas fa-credit-card mr-2 text-info"></i><b>Paga con terminal al recibir.</b></div>`;
+            }
+            return "";
+        }
+
         function actualizarUI(estado) {
             const badge = document.getElementById("statusBadge");
             const barra = document.getElementById("pBar");
@@ -138,7 +96,7 @@
             let color = "bg-warning";
             const e = estado.toLowerCase().trim();
 
-            if (e === "Recibido") { porcentaje = 10; color = "bg-secondary"; }
+            if (e === "recibido") { porcentaje = 10; color = "bg-secondary"; }
             else if (e === "confirmar / aceptado") { porcentaje = 25; color = "bg-warning"; }
             else if (e === "cocinando") { porcentaje = 45; color = "bg-warning"; }
             else if (e === "repartido / recolectar") { porcentaje = 60; color = "bg-info"; }
@@ -149,184 +107,92 @@
             badge.innerText = estado.toUpperCase();
             barra.style.width = porcentaje + "%";
             barra.className = `progress-bar progress-bar-striped progress-bar-animated ${color}`;
-            
             notificarAndroid("DeMasita: Tu pedido está " + estado);
         }
 
-   window.onload = function() {
-    const pedidoLocal = JSON.parse(localStorage.getItem("ultimoPedido"));
-    const contenedor = document.getElementById("contenido-seguimiento");
+        window.onload = function() {
+            const pedidoLocal = JSON.parse(localStorage.getItem("ultimoPedido"));
+            const contenedor = document.getElementById("contenido-seguimiento");
 
-    if (!pedidoLocal || !pedidoLocal.id) {
-        contenedor.innerHTML = `<div class="alert alert-warning text-center small">No hay pedidos activos.</div>`;
-        return;
-    }
-
-    // --- CORRECCIÓN DE HORA APROXIMADA ---
-    // Si la propiedad 'hora' no existe, calculamos una basada en el momento actual + 45 min
-    let horaEntrega = pedidoLocal.hora || pedidoLocal.entregaAprox;
-    
-    if (!horaEntrega) {
-        const ahora = new Date();
-        ahora.setMinutes(ahora.getMinutes() + 45);
-        horaEntrega = ahora.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    }
-    // -------------------------------------
-
-    let listaProdHTML = "";
-    if (pedidoLocal.productos) {
-        // Convertimos a array por si viene como objeto desde Firebase
-        const productosArray = Array.isArray(pedidoLocal.productos) 
-            ? pedidoLocal.productos 
-            : Object.values(pedidoLocal.productos);
-
-        listaProdHTML = productosArray.map(p => `
-            <div class="product-item d-flex justify-content-between">
-                <span><b>${p.cantidad}x</b> ${p.nombre || "Producto"}</span>
-                <span class="text-muted">$${(p.precio || 0) * (p.cantidad || 0)}</span>
-            </div>
-        `).join("");
-    }
-// --- PROCESAMIENTO DE DIRECCIÓN ---
-// --- LIMPIEZA AGRESIVA DE DIRECCIÓN (TU CÓDIGO ANTERIOR) ---
-    let direccionLimpia = pedidoLocal.direccion || "No especificada";
-    direccionLimpia = direccionLimpia.replace(/(,?\s*null)+/gi, "");
-    direccionLimpia = direccionLimpia.replace(/,?\s*[-+]?\d*\.?\d+,\s*[-+]?\d*\.?\d+\s*$/, "");
-    direccionLimpia = direccionLimpia.trim().replace(/^,|,$/g, "");
-
-    if (!direccionLimpia || direccionLimpia.toLowerCase() === "null") {
-        direccionLimpia = "Dirección no especificada";
-    }
-
-  function obtenerMensajePago(metodo, estado) {
-    const m = (metodo || "").toLowerCase();
-    const e = (estado || "").toLowerCase().trim();
-    
-    // Estados que consideramos como "Ya confirmado por el negocio"
-    const estadosConfirmados = ["confirmar / aceptado", "cocinando", "repartido / recolectar", "en camino", "afuera del domicilio", "entregado"];
-    const yaConfirmado = estadosConfirmados.includes(e);
-
-    // LÓGICA PARA TRANSFERENCIA
-    if (m.includes("transferencia")) {
-        if (yaConfirmado) {
-            return `
-                <div class="alert alert-light border-success small text-dark mt-2" style="border-left: 5px solid #28a745;">
-                    <i class="fas fa-check-circle mr-2 text-success"></i> <b>Transferencia confirmada. Tu pedido ya se está procesando.</b>
-                </div>`;
-        } else {
-            return `
-                <div class="alert alert-light border-primary small text-dark mt-2" style="border-left: 5px solid #007bff;">
-                    <i class="fas fa-university mr-2 text-primary"></i> <b>Envía la captura de pantalla de la transferencia al WhatsApp</b> o cuando el negocio lo confirme empezará el proceso de tu pedido.
-                </div>`;
-        }
-    }
-
-    // LÓGICA PARA TARJETA ONLINE
-    if (m.includes("tarjeta") || m.includes("online") || m.includes("stripe")) {
-        if (yaConfirmado) {
-            return `
-                <div class="alert alert-light border-success small text-dark mt-2" style="border-left: 5px solid #28a745;">
-                    <i class="fas fa-check-circle mr-2 text-success"></i> <b>Pago confirmado, tu pedido ya se está procesando.</b>
-                </div>`;
-        } else {
-            return `
-                <div class="alert alert-light border-secondary small text-dark mt-2" style="border-left: 5px solid #6c757d;">
-                    <i class="fas fa-hourglass-half mr-2 text-secondary"></i> <b>Esperando confirmación por parte del negocio.</b>
-                </div>`;
-        }
-    }
-
-    // LÓGICA PARA EFECTIVO
-    if (m.includes("efectivo")) {
-        return `
-            <div class="alert alert-light border-warning small text-dark mt-2" style="border-left: 5px solid #ffc107;">
-                <i class="fas fa-money-bill-wave mr-2 text-warning"></i> <b>Paga en efectivo al recibir.</b>
-            </div>`;
-    }
-
-    // LÓGICA PARA TERMINAL
-    if (m.includes("terminal")) {
-        return `
-            <div class="alert alert-light border-info small text-dark mt-2" style="border-left: 5px solid #17a2b8;">
-                <i class="fas fa-credit-card mr-2 text-info"></i> <b>Paga con terminal al recibir.</b>
-            </div>`;
-    }
-
-    return "";
-}
-contenedor.innerHTML = `
-    <div class="card card-tracking p-3">
-        <div class="status-header">
-            <span class="order-id">Orden #${pedidoLocal.id}</span>
-            <span id="statusBadge" class="badge badge-secondary">CONECTANDO...</span>
-        </div>
-
-        <div class="progress mb-4">
-            <div id="pBar" class="progress-bar progress-bar-striped progress-bar-animated bg-secondary" style="width: 5%"></div>
-        </div>
-
-        <div class="row text-center mb-4">
-            <div class="col-6 border-right">
-                <small class="text-muted d-block font-weight-bold" style="font-size: 0.7rem;">ENTREGA APROX.</small>
-                <h5 class="font-weight-bold mb-0" style="color: #6f1a07;">${horaEntrega}</h5>
-            </div>
-            <div class="col-6">
-                <small class="text-muted d-block font-weight-bold" style="font-size: 0.7rem;">TOTAL</small>
-                <h5 class="font-weight-bold mb-0" style="color: #6f1a07;">$${pedidoLocal.total}</h5>
-            </div>
-        </div>
-
-<div class="address-box">
-            <h6 class="font-weight-bold" style="color: #6f1a07; font-size: 0.75rem;"><i class="fas fa-map-marker-alt mr-2"></i>ENTREGAR EN:</h6>
-            <p class="mb-0 text-muted">${direccionLimpia}</p>
-        </div>
-
-<div id="contenedor-mensaje-pago">
-    ${obtenerMensajePago(pedidoLocal.metodoPago || pedidoLocal.pago, "Recibido")}
-</div>
-
-        <div class="products-section">
-            <h6 class="font-weight-bold mb-2" style="color: #6f1a07; font-size: 0.75rem;"><i class="fas fa-shopping-bag mr-2"></i>TUS PRODUCTOS:</h6>
-            <div class="border rounded p-2 bg-white">
-                ${listaProdHTML}
-            </div>
-        </div>
-    </div>
-`;
-
- onValue(pedidoRef, (snapshot) => {
-    const data = snapshot.val();
-    if (data && data.estado) {
-        if (data.estado.toLowerCase().trim() === "finalizado") {
-            notificarAndroid("Tu pedido ha sido finalizado. ¡Gracias!");
-            contenedor.innerHTML = `<div class="text-center py-5"><h4>¡Pedido Finalizado!</h4><a href="..." class="btn btn-danger mt-3">Volver al Menú</a></div>`;
-            localStorage.removeItem("ultimoPedido");
-        } else {
-            // 1. Actualiza la barra de progreso y el texto del badge
-            actualizarUI(data.estado);
-            
-            // 2. Actualiza el mensaje de pago dinámicamente
-            const contenedorMensaje = document.getElementById("contenedor-mensaje-pago");
-            if (contenedorMensaje) {
-                const metodoOriginal = pedidoLocal.metodoPago || pedidoLocal.pago;
-                contenedorMensaje.innerHTML = obtenerMensajePago(metodoOriginal, data.estado);
+            if (!pedidoLocal || !pedidoLocal.id) {
+                contenedor.innerHTML = `<div class="alert alert-warning text-center small">No hay pedidos activos.</div>`;
+                return;
             }
-        }
-    }
-});
+
+            let horaEntrega = pedidoLocal.hora || pedidoLocal.entregaAprox;
+            if (!horaEntrega) {
+                const ahora = new Date();
+                ahora.setMinutes(ahora.getMinutes() + 45);
+                horaEntrega = ahora.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            }
+
+            let listaProdHTML = "";
+            if (pedidoLocal.productos) {
+                const productosArray = Array.isArray(pedidoLocal.productos) ? pedidoLocal.productos : Object.values(pedidoLocal.productos);
+                listaProdHTML = productosArray.map(p => `
+                    <div class="product-item d-flex justify-content-between">
+                        <span><b>${p.cantidad}x</b> ${p.nombre || "Producto"}</span>
+                        <span class="text-muted">$${(p.precio || 0) * (p.cantidad || 0)}</span>
+                    </div>`).join("");
+            }
+
+            let direccionLimpia = pedidoLocal.direccion || "No especificada";
+            direccionLimpia = direccionLimpia.replace(/(,?\s*null)+/gi, "").replace(/,?\s*[-+]?\d*\.?\d+,\s*[-+]?\d*\.?\d+\s*$/, "").trim().replace(/^,|,$/g, "");
+
+            const metodoPago = pedidoLocal.metodoPago || pedidoLocal.pago || "";
+
+            contenedor.innerHTML = `
+                <div class="card card-tracking p-3">
+                    <div class="status-header">
+                        <span class="order-id">Orden #${pedidoLocal.id}</span>
+                        <span id="statusBadge" class="badge badge-secondary">CONECTANDO...</span>
+                    </div>
+                    <div class="progress mb-4">
+                        <div id="pBar" class="progress-bar progress-bar-striped progress-bar-animated bg-secondary" style="width: 5%"></div>
+                    </div>
+                    <div class="row text-center mb-4">
+                        <div class="col-6 border-right">
+                            <small class="text-muted d-block font-weight-bold" style="font-size: 0.7rem;">ENTREGA APROX.</small>
+                            <h5 class="font-weight-bold mb-0" style="color: #6f1a07;">${horaEntrega}</h5>
+                        </div>
+                        <div class="col-6">
+                            <small class="text-muted d-block font-weight-bold" style="font-size: 0.7rem;">TOTAL</small>
+                            <h5 class="font-weight-bold mb-0" style="color: #6f1a07;">$${pedidoLocal.total}</h5>
+                        </div>
+                    </div>
+                    
+                    <div id="contenedor-mensaje-pago">
+                        ${obtenerMensajePago(metodoPago, "Recibido")}
+                    </div>
+
+                    <div class="address-box mt-3">
+                        <h6 class="font-weight-bold" style="color: #6f1a07; font-size: 0.75rem;"><i class="fas fa-map-marker-alt mr-2"></i>ENTREGAR EN:</h6>
+                        <p class="mb-0 text-muted">${direccionLimpia}</p>
+                    </div>
+
+                    <div class="products-section">
+                        <h6 class="font-weight-bold mb-2" style="color: #6f1a07; font-size: 0.75rem;"><i class="fas fa-shopping-bag mr-2"></i>TUS PRODUCTOS:</h6>
+                        <div class="border rounded p-2 bg-white">${listaProdHTML}</div>
+                    </div>
+                </div>`;
+
+            const pedidoRef = ref(db, 'pedidos/' + pedidoLocal.id);
+            onValue(pedidoRef, (snapshot) => {
+                const data = snapshot.val();
+                if (data && data.estado) {
+                    if (data.estado.toLowerCase().trim() === "finalizado") {
+                        contenedor.innerHTML = `<div class="text-center py-5"><h4>¡Pedido Finalizado!</h4><a href="https://augedu6-dot.github.io/lukasecurity.github.io/menu.html" class="btn btn-danger mt-3">Volver al Menú</a></div>`;
+                        localStorage.removeItem("ultimoPedido");
+                    } else {
+                        actualizarUI(data.estado);
+                        const contenedorMensaje = document.getElementById("contenedor-mensaje-pago");
+                        if (contenedorMensaje) {
+                            contenedorMensaje.innerHTML = obtenerMensajePago(metodoPago, data.estado);
+                        }
+                    }
+                }
+            });
+        };
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
