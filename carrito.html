@@ -283,106 +283,138 @@ document.getElementById("subtotal").innerText = subtotal;
     document.getElementById("totalFinal").innerText = subtotal + costoEnvio;
     }
 
- window.confirmarPedidoFinal = async function() {
-    // 1. Validaciones
-    if (Object.keys(carrito).length === 0) { mostrarAviso("🛒 Tu carrito está vacío."); return; }
-    if (!domicilioData) { mostrarAviso("🏠 Registra tu domicilio primero."); return; }
-    if (!metodoSeleccionado) { mostrarAviso("💳 Selecciona cómo vas a pagar."); return; }
+    window.confirmarPedidoFinal = async function() {
+        // Validaciones
+        if (Object.keys(carrito).length === 0) { mostrarAviso("🛒 Tu carrito está vacío."); return; }
+        if (!domicilioData) { mostrarAviso("🏠 Registra tu domicilio primero."); return; }
+        if (!metodoSeleccionado) { mostrarAviso("💳 Selecciona cómo vas a pagar."); return; }
 
-    const btn = document.getElementById("btnPagarFlotante");
-    btn.disabled = true;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+        const btn = document.getElementById("btnPagarFlotante");
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
 
-    const GOOGLE_URL = "https://script.google.com/macros/s/AKfycbxI16EHswwjj_I4pDsYC0DM4hTrfUpTh_FomSBt94pmIGsQMJSjQCHtdMoirT1cCfnM/exec";
-    const totalNum = parseFloat(document.getElementById("totalFinal").innerText);
-    const idPedido = Math.floor(Math.random() * 0xFFFFFF).toString(16).toUpperCase().padStart(6, '0');
-    
+        const GOOGLE_URL = "https://script.google.com/macros/s/AKfycbxI16EHswwjj_I4pDsYC0DM4hTrfUpTh_FomSBt94pmIGsQMJSjQCHtdMoirT1cCfnM/exec";
+        const totalNum = parseFloat(document.getElementById("totalFinal").innerText);
+        const idPedido = Math.floor(Math.random() * 0xFFFFFF).toString(16).toUpperCase().padStart(6, '0');
     const estadoInicial = (metodoSeleccionado === "Transferencia" || metodoSeleccionado === "Tarjeta Online") 
     ? "Esperando Pago" 
     : "Recibido";
-        
-    const infoPedido = {
-        id: idPedido,
-        usuario: localStorage.getItem("usuarioLogueado") || "Invitado",
-        productos: Object.values(carrito),
-        total: totalNum,
-        direccion: `${domicilioData.calle} #${domicilioData.numero}, ${domicilioData.ciudad},${domicilioData.latitud}, ${domicilioData.longitud}`,
-        metodoPago: metodoSeleccionado,
-        fecha: new Date().toLocaleString(),
-        estado: estadoInicial
-    };
+		
+        const infoPedido = {
+            id: idPedido,
+            usuario: localStorage.getItem("usuarioLogueado") || "Invitado",
+            productos: Object.values(carrito),
+            total: totalNum,
+            direccion: `${domicilioData.calle} #${domicilioData.numero}, ${domicilioData.ciudad},${domicilioData.latitud}, ${domicilioData.longitud}`,
+            metodoPago: metodoSeleccionado,
+            fecha: new Date().toLocaleString(),
+            estado: estadoInicial
+        };
 
-    const listaProductos = Object.entries(carrito)
-        .map(([nombre, item]) => `${nombre} (x${item.cantidad})`)
-        .join(", ");
-    
-    const resumenCompleto = {
-        idPedido: idPedido,
-        usuario: localStorage.getItem("usuarioLogueado") || "Invitado",
-        productos: listaProductos,
-        total: `$${totalNum}`,
-        direccion: infoPedido.direccion,
-        metodoPago: metodoSeleccionado
-    };
+  
 
-    try {
-        // 1. Guardar en Firebase (Para todos los métodos)
-        await update(ref(db, 'pedidos/' + idPedido), infoPedido);
+            // 2. Creamos el resumen de productos en texto plano
+             const listaProductos = Object.entries(carrito)
+            .map(([nombre, item]) => `${nombre} (x${item.cantidad})`)
+            .join(", ");
         
-        // 2. Notificamos a Google Sheets (Para todos los métodos)
-        fetch(GOOGLE_URL, {
+        const resumenCompleto = {
+            idPedido: idPedido,
+            usuario: localStorage.getItem("usuarioLogueado") || "Invitado",
+            productos: listaProductos,
+            total: `$${totalNum}`, // Corregido: Ahora es un string con comillas invertidas
+            direccion: `${domicilioData.calle} #${domicilioData.numero}, ${domicilioData.ciudad},${domicilioData.latitud}, ${domicilioData.longitud}`,
+            metodoPago: metodoSeleccionado
+        };
+        
+        try {
+            // 1. Guardar en Firebase
+            await update(ref(db, 'pedidos/' + idPedido), infoPedido);
+            
+            // 3. Notificamos a Google Sheets
+           fetch(GOOGLE_URL, {
             method: 'POST',
             mode: 'no-cors',
             body: JSON.stringify({ 
-                nombre: resumenCompleto, 
-                pedido: idPedido      
+                nombre: resumenCompleto, // Aquí va todo el resumen
+                pedido: idPedido      // Aquí solo el ID
             })
         });
 
-        // 3. Guardar localmente para seguimiento
-        localStorage.setItem("ultimoPedido", JSON.stringify(infoPedido));
+            // 2. Guardar localmente para seguimiento
+            localStorage.setItem("ultimoPedido", JSON.stringify(infoPedido));
 
-        // ================================================================
-        // INICIO BLOQUE PARA TARJETA ONLINE (PASA VALORES A PAGO.HTML)
-        // ================================================================
-        if (metodoSeleccionado === "Tarjeta Online") {
-            // Guardamos valores específicos que leerá pago.html
-            localStorage.setItem("montoAPagar", totalNum); 
+            // 3. Acciones según el pago
+            if (metodoSeleccionado === "Transferencia") {
+                  
+                    const telefono = "529933044020";
+                    
+                    // 1. Definimos la función para limpiar el texto (espacios por guiones)
+                    function limpiarTexto(texto) {
+                        return texto.replace(/ /g, "-");
+                    }
+                
+                    // 2. Definimos el mensaje (asegúrate de que estas variables existan)
+                    const mensajeBase = `¡Hola! Soy ${infoPedido.usuario}. Confirmo mi pedido ${idPedido} de $${totalNum}. En un momento envío el comprobante.`;
+                
+                    // 3. Procesamos el texto
+                    const textoFinal = limpiarTexto(mensajeBase);
+
+                 // 1. Guardamos el pedido en localStorage antes de salir
+                    // 1. Guardamos el pedido en localStorage antes de salir
+               localStorage.setItem("ultimoPedido", JSON.stringify(infoPedido));
+                    // 4. CREAMOS LA URL PARA ANDROID:
+                    // wa.me es el método oficial y más compatible
+                    const url = `https://wa.me/${telefono}?text=${encodeURIComponent(mensajeBase)}`;
+            
+                localStorage.setItem("ultimoPedido", JSON.stringify(infoPedido));
+                // 2. Limpiamos el carrito
+                    localStorage.removeItem("carrito_obj");
+                setTimeout(() => {
+                    window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/seguimiento.html";
+                }, 2000);
+                
+                    // 3. OPCIÓN A: Redirigir a una página de "Gracias" (Recomendado)
+                    // Esto asegura que la página cambie y el usuario sepa que se envió.
+                //    window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/seguimiento.html";
+                    // 5. REDIRECCIÓN:
+                    // window.location.assign es la mejor forma en WebViews
+                   window.location.assign(url);
+                     
+            } 
+            else if (metodoSeleccionado === "Tarjeta Online") {
+            // Forzamos el guardado de datos limpios
+            const totalTexto = document.getElementById("totalFinal").innerText;
+            const totalLimpio = totalTexto.replace('$', '').trim(); // Quitamos el signo si lo tiene
+
+            localStorage.setItem("montoAPagar", totalLimpio); 
             localStorage.setItem("idPedidoActual", idPedido);
+            localStorage.setItem("ultimoPedido", JSON.stringify(infoPedido));
 
-            // Redirigimos a la página de pago y cortamos la ejecución aquí
-            window.location.href = "pago.html";
+            console.log("Datos guardados:", totalLimpio, idPedido); // Para revisar en consola
+
+            // Guardamos en Firebase y luego redirigimos
+            await update(ref(db, 'pedidos/' + idPedido), infoPedido);
+            
+            window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/pago.html";
             return; 
         }
-        // ================================================================
-        // FIN BLOQUE PARA TARJETA ONLINE
-        // ================================================================
+            else {
+                // Efectivo o Terminal
+                mostrarAviso("✅ ¡Pedido confirmado!");
+                localStorage.removeItem("carrito_obj");
+                setTimeout(() => {
+                    window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/seguimiento.html";
+                }, 2000);
+            }
 
-
-        // 4. Acciones para el resto de los métodos (WhatsApp, Efectivo, etc.)
-        if (metodoSeleccionado === "Transferencia") {
-            const telefono = "529933044020";
-            const mensajeBase = `¡Hola! Soy ${infoPedido.usuario}. Confirmo mi pedido ${idPedido} de $${totalNum}. En un momento envío el comprobante.`;
-            const url = `https://wa.me/${telefono}?text=${encodeURIComponent(mensajeBase)}`;
-            
-            localStorage.removeItem("carrito_obj");
-            window.location.assign(url);
-        } else {
-            // Caso para Efectivo o Terminal
-            mostrarAviso("✅ ¡Pedido confirmado!");
-            localStorage.removeItem("carrito_obj");
-            setTimeout(() => {
-                window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/seguimiento.html";
-            }, 2000);
+        } catch (error) {
+            console.error(error);
+            mostrarAviso("❌ Error al conectar con el servidor.");
+            btn.disabled = false;
+            btn.innerText = "Finalizar Pedido";
         }
-
-    } catch (error) {
-        console.error(error);
-        mostrarAviso("❌ Error al conectar con el servidor.");
-        btn.disabled = false;
-        btn.innerText = "Finalizar Pedido";
-    }
-};
+    };
 
     // Al cargar la página
   window.addEventListener('load', () => {
@@ -418,12 +450,6 @@ document.getElementById("subtotal").innerText = subtotal;
 </script>
 </body>
 </html>
-
-
-
-
-
-
 
 
 
