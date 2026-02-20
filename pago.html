@@ -11,10 +11,8 @@
         body { font-family: "Ubuntu", sans-serif; background-color: #fefcf5; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
         .payment-card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); text-align: center; width: 90%; max-width: 400px; border: 1px solid #ffdab3; }
         .logo { font-family: 'Marck Script', cursive; font-size: 2.5rem; color: #6f1a07; margin-bottom: 10px; }
-        .total-amount { font-size: 2rem; font-weight: 700; color: #333; margin: 20px 0; }
-        .btn-mp { background-color: #009ee3; color: white; border: none; padding: 15px; width: 100%; border-radius: 12px; font-weight: 700; font-size: 1.1rem; transition: all 0.3s; display: flex; align-items: center; justify-content: center; }
-        .btn-mp:disabled { background-color: #ccc; }
-        .btn-mp i { margin-right: 10px; }
+        .total-amount { font-size: 2.2rem; font-weight: 700; color: #333; margin: 20px 0; }
+        .btn-mp { background-color: #009ee3; color: white; border: none; padding: 15px; width: 100%; border-radius: 12px; font-weight: 700; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; }
         .loader { border: 4px solid #f3f3f3; border-top: 4px solid #6f1a07; border-radius: 50%; width: 30px; height: 30px; animation: spin 2s linear infinite; margin: 20px auto; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         .hidden { display: none; }
@@ -37,61 +35,62 @@
             <button id="checkout-btn" class="btn-mp">
                 <i class="fas fa-credit-card"></i> Pagar con Mercado Pago
             </button>
-            <p class="mt-3 small text-muted"><i class="fas fa-lock"></i> Pago procesado de forma segura por Mercado Pago</p>
+            <p class="mt-3 small text-muted"><i class="fas fa-lock"></i> Pago procesado de forma segura</p>
         </div>
         
         <a href="carrito.html" class="btn btn-link btn-sm mt-3 text-muted">Cancelar y volver</a>
     </div>
 
- <script>
-    // 1. URL de tu API en Render (VERIFICA QUE TERMINE EN /create_preference)
-    const RENDER_API_URL = 'https://demasita-backend.onrender.com/create_preference';
+    <script>
+        // URL de tu API en Render (Verificada)
+        const RENDER_API_URL = "https://demasita-backend.onrender.com/create_preference";
 
-    async function iniciarPago() {
-        // Recuperamos los datos del localStorage
-        const total = localStorage.getItem("montoAPagar");
-        const idPedido = localStorage.getItem("idPedidoActual");
+        window.onload = async function() {
+            // 1. Recuperar datos
+            const total = localStorage.getItem("montoAPagar");
+            const idPedido = localStorage.getItem("idPedidoActual");
 
-        console.log("Recuperado para pago:", total, idPedido);
+            console.log("Iniciando pago para:", idPedido, "Monto:", total);
 
-        if (!total || total === "0") {
-            console.error("No hay monto para pagar");
-            document.getElementById('displayTotal').innerText = "Error en monto";
-            return;
-        }
-
-        // Mostramos el total inmediatamente
-        document.getElementById('displayTotal').innerText = `$${total}`;
-
-        try {
-            const response = await fetch(RENDER_API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    total: total,
-                    idPedido: idPedido
-                })
-            });
-
-            const data = await response.json();
-
-            if (data.init_point) {
-                // Ocultamos cargando y mostramos botón
-                document.getElementById('loadingSection').classList.add('hidden');
-                document.getElementById('paymentSection').classList.remove('hidden');
-                
-                document.getElementById('checkout-btn').onclick = () => {
-                    localStorage.removeItem("carrito_obj"); 
-                    window.location.href = data.init_point;
-                };
+            // 2. Mostrar monto si existe
+            if (total) {
+                document.getElementById('displayTotal').innerText = "$" + total;
+            } else {
+                alert("No se encontró el monto. Volviendo al carrito.");
+                window.location.href = "carrito.html";
+                return;
             }
-        } catch (error) {
-            console.error("Error al conectar con Render:", error);
-        }
-    }
 
-    // Ejecutar la función apenas cargue la ventana
-    window.onload = iniciarPago;
-</script>
+            // 3. Llamar a Render
+            try {
+                const response = await fetch(RENDER_API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        total: total,
+                        idPedido: idPedido
+                    })
+                });
+
+                if (!response.ok) throw new Error("Error en respuesta del servidor");
+
+                const data = await response.json();
+
+                if (data.init_point) {
+                    // Mostrar botón de pago
+                    document.getElementById('loadingSection').classList.add('hidden');
+                    document.getElementById('paymentSection').classList.remove('hidden');
+                    
+                    document.getElementById('checkout-btn').onclick = function() {
+                        localStorage.removeItem("carrito_obj"); 
+                        window.location.href = data.init_point;
+                    };
+                }
+            } catch (error) {
+                console.error("Error al conectar con Render:", error);
+                alert("Hubo un problema al generar el pago. Inténtalo de nuevo.");
+            }
+        };
+    </script>
 </body>
 </html>
