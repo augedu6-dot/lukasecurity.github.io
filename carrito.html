@@ -142,19 +142,49 @@
         <div class="custom-control custom-radio"><input type="radio" name="metodo" class="custom-control-input"><label class="custom-control-label"></label></div>
     </div>
 
-    <div class="section-title"><i class="fas fa-receipt"></i> Total a Pagar</div>
-    <div class="card-custom mb-5">
-        <div class="d-flex justify-content-between font-weight-bold" style="font-size: 1.3rem; color: #6f1a07;">
-            <span>Total</span><span>$<span id="totalFinal">0</span></span>
-        </div>
+  
+<div class="section-title"><i class="fas fa-receipt"></i> Resumen de Pago</div>
+<div class="card-custom mb-5">
+    <div class="d-flex justify-content-between mb-1">
+        <span class="text-muted">Subtotal</span>
+        <span>$<span id="subtotal">0</span></span>
+    </div>
+    <div class="d-flex justify-content-between mb-2">
+        <span class="text-muted">Costo de Envío</span>
+        <span id="displayEnvio" class="font-weight-bold"></span>
+    </div>
+    <hr>
+    <div class="d-flex justify-content-between font-weight-bold" style="font-size: 1.3rem; color: #6f1a07;">
+        <span>Total</span>
+        <span>$<span id="totalFinal">0</span></span>
     </div>
 </div>
+
 
 <button id="btnPagarFlotante" class="btn-finalizar" onclick="confirmarPedidoFinal()">
     Finalizar Pedido
 </button>
 
 <script type="module">
+// 1. Coordenadas de DeMasita
+const TIENDA_LAT = 17.977210098538634;
+const TIENDA_LNG = -92.92716930505645;
+
+// 2. Función para calcular distancia (Haversine)
+function calcularDistancia(lat2, lon2) {
+    const R = 6371e3; // Radio de la Tierra en metros
+    const phi1 = TIENDA_LAT * Math.PI / 180;
+    const phi2 = lat2 * Math.PI / 180;
+    const deltaPhi = (lat2 - TIENDA_LAT) * Math.PI / 180;
+    const deltaLambda = (lon2 - TIENDA_LNG) * Math.PI / 180;
+
+    const a = Math.sin(deltaPhi / 2) * Math.sin(deltaPhi / 2) +
+              Math.cos(phi1) * Math.cos(phi2) *
+              Math.sin(deltaLambda / 2) * Math.sin(deltaLambda / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+    return R * c; // Retorna metros
+}
     // IMPORTACIÓN DE FIREBASE
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getDatabase, ref, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
@@ -209,20 +239,47 @@
         if (items.length === 0) {
             lista.innerHTML = "<p class='text-center py-4 text-muted'>Tu carrito está vacío.</p>";
         } else {
-            for (const [nombre, item] of items) {
-                precioTotal += item.cantidad * item.precio;
-                lista.innerHTML += `
-                    <div class="food-item">
-                        <div><p class="mb-0 font-weight-bold">${nombre}</p><small class="text-muted">$${item.precio} c/u</small></div>
-                        <div class="quantity-controls">
-                            <button class="btn-qty" onclick="cambiarCantidad('${nombre}', ${item.precio}, -1)">-</button>
-                            <span class="qty-number">${item.cantidad}</span>
-                            <button class="btn-qty" onclick="cambiarCantidad('${nombre}', ${item.precio}, 1)">+</button>
-                        </div>
-                    </div>`;
-            }
+           for (const [nombre, item] of items) {
+            subtotal += item.cantidad * item.precio;
+            lista.innerHTML += `
+                <div class="food-item">
+                    <div><p class="mb-0 font-weight-bold">${nombre}</p><small class="text-muted">$${item.precio} c/u</small></div>
+                    <div class="quantity-controls">
+                        <button class="btn-qty" onclick="cambiarCantidad('${nombre}', ${item.precio}, -1)">-</button>
+                        <span class="qty-number">${item.cantidad}</span>
+                        <button class="btn-qty" onclick="cambiarCantidad('${nombre}', ${item.precio}, 1)">+</button>
+                    </div>
+                </div>`;
         }
-        document.getElementById("totalFinal").innerText = precioTotal;
+    }
+
+// Lógica de costo de envío
+    let costoEnvio = 0;
+    const displayEnvio = document.getElementById("displayEnvio");
+
+    if (domicilioData && domicilioData.latitud && domicilioData.longitud) {
+        const distanciaMts = calcularDistancia(domicilioData.latitud, domicilioData.longitud);
+        
+        if (distanciaMts <= 500) {
+            costoEnvio = 0;
+        } else if (distanciaMts <= 1000) {
+            costoEnvio = 20;
+        } else {
+            costoEnvio = 30;
+        }
+    }
+
+    // Mostrar "Gratis" o el monto
+    if (costoEnvio === 0) {
+        displayEnvio.innerText = "¡Gratis!";
+        displayEnvio.style.color = "#28a745";
+    } else {
+        displayEnvio.innerText = `$${costoEnvio}`;
+        displayEnvio.style.color = "#333";
+    }
+
+document.getElementById("subtotal").innerText = subtotal;
+    document.getElementById("totalFinal").innerText = subtotal + costoEnvio;
     }
 
     window.confirmarPedidoFinal = async function() {
