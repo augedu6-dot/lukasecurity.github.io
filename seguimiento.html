@@ -198,7 +198,7 @@
         direccionLimpia = "Dirección no especificada";
     }
 
-    function obtenerMensajePago(metodo, estado) {
+  function obtenerMensajePago(metodo, estado) {
     const m = (metodo || "").toLowerCase();
     const e = (estado || "").toLowerCase().trim();
     
@@ -294,7 +294,7 @@ contenedor.innerHTML = `
     </div>
 `;
 
-  onValue(pedidoRef, (snapshot) => {
+ onValue(pedidoRef, (snapshot) => {
     const data = snapshot.val();
     if (data && data.estado) {
         if (data.estado.toLowerCase().trim() === "finalizado") {
@@ -317,6 +317,7 @@ contenedor.innerHTML = `
     </script>
 </body>
 </html>
+
 
 
 
