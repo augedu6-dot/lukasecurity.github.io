@@ -198,31 +198,62 @@
         direccionLimpia = "Dirección no especificada";
     }
 
-       // --- LÓGICA DE MENSAJE DE PAGO ---
-    let mensajePagoHTML = "";
-    const metodo = (pedidoLocal.metodoPago || pedidoLocal.pago || "").toLowerCase();
+    function obtenerMensajePago(metodo, estado) {
+    const m = (metodo || "").toLowerCase();
+    const e = (estado || "").toLowerCase().trim();
+    
+    // Estados que consideramos como "Ya confirmado por el negocio"
+    const estadosConfirmados = ["confirmar / aceptado", "cocinando", "repartido / recolectar", "en camino", "afuera del domicilio", "entregado"];
+    const yaConfirmado = estadosConfirmados.includes(e);
 
-    if (metodo.includes("efectivo")) {
-        mensajePagoHTML = `
+    // LÓGICA PARA TRANSFERENCIA
+    if (m.includes("transferencia")) {
+        if (yaConfirmado) {
+            return `
+                <div class="alert alert-light border-success small text-dark mt-2" style="border-left: 5px solid #28a745;">
+                    <i class="fas fa-check-circle mr-2 text-success"></i> <b>Transferencia confirmada. Tu pedido ya se está procesando.</b>
+                </div>`;
+        } else {
+            return `
+                <div class="alert alert-light border-primary small text-dark mt-2" style="border-left: 5px solid #007bff;">
+                    <i class="fas fa-university mr-2 text-primary"></i> <b>Envía la captura de pantalla de la transferencia al WhatsApp</b> o cuando el negocio lo confirme empezará el proceso de tu pedido.
+                </div>`;
+        }
+    }
+
+    // LÓGICA PARA TARJETA ONLINE
+    if (m.includes("tarjeta") || m.includes("online") || m.includes("stripe")) {
+        if (yaConfirmado) {
+            return `
+                <div class="alert alert-light border-success small text-dark mt-2" style="border-left: 5px solid #28a745;">
+                    <i class="fas fa-check-circle mr-2 text-success"></i> <b>Pago confirmado, tu pedido ya se está procesando.</b>
+                </div>`;
+        } else {
+            return `
+                <div class="alert alert-light border-secondary small text-dark mt-2" style="border-left: 5px solid #6c757d;">
+                    <i class="fas fa-hourglass-half mr-2 text-secondary"></i> <b>Esperando confirmación por parte del negocio.</b>
+                </div>`;
+        }
+    }
+
+    // LÓGICA PARA EFECTIVO
+    if (m.includes("efectivo")) {
+        return `
             <div class="alert alert-light border-warning small text-dark mt-2" style="border-left: 5px solid #ffc107;">
                 <i class="fas fa-money-bill-wave mr-2 text-warning"></i> <b>Paga en efectivo al recibir.</b>
             </div>`;
-    } else if (metodo.includes("terminal")) {
-        mensajePagoHTML = `
+    }
+
+    // LÓGICA PARA TERMINAL
+    if (m.includes("terminal")) {
+        return `
             <div class="alert alert-light border-info small text-dark mt-2" style="border-left: 5px solid #17a2b8;">
                 <i class="fas fa-credit-card mr-2 text-info"></i> <b>Paga con terminal al recibir.</b>
             </div>`;
-    } else if (metodo.includes("transferencia")) {
-        mensajePagoHTML = `
-            <div class="alert alert-light border-primary small text-dark mt-2" style="border-left: 5px solid #007bff;">
-                <i class="fas fa-university mr-2 text-primary"></i> <b>Envía la captura de pantalla de la transferencia al WhatsApp</b> o cuando el negocio lo confirme empezará el proceso de tu pedido.
-            </div>`;
-    } else if (metodo.includes("tarjeta") || metodo.includes("online") || metodo.includes("stripe")) {
-        mensajePagoHTML = `
-            <div class="alert alert-light border-secondary small text-dark mt-2" style="border-left: 5px solid #6c757d;">
-                <i class="fas fa-globe mr-2 text-secondary"></i> <b>Esperando confirmación por parte del negocio.</b>
-            </div>`;
     }
+
+    return "";
+}
 contenedor.innerHTML = `
     <div class="card card-tracking p-3">
         <div class="status-header">
@@ -261,23 +292,30 @@ contenedor.innerHTML = `
     </div>
 `;
 
-    const pedidoRef = ref(db, 'pedidos/' + pedidoLocal.id);
-    onValue(pedidoRef, (snapshot) => {
-        const data = snapshot.val();
-        if (data && data.estado) {
-            if (data.estado.toLowerCase().trim() === "finalizado") {
-                notificarAndroid("Tu pedido ha sido finalizado. ¡Gracias!");
-                contenedor.innerHTML = `<div class="text-center py-5"><h4>¡Pedido Finalizado!</h4><a href="https://augedu6-dot.github.io/lukasecurity.github.io/menu.html" class="btn btn-danger mt-3">Volver al Menú</a></div>`;
-                localStorage.removeItem("ultimoPedido");
-            } else {
-                actualizarUI(data.estado);
+  onValue(pedidoRef, (snapshot) => {
+    const data = snapshot.val();
+    if (data && data.estado) {
+        if (data.estado.toLowerCase().trim() === "finalizado") {
+            notificarAndroid("Tu pedido ha sido finalizado. ¡Gracias!");
+            contenedor.innerHTML = `<div class="text-center py-5"><h4>¡Pedido Finalizado!</h4><a href="..." class="btn btn-danger mt-3">Volver al Menú</a></div>`;
+            localStorage.removeItem("ultimoPedido");
+        } else {
+            // 1. Actualiza la barra de progreso y el texto del badge
+            actualizarUI(data.estado);
+            
+            // 2. Actualiza el mensaje de pago dinámicamente
+            const contenedorMensaje = document.getElementById("contenedor-mensaje-pago");
+            if (contenedorMensaje) {
+                const metodoOriginal = pedidoLocal.metodoPago || pedidoLocal.pago;
+                contenedorMensaje.innerHTML = obtenerMensajePago(metodoOriginal, data.estado);
             }
         }
-    });
-};
+    }
+});
     </script>
 </body>
 </html>
+
 
 
 
