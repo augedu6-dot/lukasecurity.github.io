@@ -43,60 +43,55 @@
         <a href="carrito.html" class="btn btn-link btn-sm mt-3 text-muted">Cancelar y volver</a>
     </div>
 
-    <script>
-        // 1. URL de tu API en Render (CAMBIA ESTO)
-        const RENDER_API_URL = 'https://demasita-backend.onrender.com/create_preference';
+  <script>
+    // 1. URL de tu API en Render (VERIFICA QUE TERMINE EN /create_preference)
+    const RENDER_API_URL = 'https://demasita-backend.onrender.com/create_preference';
 
-        document.addEventListener('DOMContentLoaded', async () => {
-    // ESTO DEBE COINCIDIR CON LO QUE PUSIMOS EN EL CARRITO
-    const total = localStorage.getItem("montoAPagar"); 
-    const idPedido = localStorage.getItem("idPedidoActual");
+    async function iniciarPago() {
+        // Recuperamos los datos del localStorage
+        const total = localStorage.getItem("montoAPagar");
+        const idPedido = localStorage.getItem("idPedidoActual");
 
-    if (total) {
+        console.log("Recuperado para pago:", total, idPedido);
+
+        if (!total || total === "0") {
+            console.error("No hay monto para pagar");
+            document.getElementById('displayTotal').innerText = "Error en monto";
+            return;
+        }
+
+        // Mostramos el total inmediatamente
         document.getElementById('displayTotal').innerText = `$${total}`;
+
+        try {
+            const response = await fetch(https://demasita-backend.onrender.com, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    total: total,
+                    idPedido: idPedido
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.init_point) {
+                // Ocultamos cargando y mostramos botón
+                document.getElementById('loadingSection').classList.add('hidden');
+                document.getElementById('paymentSection').classList.remove('hidden');
+                
+                document.getElementById('checkout-btn').onclick = () => {
+                    localStorage.removeItem("carrito_obj"); 
+                    window.location.href = data.init_point;
+                };
+            }
+        } catch (error) {
+            console.error("Error al conectar con Render:", error);
+        }
     }
 
-            if (!total || !idPedido) {
-                alert("No hay información de pago pendiente.");
-                window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/carrito.html";
-                return;
-            }
-
-            // Mostrar el total en la pantalla
-            document.getElementById('displayTotal').innerText = `$${total}`;
-
-            try {
-                // 2. Llamar a tu backend en Render para obtener el init_point
-                const response = await fetch(https://demasita-backend.onrender.com, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        total: total,
-                        idPedido: idPedido
-                    })
-                });
-
-                if (!response.ok) throw new Error("Error en el servidor");
-
-                const data = await response.json();
-
-                // 3. Configurar el botón de pago
-                if (data.init_point) {
-                    document.getElementById('loadingSection').classList.add('hidden');
-                    document.getElementById('paymentSection').classList.remove('hidden');
-                    
-                    document.getElementById('checkout-btn').onclick = () => {
-                        // Limpiamos el carrito justo antes de redirigir al pago
-                        localStorage.removeItem("carrito_obj");
-                        window.location.href = data.init_point;
-                    };
-                }
-            } catch (error) {
-                console.error(error);
-                alert("Hubo un error al conectar con Mercado Pago. Inténtalo de nuevo.");
-                window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/carrito.html";
-            }
-        });
-    </script>
+    // Ejecutar la función apenas cargue la ventana
+    window.onload = iniciarPago;
+</script>
 </body>
 </html>
