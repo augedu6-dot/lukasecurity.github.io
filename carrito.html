@@ -298,7 +298,7 @@ document.getElementById("subtotal").innerText = subtotal;
         const idPedido = Math.floor(Math.random() * 0xFFFFFF).toString(16).toUpperCase().padStart(6, '0');
     const estadoInicial = (metodoSeleccionado === "Transferencia" || metodoSeleccionado === "Tarjeta Online") 
     ? "Esperando Pago" 
-    : "Pendiente";
+    : "Recibido";
 		
         const infoPedido = {
             id: idPedido,
@@ -308,7 +308,7 @@ document.getElementById("subtotal").innerText = subtotal;
             direccion: `${domicilioData.calle} #${domicilioData.numero}, ${domicilioData.ciudad},${domicilioData.latitud}, ${domicilioData.longitud}`,
             metodoPago: metodoSeleccionado,
             fecha: new Date().toLocaleString(),
-            estado: "estadoInicial"
+            estado: estadoInicial
         };
 
   
@@ -436,6 +436,7 @@ document.getElementById("subtotal").innerText = subtotal;
 </script>
 </body>
 </html>
+
 
 
 
