@@ -43,7 +43,7 @@
         <a href="carrito.html" class="btn btn-link btn-sm mt-3 text-muted">Cancelar y volver</a>
     </div>
 
-  <script>
+ <script>
     // 1. URL de tu API en Render (VERIFICA QUE TERMINE EN /create_preference)
     const RENDER_API_URL = 'https://demasita-backend.onrender.com/create_preference';
 
@@ -64,7 +64,7 @@
         document.getElementById('displayTotal').innerText = `$${total}`;
 
         try {
-            const response = await fetch(https://demasita-backend.onrender.com, {
+            const response = await fetch(RENDER_API_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
