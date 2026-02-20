@@ -9,9 +9,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
    
     <style>
+    body { overscroll-behavior-y: contain; position: fixed; width: 100%; height: 100%; overflow-x: hidden; overscroll-behavior-y: contain;top: 0;overflow-x: hidden; -webkit-touch-callout: none; user-select: none; }
         body { font-family: "Ubuntu", sans-serif;  background-color: #fefcf5;  padding-bottom: 130px;  overflow-x: hidden; overscroll-behavior-y: contain; position: relative;top: 0;overflow-x: hidden; -webkit-touch-callout: none; user-select: none;}
         input, textarea { -webkit-user-select: text; user-select: text; }
-        .navbar { background-color: white; border-bottom: 2px solid #ffdab3; position: sticky; top: 0; z-index: 1000; padding: 0.5rem 1rem; }
+       .navbar { background: white !important; border-bottom: 2px solid #ffdab3; position: sticky; top: 0; z-index: 1050; padding: 0.5rem 1rem; }
+        
         .navbar-brand { font-family: 'Marck Script', cursive; font-size: 1.8rem; color: #6f1a07 !important; font-weight: bold; }
         
         .card-address { border: none; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); background: white; }
@@ -24,7 +26,7 @@
         .form-control:focus { border-color: #f44336; box-shadow: none; }
         
         #success-alert { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 2000; display: none; border-radius: 50px; padding: 10px 25px; background: #28a745; color: white; border: none; }
-        .container mt-4 mb-5{margin-top: 1rem !important;  position: relative;  z-index: 1;}
+     
     </style>
 </head>
 <body>
@@ -203,6 +205,7 @@
 </body>
 
 </html>
+
 
 
 
