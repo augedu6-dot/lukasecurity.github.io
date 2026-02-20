@@ -2,46 +2,104 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Carrito - DeMasita</title>
     <link href="https://fonts.googleapis.com/css2?family=Marck+Script&family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
     <style>
-        body { font-family: "Ubuntu", sans-serif; background-color: #fefcf5; padding-bottom: 130px; overflow-x: hidden; -webkit-touch-callout: none; user-select: none; }
-        input, textarea { -webkit-user-select: text; user-select: text; }
+        body { font-family: "Ubuntu", sans-serif; background-color: #fefcf5; padding-bottom: 130px;  #fefcf5; overflow-x: hidden;-webkit-touch-callout: none; -webkit-user-select: none;-khtml-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;  }
+       input, textarea {
+    -webkit-user-select: text;user-select: text;
+}
+        /* NAVBAR */
         .navbar { background-color: white; border-bottom: 2px solid #ffdab3; padding: 0.5rem 0.8rem; position: sticky; top: 0; z-index: 1000; }
         .navbar-brand { font-family: 'Marck Script', cursive; font-size: 1.6rem; color: #6f1a07 !important; }
+
         .section-title { color: #6f1a07; font-weight: 700; margin: 15px 0 8px; font-size: 1.05rem; display: flex; align-items: center; }
         .section-title i { margin-right: 10px; color: #f44336; }
-        .food-item { line-height: 1rem; background: white; padding: 8px 12px; margin-bottom: 6px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #f9f0e6; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
-        .quantity-controls { display: flex; align-items: center; background: #f1f3f5; border-radius: 10px; padding: 3px; flex-shrink: 0; }
+
+        /* PRODUCTOS */
+        .food-item {line-height: 1rem; background: white; padding: 8px 12px; margin-bottom: 6px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #f9f0e6; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .quantity-controls { display: flex; align-items: center; background: #f1f3f5; border-radius: 10px; padding: 3px; }
         .btn-qty { width: 30px; height: 30px; border-radius: 8px; border: none; background: white; color: #6f1a07; font-weight: bold; }
         .qty-number { min-width: 25px; text-align: center; font-weight: 700; color: #6f1a07; margin: 0 5px; }
+
         .card-custom { background: white; padding: 15px; border-radius: 15px; border: 1px solid #f9f0e6; }
-        .payment-option { background: white; border: 2px solid #f9f0e6; border-radius: 12px; padding: 12px; margin-bottom: 8px; display: flex; align-items: center; cursor: pointer; transition: all 0.2s; line-height: 0.9rem; }
+
+        /* OPCIONES DE PAGO */
+        .payment-option {
+            background: white; border: 2px solid #f9f0e6; border-radius: 12px;
+            padding: 12px; margin-bottom: 8px; display: flex; align-items: center;
+            cursor: pointer; transition: all 0.2s;
+            line-height: 0.9rem;
+        }
         .payment-option.selected { border-color: #d35400; background-color: #fff5eb; }
         .payment-option i { font-size: 1.3rem; margin-right: 14px; color: #d35400; width: 25px; text-align: center; }
         .payment-details p { margin: 0; font-weight: 700; color: #333; font-size: 0.9rem; }
         .payment-details small { color: #777; font-size: 0.75rem; }
         .custom-radio { margin-left: auto; pointer-events: none; }
-        .btn-finalizar { position: fixed; bottom: 20px; left: 5%; width: 90%; background: #6f1a07; color: white; padding: 16px; border-radius: 18px; font-weight: 700; text-align: center; border: none; z-index: 1000; box-shadow: 0 8px 20px rgba(111, 26, 7, 0.3); font-size: 1.1rem; }
+
+        /* BOTÓN FIJO */
+        .btn-finalizar {
+            position: fixed; bottom: 20px; left: 5%; width: 90%; 
+            background: #6f1a07; color: white; padding: 16px; border-radius: 18px;
+            font-weight: 700; text-align: center; border: none; z-index: 1000;
+            box-shadow: 0 8px 20px rgba(111, 26, 7, 0.3); font-size: 1.1rem;
+        }
         .btn-finalizar:disabled { background: #ccc; box-shadow: none; }
-        #avisoHtml { position: fixed; top: -100px; left: 50%; transform: translateX(-50%); background: #f44336; color: white; padding: 15px; border-radius: 0 0 15px 15px; z-index: 2000; transition: top 0.5s ease; width: 90%; text-align: center; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+
+        /* AVISO ESTILO HTML */
+        #avisoHtml { 
+            position: fixed; top: -100px; left: 50%; transform: translateX(-50%);
+            background: #f44336; color: white; padding: 15px; border-radius: 0 0 15px 15px;
+            z-index: 2000; transition: top 0.5s ease; width: 90%; text-align: center; font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
         #avisoHtml.show { top: 0; }
-        .text-gratis { color: #28a745; font-weight: 700; }
+        .food-item {
+    display: flex;
+    justify-content: space-between; /* Separa el texto de los botones */
+    align-items: center;           /* Alinea verticalmente */
+    padding: 5px;
+    border-bottom: 1px solid #eee;
+    gap: 15px;                      /* Espacio mínimo entre nombre y botones */
+}
+
+/* El div que contiene el nombre y el precio unitario */
+.food-item > div:first-child {
+    flex: 1;           /* Ocupa todo el espacio disponible */
+    min-width: 0;      /* Truco necesario para que el texto respete el contenedor */
+}
+
+/* El párrafo con el nombre del producto */
+.food-item p.font-weight-bold {
+    white-space: normal;       /* Permite el salto de línea (por defecto es normal, pero asegura) */
+    word-wrap: break-word;     /* Rompe palabras extremadamente largas */
+    overflow-wrap: break-word; /* Estándar moderno para romper palabras */
+    line-height: 1;          /* Ajusta el espacio entre líneas si salta */
+    margin-bottom: 2px;
+}
+
+/* Controles de cantidad (para que no se encojan) */
+.quantity-controls {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;            /* Evita que los botones se aplasten si el texto es largo */
+}
+        .custom-small{font-size: 1.2rem;}
     </style>
 </head>
 <body>
 
 <div id="avisoHtml">Aviso</div>
 
-<nav class="navbar navbar-expand-lg navbar-light shadow-sm mb-3">
-    <div class="container d-flex justify-content-between align-items-center">
-        <a class="navbar-brand" href="https://augedu6-dot.github.io/lukasecurity.github.io/menu.html">DeMasita</a>
-        <a class="btn btn-sm btn-outline-danger font-weight-bold" href="https://augedu6-dot.github.io/lukasecurity.github.io/menu.html">Menú</a>
-    </div>
-</nav>
+   <nav class="navbar navbar-expand-lg navbar-light shadow-sm mb-3">
+        <div class="container d-flex justify-content-between align-items-center">
+            <a class="navbar-brand" href="https://augedu6-dot.github.io/lukasecurity.github.io/menu.html">DeMasita</a>
+            <a class="btn btn-sm btn-outline-danger font-weight-bold" href="https://augedu6-dot.github.io/lukasecurity.github.io/menu.html">Menú</a>
+        </div>
+    </nav>
 
 <div class="container mt-3">
     <div class="section-title"><i class="fas fa-shopping-basket"></i> Tu Pedido</div>
@@ -51,7 +109,7 @@
     <div class="card-custom mb-3" onclick="window.location.href='https://augedu6-dot.github.io/lukasecurity.github.io/direccion2.html'" style="cursor:pointer;">
         <div class="d-flex justify-content-between align-items-center">
             <div style="min-width: 0;">
-                <p id="currentAddress" class="mb-0 font-weight-bold" style="overflow-wrap: break-word; font-size: 0.85rem; color: #f44336;">⚠️ Registra tu dirección</p>
+                <p id="currentAddress" class="mb-0 font-weight-bold" style="overflow-wrap: break-word; word-wrap: break-word; font-size: 0.85rem; color: #f44336;">⚠️ Registra tu dirección</p>
                 <small class="text-muted">Toca para cambiar o agregar</small>
             </div>
             <i class="fas fa-chevron-right text-muted ml-2"></i>
@@ -59,38 +117,33 @@
     </div>
 
     <div class="section-title"><i class="fas fa-money-check-alt"></i> Método de Pago</div>
+    
     <div class="payment-option" onclick="seleccionarMetodo(this, 'Efectivo')">
-        <i class="fas fa-money-bill-wave"></i>
+        <i class="fas fa-money-bill-wave" custom-small ></i>
         <div class="payment-details"><p>Efectivo</p><small>Pago al recibir</small></div>
         <div class="custom-control custom-radio"><input type="radio" name="metodo" class="custom-control-input"><label class="custom-control-label"></label></div>
     </div>
+
     <div class="payment-option" onclick="seleccionarMetodo(this, 'Terminal')">
         <i class="fas fa-mobile-alt"></i>
         <div class="payment-details"><p>Terminal</p><small>Llevamos la terminal</small></div>
         <div class="custom-control custom-radio"><input type="radio" name="metodo" class="custom-control-input"><label class="custom-control-label"></label></div>
     </div>
+
     <div class="payment-option" onclick="seleccionarMetodo(this, 'Tarjeta Online')">
         <i class="fas fa-credit-card"></i>
         <div class="payment-details"><p>Tarjeta Online</p><small>Pago seguro vía Stripe</small></div>
         <div class="custom-control custom-radio"><input type="radio" name="metodo" class="custom-control-input"><label class="custom-control-label"></label></div>
     </div>
+
     <div class="payment-option" onclick="seleccionarMetodo(this, 'Transferencia')">
         <i class="fab fa-whatsapp" style="color: #25D366;"></i>
         <div class="payment-details"><p>Transferencia</p><small>Envía captura por WhatsApp</small></div>
         <div class="custom-control custom-radio"><input type="radio" name="metodo" class="custom-control-input"><label class="custom-control-label"></label></div>
     </div>
 
-    <div class="section-title"><i class="fas fa-receipt"></i> Resumen de Pago</div>
+    <div class="section-title"><i class="fas fa-receipt"></i> Total a Pagar</div>
     <div class="card-custom mb-5">
-        <div class="d-flex justify-content-between mb-1">
-            <span class="text-muted">Subtotal</span>
-            <span>$<span id="subtotal">0</span></span>
-        </div>
-        <div class="d-flex justify-content-between mb-2">
-            <span class="text-muted">Costo de Envío </span>
-            <span id="displayEnvio" class="font-weight-bold">$0</span>
-        </div>
-        <hr>
         <div class="d-flex justify-content-between font-weight-bold" style="font-size: 1.3rem; color: #6f1a07;">
             <span>Total</span><span>$<span id="totalFinal">0</span></span>
         </div>
@@ -102,6 +155,7 @@
 </button>
 
 <script type="module">
+    // IMPORTACIÓN DE FIREBASE
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getDatabase, ref, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
@@ -115,13 +169,12 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    const TIENDA_LAT = 17.977210098538634;
-    const TIENDA_LNG = -92.92716930505645;
-
+    // VARIABLES GLOBALES
     let carrito = JSON.parse(localStorage.getItem("carrito_obj")) || {};
     let domicilioData = JSON.parse(localStorage.getItem('domicilio')) || null;
     let metodoSeleccionado = "";
 
+    // FUNCIÓN AVISO
     function mostrarAviso(msg) {
         const aviso = document.getElementById("avisoHtml");
         aviso.innerText = msg;
@@ -129,20 +182,11 @@
         setTimeout(() => aviso.classList.remove("show"), 3500);
     }
 
-    function calcularDistancia(lat2, lon2) {
-        const R = 6371000; 
-        const dLat = (lat2 - TIENDA_LAT) * Math.PI / 180;
-        const dLon = (lon2 - TIENDA_LNG) * Math.PI / 180;
-        const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-                  Math.cos(TIENDA_LAT * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-                  Math.sin(dLon/2) * Math.sin(dLon/2);
-        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-        return R * c;
-    }
-
+    // EXPORTAR FUNCIONES AL ÁMBITO GLOBAL (Necesario por type="module")
     window.seleccionarMetodo = function(elemento, metodo) {
         document.querySelectorAll('.payment-option').forEach(opt => opt.classList.remove('selected'));
         document.querySelectorAll('.custom-control-input').forEach(rad => rad.checked = false);
+        
         elemento.classList.add('selected');
         elemento.querySelector('input').checked = true;
         metodoSeleccionado = metodo;
@@ -157,55 +201,32 @@
     };
 
     function actualizarInterfaz() {
-        let subtotal = 0;
+        let precioTotal = 0;
         const lista = document.getElementById('lista-carrito');
         lista.innerHTML = "";
         
-        Object.entries(carrito).forEach(([nombre, item]) => {
-            subtotal += item.cantidad * item.precio;
-            lista.innerHTML += `
-                <div class="food-item">
-                    <div><p class="mb-0 font-weight-bold">${nombre}</p><small class="text-muted">$${item.precio} c/u</small></div>
-                    <div class="quantity-controls">
-                        <button class="btn-qty" onclick="cambiarCantidad('${nombre}', ${item.precio}, -1)">-</button>
-                        <span class="qty-number">${item.cantidad}</span>
-                        <button class="btn-qty" onclick="cambiarCantidad('${nombre}', ${item.precio}, 1)">+</button>
-                    </div>
-                </div>`;
-        });
-
-        if (Object.keys(carrito).length === 0) lista.innerHTML = "<p class='text-center py-4 text-muted'>Tu carrito está vacío.</p>";
-
-        let costoEnvio = 0;
-        const displayEnvio = document.getElementById("displayEnvio");
-        const distTexto = document.getElementById("distanciaTexto");
-
-        if (domicilioData && domicilioData.latitud && domicilioData.longitud) {
-            const mts = calcularDistancia(domicilioData.latitud, domicilioData.longitud);
-            distTexto.innerText = `(${Math.round(mts)}m)`;
-            distTexto.style.display = "inline";
-            
-            if (mts <= 500) costoEnvio = 0;
-            else if (mts <= 1000) costoEnvio = 20;
-            else costoEnvio = 30;
+        const items = Object.entries(carrito);
+        if (items.length === 0) {
+            lista.innerHTML = "<p class='text-center py-4 text-muted'>Tu carrito está vacío.</p>";
         } else {
-            distTexto.style.display = "none";
-            costoEnvio = 0;
+            for (const [nombre, item] of items) {
+                precioTotal += item.cantidad * item.precio;
+                lista.innerHTML += `
+                    <div class="food-item">
+                        <div><p class="mb-0 font-weight-bold">${nombre}</p><small class="text-muted">$${item.precio} c/u</small></div>
+                        <div class="quantity-controls">
+                            <button class="btn-qty" onclick="cambiarCantidad('${nombre}', ${item.precio}, -1)">-</button>
+                            <span class="qty-number">${item.cantidad}</span>
+                            <button class="btn-qty" onclick="cambiarCantidad('${nombre}', ${item.precio}, 1)">+</button>
+                        </div>
+                    </div>`;
+            }
         }
-
-        if (costoEnvio === 0) {
-            displayEnvio.innerText = "¡Gratis!";
-            displayEnvio.className = "text-gratis";
-        } else {
-            displayEnvio.innerText = `$${costoEnvio}`;
-            displayEnvio.className = "font-weight-bold";
-        }
-
-        document.getElementById("subtotal").innerText = subtotal;
-        document.getElementById("totalFinal").innerText = subtotal + costoEnvio;
+        document.getElementById("totalFinal").innerText = precioTotal;
     }
 
     window.confirmarPedidoFinal = async function() {
+        // Validaciones
         if (Object.keys(carrito).length === 0) { mostrarAviso("🛒 Tu carrito está vacío."); return; }
         if (!domicilioData) { mostrarAviso("🏠 Registra tu domicilio primero."); return; }
         if (!metodoSeleccionado) { mostrarAviso("💳 Selecciona cómo vas a pagar."); return; }
@@ -214,56 +235,188 @@
         btn.disabled = true;
         btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
 
+        const GOOGLE_URL = "https://script.google.com/macros/s/AKfycbxI16EHswwjj_I4pDsYC0DM4hTrfUpTh_FomSBt94pmIGsQMJSjQCHtdMoirT1cCfnM/exec";
         const totalNum = parseFloat(document.getElementById("totalFinal").innerText);
         const idPedido = Math.floor(Math.random() * 0xFFFFFF).toString(16).toUpperCase().padStart(6, '0');
-        
+    
+
         const infoPedido = {
             id: idPedido,
             usuario: localStorage.getItem("usuarioLogueado") || "Invitado",
             productos: Object.values(carrito),
             total: totalNum,
-            direccion: `${domicilioData.calle} #${domicilioData.numero}, ${domicilioData.ciudad},${domicilioData.latitud},${domicilioData.longitud}`,
+            direccion: `${domicilioData.calle} #${domicilioData.numero}, ${domicilioData.ciudad},${domicilioData.latitud}, ${domicilioData.longitud}`,
             metodoPago: metodoSeleccionado,
             fecha: new Date().toLocaleString(),
             estado: "Recibido"
         };
 
+  
+
+            // 2. Creamos el resumen de productos en texto plano
+             const listaProductos = Object.entries(carrito)
+            .map(([nombre, item]) => `${nombre} (x${item.cantidad})`)
+            .join(", ");
+        
+        const resumenCompleto = {
+            idPedido: idPedido,
+            usuario: localStorage.getItem("usuarioLogueado") || "Invitado",
+            productos: listaProductos,
+            total: `$${totalNum}`, // Corregido: Ahora es un string con comillas invertidas
+            direccion: `${domicilioData.calle} #${domicilioData.numero}, ${domicilioData.ciudad},${domicilioData.latitud}, ${domicilioData.longitud}`,
+            metodoPago: metodoSeleccionado
+        };
+        
         try {
+            // 1. Guardar en Firebase
             await update(ref(db, 'pedidos/' + idPedido), infoPedido);
+            
+            // 3. Notificamos a Google Sheets
+           fetch(GOOGLE_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            body: JSON.stringify({ 
+                nombre: resumenCompleto, // Aquí va todo el resumen
+                pedido: idPedido      // Aquí solo el ID
+            })
+        });
+
+            // 2. Guardar localmente para seguimiento
             localStorage.setItem("ultimoPedido", JSON.stringify(infoPedido));
 
+            // 3. Acciones según el pago
             if (metodoSeleccionado === "Transferencia") {
-                const mensajeBase = `¡Hola! Confirmo mi pedido ${idPedido} de $${totalNum}. En breve envío el comprobante.`;
-                const url = `https://wa.me/529933044020?text=${encodeURIComponent(mensajeBase)}`;
-                localStorage.removeItem("carrito_obj");
-                window.location.assign(url);
-            } else if (metodoSeleccionado === "Tarjeta Online") {
+                  
+                    const telefono = "529933044020";
+                    
+                    // 1. Definimos la función para limpiar el texto (espacios por guiones)
+                    function limpiarTexto(texto) {
+                        return texto.replace(/ /g, "-");
+                    }
+                
+                    // 2. Definimos el mensaje (asegúrate de que estas variables existan)
+                    const mensajeBase = `¡Hola! Soy ${infoPedido.usuario}. Confirmo mi pedido ${idPedido} de $${totalNum}. En un momento envío el comprobante.`;
+                
+                    // 3. Procesamos el texto
+                    const textoFinal = limpiarTexto(mensajeBase);
+
+                 // 1. Guardamos el pedido en localStorage antes de salir
+                    // 1. Guardamos el pedido en localStorage antes de salir
+               localStorage.setItem("ultimoPedido", JSON.stringify(infoPedido));
+                    // 4. CREAMOS LA URL PARA ANDROID:
+                    // wa.me es el método oficial y más compatible
+                    const url = `https://wa.me/${telefono}?text=${encodeURIComponent(mensajeBase)}`;
+            
+                localStorage.setItem("ultimoPedido", JSON.stringify(infoPedido));
+                // 2. Limpiamos el carrito
+                    localStorage.removeItem("carrito_obj");
+                setTimeout(() => {
+                    window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/seguimiento.html";
+                }, 2000);
+                
+                    // 3. OPCIÓN A: Redirigir a una página de "Gracias" (Recomendado)
+                    // Esto asegura que la página cambie y el usuario sepa que se envió.
+                //    window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/seguimiento.html";
+                    // 5. REDIRECCIÓN:
+                    // window.location.assign es la mejor forma en WebViews
+                   window.location.assign(url);
+                     
+            } 
+            else if (metodoSeleccionado === "Tarjeta Online") {
                 window.location.href = "https://buy.stripe.com/9B67sL7Ej4Mf1ad3rFdfG08";
-            } else {
+            } 
+            else {
+                // Efectivo o Terminal
                 mostrarAviso("✅ ¡Pedido confirmado!");
                 localStorage.removeItem("carrito_obj");
-                setTimeout(() => { window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/seguimiento.html"; }, 2000);
+                setTimeout(() => {
+                    window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/seguimiento.html";
+                }, 2000);
             }
+
         } catch (error) {
-            mostrarAviso("❌ Error de conexión.");
+            console.error(error);
+            mostrarAviso("❌ Error al conectar con el servidor.");
             btn.disabled = false;
             btn.innerText = "Finalizar Pedido";
         }
     };
 
-    window.addEventListener('load', () => {
-        if(domicilioData) {
-            document.getElementById('currentAddress').innerText = `${domicilioData.calle} #${domicilioData.numero}`;
-            document.getElementById('currentAddress').style.color = "#28a745"; 
-        }
-        if (localStorage.getItem("ultimoPedido")) {
+    // Al cargar la página
+  window.addEventListener('load', () => {
+    // 1. Mostrar la dirección si existe (Tu código actual)
+    if(domicilioData) {
+        document.getElementById('currentAddress').innerText = `${domicilioData.calle} #${domicilioData.numero}`;
+        document.getElementById('currentAddress').style.color = "#28a745"; 
+    }
+
+    // 2. NUEVA VALIDACIÓN: Bloquear si ya hay un pedido activo
+    const pedidoActivo = localStorage.getItem("ultimoPedido");
+    if (pedidoActivo) {
+        const btn = document.getElementById("btnPagarFlotante");
+        const aviso = document.getElementById("avisoHtml");
+
+        // Bloqueo visual del botón
+        btn.disabled = true;
+        btn.classList.add("blocked"); 
+        btn.innerHTML = `<span><i class="fas fa-sync fa-spin"></i> Pedido en curso...</span>`;
+        
+        // Mostrar aviso superior
+        aviso.innerText = "⚠️ Ya tienes un pedido activo. Por favor, espera a que finalice.";
+        aviso.classList.add("show");
+        
+        // Opcional: Redirigir automáticamente al seguimiento tras 3 segundos
+        setTimeout(() => {
             window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/seguimiento.html";
-        }
-        actualizarInterfaz();
-    });
+        }, 3000);
+    }
+
+    actualizarInterfaz();
+});
 </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
