@@ -8,318 +8,197 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
     <style>
-          body { font-family: "Ubuntu", sans-serif; background-color: #fefcf5; overflow-x: hidden;-webkit-touch-callout: none; -webkit-user-select: none;-khtml-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;   }
-        /* FIX NAVBAR: Todo en una sola línea */
-        input, textarea {
-    -webkit-user-select: text;user-select: text;
-}
-        .navbar { 
-            background-color: white; 
-            border-bottom: 2px solid #ffdab3; 
-            position: sticky; 
-            top: 0; 
-            z-index: 1000;
-            padding: 0.5rem 1rem;
-        }
-        .navbar .container {
-            display: flex;
-            flex-wrap: nowrap; /* Evita que los elementos bajen a la siguiente línea */
-            justify-content: space-between;
-            align-items: center;
-        }
-        .navbar-brand { 
-            font-family: 'Marck Script', cursive; 
-            font-size: 1.6rem; /* Ajustado para móvil */
-            color: #6f1a07 !important; 
-            margin-right: 0;
-        }
-
-        .nav-user-link {
-            color: #d35400 !important;
-            font-weight: 700;
-            cursor: pointer;
-            display: flex; 
-            align-items: center;
-            padding: 5px 10px;
-            background: #fff5eb;
-            border-radius: 20px;
-            text-decoration: none !important;
-            font-size: 0.85rem;
-        }
-
-        .cart-icon { font-size: 1.4rem; color: #6f1a07; position: relative; cursor: pointer; }
-        .cart-count { 
-            background: #f44336; color: white; border-radius: 50%; 
-            padding: 2px 6px; font-size: 0.7rem; 
-            position: absolute; top: -10px; right: -10px; 
-        }
-
-        /* Estilos del Modal */
-        .modal-content { border-radius: 20px; border: none; }
-        .modal-header { background: #6f1a07; color: white; border-radius: 20px 20px 0 0; }
-        .user-avatar {
-            width: 70px; height: 70px; background: #ffdab3; color: #6f1a07;
-            border-radius: 50%; display: flex; align-items: center;
-            justify-content: center; font-size: 2rem; margin: 0 auto 15px;
-        }
+        body { font-family: "Ubuntu", sans-serif; background-color: #fefcf5; overflow-x: hidden; -webkit-touch-callout: none; user-select: none; }
+        input, textarea { -webkit-user-select: text; user-select: text; }
         
-        /* Ajuste de contenedor principal para móvil */
-        .container-main { max-width: 100%; margin-top: 20px; padding: 15px; }
+        .navbar { background-color: white; border-bottom: 2px solid #ffdab3; position: sticky; top: 0; z-index: 1000; padding: 0.5rem 1rem; }
+        .navbar-brand { font-family: 'Marck Script', cursive; font-size: 1.8rem; color: #6f1a07 !important; font-weight: bold; }
         
-        #successAlert { display: none; border-radius: 15px; background-color: #d4edda; color: #155724; border: none; }
-
-        .address-card {
-            background: white;
-            border-radius: 15px;
-            padding: 20px;
-            border: 2px solid #ffdab3;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            margin-bottom: 20px;
-        }
-        .address-card i { color: #f44336; font-size: 1.3rem; margin-right: 12px; }
-        .address-title { font-weight: bold; color: #6f1a07; font-size: 1.1rem; }
-        .address-text { word-break: break-all; overflow-wrap: break-word;color: #555; font-size: 0.95rem; }
-
-        .form-container { background: white; padding: 20px; border-radius: 15px; border: 1px solid #eee; }
-        .form-control { border-radius: 10px; border: 1px solid #ddd; padding: 10px; height: auto; font-size: 16px; /* Evita zoom automático en iPhone */ }
-        
-        .btn-main { background: #f44336; color: white; border: none; border-radius: 25px; padding: 12px; width: 100%; font-weight: bold; }
-        .btn-outline-custom { color: #f44336; border: 1px solid #f44336; background: none; border-radius: 20px; padding: 5px 15px; font-size: 0.85rem; margin-top: 10px; }
+        .card-address { border: none; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); background: white; }
+        .btn-custom { border-radius: 50px; font-weight: bold; padding: 12px; transition: all 0.3s; }
+        .btn-save { background-color: #f44336; color: white; border: none; }
+        .btn-save:disabled { background-color: #ccc; }
         
         .hidden { display: none; }
+        .form-control { border-radius: 10px; border: 1px solid #ffdab3; padding: 10px 15px; }
+        .form-control:focus { border-color: #f44336; box-shadow: none; }
+        
+        #success-alert { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 2000; display: none; border-radius: 50px; padding: 10px 25px; background: #28a745; color: white; border: none; }
     </style>
-<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 </head>
 <body>
-<nav class="navbar navbar-light">
-    <div class="container">
-        <a class="navbar-brand" href="https://augedu6-dot.github.io/lukasecurity.github.io/menu.html">DeMasita</a>
+
+    <nav class="navbar shadow-sm">
+        <span class="navbar-brand">DeMasita</span>
+    </nav>
+
+    <div id="success-alert" class="shadow-lg animate__animated animate__fadeInDown">
+        <i class="fas fa-check-circle mr-2"></i> ¡Dirección guardada!
+    </div>
+
+    <div class="container mt-4 mb-5">
         
-        <div class="d-flex align-items-center">
-            <div class="cart-icon mr-3" onclick="window.location.href='https://augedu6-dot.github.io/lukasecurity.github.io/carrito.html'">
-                <i class="fas fa-shopping-cart"></i>
-                <span class="cart-count" id="cartCount">0</span>
-            </div>
-
-            <div class="nav-user-link" data-toggle="modal" data-target="#userModal">
-                <i class="fas fa-user-circle mr-1"></i>
-                <span id="navUser">Cuenta</span>
+        <div id="section-form" class="animate__animated animate__fadeIn">
+            <h4 class="font-weight-bold mb-4" style="color: #6f1a07;">Entregar en:</h4>
+            <div class="card card-address p-4">
+                <form id="addressForm">
+                    <div class="form-group">
+                        <label class="small font-weight-bold">Calle / Avenida</label>
+                        <input type="text" id="calle" class="form-control" placeholder="Ej. Av. Principal" required>
+                    </div>
+                    <div class="row">
+                        <div class="col-6" style="padding-right: 5px;>
+                            <div class="form-group">
+                                <label class="small font-weight-bold">Número</label>
+                                <input type="number" id="numero" class="form-control" placeholder="000" required>
+                            </div>
+                        </div>
+                        <div class="col-6" style="padding-left: 5px;>
+                            <div class="form-group">
+                                <label class="small font-weight-bold">Código Postal</label>
+                                <input type="number" id="cp" class="form-control" value="86000" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="small font-weight-bold">Ciudad / Municipio</label>
+                        <input  type="text" id="ciudad" class="form-control"  value="Centro" placeholder="Ciudad" required>
+                    </div>
+                    <div class="form-group">
+                        <input hidden type="text" id="pais" class="form-control" value="México" required>
+                    </div>
+                    
+                    <button type="submit" id="btnSubmit" class="btn btn-save btn-block btn-custom mt-3">
+                        <span id="btnText">GUARDAR Y CONTINUAR</span>
+                        <span id="btnLoader" class="hidden"><i class="fas fa-spinner fa-spin"></i> Buscando...</span>
+                    </button>
+                    <button type="button" class="btn btn-light btn-block btn-custom mt-2 text-muted" onclick="cancelarRegistro()">Cancelar</button>
+                </form>
             </div>
         </div>
-    </div>
-</nav>
 
-<div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header border-0">
-                <h5 class="modal-title">Mi Perfil</h5>
-                <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
-            </div>
-            <div class="modal-body text-center p-4">
-                <div class="user-avatar"><i class="fas fa-user"></i></div>
-                <h3 class="h5 font-weight-bold">¡Hola!</h3>
-                <p class="text-muted small">Sesión iniciada como:</p>
-                <p class="user-email font-weight-bold mb-4" id="displayEmail"></p>
-                
-                <div class="list-group mb-4">
-                    <a href="https://augedu6-dot.github.io/lukasecurity.github.io/menu.html" class="list-group-item list-group-item-action border-0 text-left">
-                        <i class="fas fa-utensils mr-2"></i> Ver Menú
-                    </a>
-                    <a href="https://augedu6-dot.github.io/lukasecurity.github.io/direccion.html" class="list-group-item list-group-item-action border-0 text-left">
-                        <i class="fas fa-map-marker-alt mr-2"></i> Mis Direcciones
-                    </a>
+        <div id="section-saved" class="hidden animate__animated animate__fadeIn">
+            <h4 class="font-weight-bold mb-4" style="color: #6f1a07;">Tu dirección de entrega</h4>
+            <div class="card card-address p-4 text-center">
+                <div style="font-size: 3rem; color: #f44336;" class="mb-3">
+                    <i class="fas fa-map-marker-alt"></i>
                 </div>
-
-                <button class="btn btn-danger btn-block rounded-pill py-2" onclick="cerrarSesion()">
-                    <i class="fas fa-sign-out-alt mr-2"></i>Cerrar Sesión
+                <h5 id="display-address" class="font-weight-bold m-0 text-dark">---</h5>
+                <p id="display-city" class="text-muted mb-4 small">---</p>
+                
+                <button class="btn btn-save btn-block btn-custom mb-2" onclick="confirmarPedido()">
+                    CONFIRMAR Y VER CARRITO
+                </button>
+                <button class="btn btn-outline-secondary btn-block btn-custom" onclick="abrirFormulario()">
+                    <i class="fas fa-edit mr-2"></i>Cambiar dirección
                 </button>
             </div>
         </div>
-    </div>
-</div>
 
-<div class="container container-main">
-    <div id="successAlert" class="alert alert-success text-center mb-4" role="alert">
-        <i class="fas fa-check-circle"></i> ¡Dirección guardada!
     </div>
 
-    <div id="sectionSavedAddress">
-        <h5 class="mb-3" style="color: #6f1a07; font-weight: bold;">Entregar en:</h5>
-        <div class="address-card d-flex align-items-start">
-            <i class="fas fa-map-marker-alt mt-1"></i>
-            <div class="address-details w-100">
-                <p class="address-title">Mi Domicilio</p>
-                <p id="displayFullAddress" class="address-text"></p>
-                <button class="btn-outline-custom" onclick="abrirFormulario()">
-                    <i class="fas fa-plus mr-1"></i> Cambiar Dirección
-                </button>
-            </div>
-        </div>
-        <button class="btn-main mt-3" onclick="confirmarPedido()">
-            Continuar al Carrito <i class="fas fa-arrow-right ml-2"></i>
-        </button>
-    </div>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 
-    <div id="sectionFormAddress" class="form-container hidden">
-        <h5 class="mb-4" style="color: #6f1a07; font-weight: bold;">Nueva Dirección</h5>
-        <form id="addressForm">
-            <div class="form-group">
-                <label>Calle</label>
-                <input type="text" id="calle" class="form-control" placeholder="Nombre de la calle" required>
-            </div>
-            <div class="row">
-                <div class="col-6">
-                    <div class="form-group">
-                        <label>Número</label>
-                        <input type="number" id="numero" class="form-control" placeholder="123" required>
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="form-group">
-                        <label>C.P.</label>
-                        <input type="text" id="cp" class="form-control" placeholder="CP" required>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <label>Ciudad</label>
-                <input type="text" id="ciudad" class="form-control" placeholder="Ciudad" required>
-            </div>
-            <div class="form-group">
-                
-                <input type="hidden" type="text" id="pais" class="form-control" value="México" required>
-            </div>
+    <script>
+        const addressForm = document.getElementById('addressForm');
+        const sectionForm = document.getElementById('section-form');
+        const sectionSaved = document.getElementById('section-saved');
+        const btnSubmit = document.getElementById('btnSubmit');
+        const btnText = document.getElementById('btnText');
+        const btnLoader = document.getElementById('btnLoader');
+
+        document.addEventListener('DOMContentLoaded', cargarDatos);
+
+        addressForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
             
-            <div class="d-flex">
-                <button type="submit" class="btn-main mr-2">Guardar</button>
-                <button type="button" class="btn btn-light" style="border-radius: 25px;" onclick="cancelarRegistro()">Cancelar</button>
-            </div>
-        </form>
-    </div>
-</div>
+            // Estado de carga
+            btnSubmit.disabled = true;
+            btnText.classList.add('hidden');
+            btnLoader.classList.remove('hidden');
 
-<script>
-    const sectionForm = document.getElementById('sectionFormAddress');
-    const sectionSaved = document.getElementById('sectionSavedAddress');
-    const successAlert = document.getElementById('successAlert');
+            const calle = document.getElementById('calle').value;
+            const numero = document.getElementById('numero').value;
+            const cp = document.getElementById('cp').value;
+            const ciudad = document.getElementById('ciudad').value;
+            const pais = document.getElementById('pais').value;
 
-    const direccionEjemplo = {
-        calle: "",
-        numero: "",
-        cp: "8600",
-        ciudad: "Centro",
-        pais: "México"
-    };
+            // Dirección formateada para el buscador
+            const query = `${calle} ${numero}, ${cp}, ${ciudad}, ${pais}`;
+            
+            let lat = null;
+            let lon = null;
 
-    window.onload = function() {
-        const usuario = localStorage.getItem("usuarioLogueado");
-        if (!usuario) {
-            window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/login2.html";
-        } else {
-            document.getElementById("displayEmail").innerText = usuario;
-            document.getElementById("navUser").innerText = usuario.split('@')[0];
+            try {
+                // Buscamos coordenadas en OpenStreetMap (Nominatim)
+                const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=1`);
+                const data = await response.json();
+
+                if (data && data.length > 0) {
+                    lat = data[0].lat;
+                    lon = data[0].lon;
+                }
+            } catch (error) {
+                console.error("Error al obtener coordenadas:", error);
+            }
+
+            // Guardamos todo el objeto (coordenadas incluidas pero ocultas)
+            const domicilio = { calle, numero, cp, ciudad, pais, latitud: lat, longitud: lon };
+            localStorage.setItem('domicilio', JSON.stringify(domicilio));
+
+            // Feedback visual
+            document.getElementById('success-alert').style.display = 'block';
+            setTimeout(() => { document.getElementById('success-alert').style.display = 'none'; }, 3000);
+
+            // Reset de botones y cambio de sección
+            btnSubmit.disabled = false;
+            btnText.classList.remove('hidden');
+            btnLoader.classList.add('hidden');
+            
+            cargarDatos();
+        });
+
+        function cargarDatos() {
+            const d = JSON.parse(localStorage.getItem('domicilio'));
+            if (d && d.calle) {
+                sectionForm.classList.add('hidden');
+                sectionSaved.classList.remove('hidden');
+                document.getElementById('display-address').textContent = `${d.calle} ${d.numero}`;
+                document.getElementById('display-city').textContent = `${d.cp}, ${d.ciudad}, ${d.pais}`;
+            } else {
+                sectionForm.classList.remove('hidden');
+                sectionSaved.classList.add('hidden');
+            }
         }
 
-        if (!localStorage.getItem('domicilio')) {
-            localStorage.setItem('domicilio', JSON.stringify(direccionEjemplo));
+        function abrirFormulario() {
+            sectionSaved.classList.add('hidden');
+            sectionForm.classList.remove('hidden');
+            const d = JSON.parse(localStorage.getItem('domicilio'));
+            if(d) {
+                document.getElementById('calle').value = d.calle || "";
+                document.getElementById('numero').value = d.numero || "";
+                document.getElementById('cp').value = d.cp || "";
+                document.getElementById('ciudad').value = d.ciudad || "";
+            }
         }
-        cargarDatos();
-        actualizarContadorCarrito();
-    };
 
-    function actualizarContadorCarrito() {
-        const carrito = JSON.parse(localStorage.getItem("carrito_obj")) || {};
-        let total = 0;
-        for (const item in carrito) {
-            total += carrito[item].cantidad;
+        function cancelarRegistro() {
+            const d = JSON.parse(localStorage.getItem('domicilio'));
+            if (d && d.calle) {
+                cargarDatos();
+            } else {
+                window.location.href = "menu.html";
+            }
         }
-        document.getElementById("cartCount").innerText = total;
-    }
 
-    function cargarDatos() {
-        const d = JSON.parse(localStorage.getItem('domicilio'));
-        if (d && d.calle !== "Cargando...") {
-            document.getElementById('displayFullAddress').innerHTML = 
-                `${d.calle} #${d.numero}, ${d.ciudad}<br>CP: ${d.cp}, ${d.pais}`;
-            sectionForm.classList.add('hidden');
-            sectionSaved.classList.remove('hidden');
-        } else {
-            abrirFormulario();
+        function confirmarPedido() {
+            // Al confirmar, podrías usar d.latitud y d.longitud para el envío
+            window.location.href = "carrito.html";
         }
-    }
-
-    document.getElementById('addressForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        const nuevaDireccion = {
-            calle: document.getElementById('calle').value,
-            numero: document.getElementById('numero').value,
-            cp: document.getElementById('cp').value,
-            ciudad: document.getElementById('ciudad').value,
-            pais: document.getElementById('pais').value
-        };
-
-        localStorage.setItem('domicilio', JSON.stringify(nuevaDireccion));
-        
-        const emailUsuario = localStorage.getItem('usuarioLogueado') || "Sin Email";
-        const infoCompleta = `Usuario: ${emailUsuario} | Dirección: ${nuevaDireccion.calle} ${nuevaDireccion.numero}, ${nuevaDireccion.ciudad}, CP: ${nuevaDireccion.cp}`;
-
-        
-        
-        successAlert.style.display = 'block';
-        setTimeout(() => { successAlert.style.display = 'none'; }, 3000);
-
-        cargarDatos();
-    });
-
-    function abrirFormulario() {
-        sectionSaved.classList.add('hidden');
-        sectionForm.classList.remove('hidden');
-        const d = JSON.parse(localStorage.getItem('domicilio'));
-        if(d) {
-            document.getElementById('calle').value = d.calle || "";
-            document.getElementById('numero').value = d.numero || "";
-            document.getElementById('cp').value = d.cp || "";
-            document.getElementById('ciudad').value = d.ciudad || "";
-            document.getElementById('pais').value = d.pais || "México";
-        }
-    }
-
-    function cancelarRegistro() {
-        const d = JSON.parse(localStorage.getItem('domicilio'));
-        if (d && d.calle !== "Cargando...") {
-            sectionForm.classList.add('hidden');
-            sectionSaved.classList.remove('hidden');
-        } else {
-            window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/menu.html";
-        }
-    }
-
-    function confirmarPedido() {
-        window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/carrito.html";
-    }
-
-    function cerrarSesion() {
-        localStorage.removeItem("usuarioLogueado");
-        window.location.href = "https://augedu6-dot.github.io/lukasecurity.github.io/login2.html";
-    }
-
-  
-</script>
+    </script>
 </body>
+
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
