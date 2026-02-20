@@ -188,18 +188,25 @@
         `).join("");
     }
 // --- PROCESAMIENTO DE DIRECCIÓN ---
-let direccionLimpia = pedidoLocal.direccion || "No especificada";
+// --- LIMPIEZA AGRESIVA DE DIRECCIÓN (SIN ESPACIOS) ---
+    let direccionLimpia = pedidoLocal.direccion || "No especificada";
 
-// Si la dirección contiene coordenadas (ej: "19.432,-99.133") o "null", la limpiamos
-const esCoordenada = /^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?),\s*[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$/;
-const esNull = direccionLimpia.toLowerCase().includes("null");
+    // 1. Elimina ",null" o "null" repetidos sin importar los espacios
+    // Esto limpia: "Calle,null,null" -> "Calle"
+    direccionLimpia = direccionLimpia.replace(/(,?\s*null)+/gi, "");
 
-if (esCoordenada.test(direccionLimpia) || esNull) {
-    direccionLimpia = "Ubicación seleccionada en mapa"; 
-    // O puedes dejarlo como "No especificada" si prefieres
-}
-   // ... dentro del window.onload, donde defines el contenedor.innerHTML ...
+    // 2. Elimina coordenadas al final aunque no tengan espacios
+    // Detecta: ",19.432,-99.133" o " , 19.432 , -99.133"
+    // El regex busca: Coma opcional + número (opcionalmente con signo y decimal) + coma + número
+    direccionLimpia = direccionLimpia.replace(/,?\s*[-+]?\d*\.?\d+,\s*[-+]?\d*\.?\d+\s*$/, "");
 
+    // 3. Limpieza de seguridad: quitar comas que hayan quedado al final o al inicio
+    direccionLimpia = direccionLimpia.trim().replace(/^,|,$/g, "");
+
+    // 4. Validación final
+    if (!direccionLimpia || direccionLimpia.toLowerCase() === "null") {
+        direccionLimpia = "Dirección no especificada";
+    }
 contenedor.innerHTML = `
     <div class="card card-tracking p-3">
         <div class="status-header">
@@ -261,6 +268,7 @@ contenedor.innerHTML = `
     </script>
 </body>
 </html>
+
 
 
 
